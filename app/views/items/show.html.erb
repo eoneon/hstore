@@ -1,0 +1,14 @@
+<h1>Items#show</h1>
+<p><%= @item.name %></p>
+<p>Art Type: <%#= @item.item_type.name %></p>
+<% @item.properties.each do |name, value| %>
+<p>
+  <b><%= name.humanize %>:</b>
+  <%= value %>
+</p>
+<% end%>
+
+<p>
+  <%= link_to "Edit", edit_item_path(@item) %>
+  <%= link_to "Back to Items", items_path %>
+</p>
