@@ -1,0 +1,14 @@
+<%= form_for @item do |f| %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+
+  <%#= f.fields_for :parameters, OpenStruct.new(@item.parameters) do |builder| %>
+    <%# @item.item_type.fields.each do |field| %>
+      <%#= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <%# end %>
+  <%# end %>
+  <%= f.submit "Save" %>
+<% end %>
