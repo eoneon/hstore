@@ -49,6 +49,40 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: item_fields; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE item_fields (
+    id integer NOT NULL,
+    field_type character varying,
+    required boolean,
+    item_type_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    name character varying
+);
+
+
+--
+-- Name: item_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE item_fields_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: item_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE item_fields_id_seq OWNED BY item_fields.id;
+
+
+--
 -- Name: item_types; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -122,6 +156,13 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: item_fields id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields ALTER COLUMN id SET DEFAULT nextval('item_fields_id_seq'::regclass);
+
+
+--
 -- Name: item_types id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -133,6 +174,14 @@ ALTER TABLE ONLY item_types ALTER COLUMN id SET DEFAULT nextval('item_types_id_s
 --
 
 ALTER TABLE ONLY items ALTER COLUMN id SET DEFAULT nextval('items_id_seq'::regclass);
+
+
+--
+-- Name: item_fields item_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT item_fields_pkey PRIMARY KEY (id);
 
 
 --
@@ -149,6 +198,13 @@ ALTER TABLE ONLY item_types
 
 ALTER TABLE ONLY items
     ADD CONSTRAINT items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_item_fields_on_item_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_item_type_id ON item_fields USING btree (item_type_id);
 
 
 --
@@ -174,6 +230,14 @@ ALTER TABLE ONLY items
 
 
 --
+-- Name: item_fields fk_rails_a6e4d93288; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_a6e4d93288 FOREIGN KEY (item_type_id) REFERENCES item_types(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -184,4 +248,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170710182320');
 INSERT INTO schema_migrations (version) VALUES ('20170710233541');
 
 INSERT INTO schema_migrations (version) VALUES ('20170710233809');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711000609');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711004141');
 

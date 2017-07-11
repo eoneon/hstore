@@ -57,7 +57,7 @@ class ItemTypesController < ApplicationController
   #https://stackoverflow.com/questions/18436741/rails-4-strong-parameters-nested-objects
   #https://stackoverflow.com/questions/24584816/rails-4-deleting-nested-attributes-works-on-create-but-not-on-edit-update - edit
   def item_type_params
-    # params.require(:item_type).permit(:id, :name, { :fields_attributes => [:id, :field_type, :name, :required, :item_type_id, :_destroy] })
-    params.require(:item_type).permit(:name)
+    params.require(:item_type).permit(:id, :name, { :fields_attributes => [:id, :field_type, :name, :required, :item_type_id, :_destroy] })
+    #params.require(:item_type).permit(:name)
   end
 end

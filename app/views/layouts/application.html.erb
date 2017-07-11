@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hstore</title>
+  <title>Dynamic</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <div id="container">
+    <p><%= link_to "Back to Items", root_path %></p>
+    <p><%= link_to "Add new Item Type", new_item_type_path %></p>
+    <p><%= link_to "View Item Type list", item_types_path %></p>
 
-<%= yield %>
-
+    <%= yield %>
+  </div>
+</div>
 </body>
 </html>

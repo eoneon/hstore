@@ -8,7 +8,7 @@ class ItemsController < ApplicationController
   end
 
   def new
-    @item = Item.new
+    @item = Item.new(item_type_id: params[:item_type_id])
   end
 
   def create
@@ -61,7 +61,7 @@ class ItemsController < ApplicationController
     #params.require(:item).permit(:sku, :item_type_id, :properties => {:name, :leg_count})
     #https://stackoverflow.com/questions/19172893/rails-hashes-with-unknown-keys-and-strong-parameters
     properties = params[:item].delete(:properties)
-    params.require(:item).permit(:name).tap do |whitelisted|
+    params.require(:item).permit(:name, :item_type_id).tap do |whitelisted|
        whitelisted[:properties] = properties
      end
   end

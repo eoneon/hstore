@@ -1,3 +1,4 @@
 class ItemType < ActiveRecord::Base
-  belongs_to :item_type
+  has_many :fields, class_name: "ItemField"
+  accepts_nested_attributes_for :fields, allow_destroy: true
 end
