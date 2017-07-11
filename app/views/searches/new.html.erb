@@ -1,0 +1,14 @@
+<h1>Advanced Search</h1>
+
+<%= form_for @search do |f| %>
+  <div class="field">
+    <%= f.label :keywords %><br />
+    <%= f.text_field :keywords %>
+  </div>
+
+  <div class="field">
+    <%= f.label :item_type_id %><br />
+    <%= f.collection_select :item_type_id, ItemType.order(:name), :id, :name, include_blank: true %>
+  </div>
+  <div class="actions"><%= f.submit "Search" %></div>
+<% end %>

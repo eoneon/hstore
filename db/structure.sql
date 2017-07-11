@@ -156,6 +156,38 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: searches; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE searches (
+    id integer NOT NULL,
+    keywords character varying,
+    item_type_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: searches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE searches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: searches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE searches_id_seq OWNED BY searches.id;
+
+
+--
 -- Name: item_fields id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -174,6 +206,13 @@ ALTER TABLE ONLY item_types ALTER COLUMN id SET DEFAULT nextval('item_types_id_s
 --
 
 ALTER TABLE ONLY items ALTER COLUMN id SET DEFAULT nextval('items_id_seq'::regclass);
+
+
+--
+-- Name: searches id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY searches ALTER COLUMN id SET DEFAULT nextval('searches_id_seq'::regclass);
 
 
 --
@@ -201,6 +240,14 @@ ALTER TABLE ONLY items
 
 
 --
+-- Name: searches searches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY searches
+    ADD CONSTRAINT searches_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: index_item_fields_on_item_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -212,6 +259,13 @@ CREATE INDEX index_item_fields_on_item_type_id ON item_fields USING btree (item_
 --
 
 CREATE INDEX index_items_on_item_type_id ON items USING btree (item_type_id);
+
+
+--
+-- Name: index_searches_on_item_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searches_on_item_type_id ON searches USING btree (item_type_id);
 
 
 --
@@ -227,6 +281,14 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 ALTER TABLE ONLY items
     ADD CONSTRAINT fk_rails_6bed0f90a5 FOREIGN KEY (item_type_id) REFERENCES item_types(id);
+
+
+--
+-- Name: searches fk_rails_8008e11d5a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY searches
+    ADD CONSTRAINT fk_rails_8008e11d5a FOREIGN KEY (item_type_id) REFERENCES item_types(id);
 
 
 --
@@ -252,4 +314,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170710233809');
 INSERT INTO schema_migrations (version) VALUES ('20170711000609');
 
 INSERT INTO schema_migrations (version) VALUES ('20170711004141');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711205828');
 
