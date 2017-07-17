@@ -164,7 +164,8 @@ CREATE TABLE searches (
     keywords character varying,
     item_type_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    properties character varying
 );
 
 
@@ -316,4 +317,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170711000609');
 INSERT INTO schema_migrations (version) VALUES ('20170711004141');
 
 INSERT INTO schema_migrations (version) VALUES ('20170711205828');
+
+INSERT INTO schema_migrations (version) VALUES ('20170717181834');
 

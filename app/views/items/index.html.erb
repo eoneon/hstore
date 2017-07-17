@@ -13,6 +13,11 @@
 
 <p><%= link_to "Advanced Search", new_search_path %></p>
 
+<%= form_tag new_search_path, method: :get do %>
+  <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
+  <%= submit_tag "New Search", name: nil %>
+<% end %>
+
 <%= form_tag new_item_path, method: :get do %>
   <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
   <%= submit_tag "New Item", name: nil %>

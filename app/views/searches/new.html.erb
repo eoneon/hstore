@@ -1,9 +1,10 @@
 <h1>Advanced Search</h1>
 
 <%= form_for @search do |f| %>
+  <%= f.hidden_field :item_type_id %>
   <div class="field">
-    <%= f.label :keywords %><br />
-    <%= f.text_field :keywords %>
+    <%#= f.label :keywords %><br />
+    <%#= f.text_field :keywords %>
   </div>
 
   <div class="field">
@@ -11,10 +12,10 @@
     <%= f.collection_select :item_type_id, ItemType.order(:name), :id, :name, include_blank: true %>
   </div>
 
-  <%#= f.fields_for :properties, OpenStruct.new(@item.properties) do |builder| %>
-    <%# @item.item_type.fields.each do |field| %>
-      <%#= render "items/fields/#{field.field_type}", field: field, f: builder %>
-    <%# end %>
-  <%# end %>
+  <%= f.fields_for :properties, OpenStruct.new(@search.properties) do |builder| %>
+    <% @search.item_type.fields.each do |field| %>
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+  <% end %>
   <div class="actions"><%= f.submit "Search" %></div>
 <% end %>
