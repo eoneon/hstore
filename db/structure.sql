@@ -49,6 +49,38 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: artists; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE artists (
+    id integer NOT NULL,
+    first_name character varying,
+    last_name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: artists_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE artists_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: artists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE artists_id_seq OWNED BY artists.id;
+
+
+--
 -- Name: item_fields; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -123,7 +155,8 @@ CREATE TABLE items (
     properties hstore,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    item_type_id integer
+    item_type_id integer,
+    artist_id integer
 );
 
 
@@ -189,6 +222,13 @@ ALTER SEQUENCE searches_id_seq OWNED BY searches.id;
 
 
 --
+-- Name: artists id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY artists ALTER COLUMN id SET DEFAULT nextval('artists_id_seq'::regclass);
+
+
+--
 -- Name: item_fields id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -214,6 +254,14 @@ ALTER TABLE ONLY items ALTER COLUMN id SET DEFAULT nextval('items_id_seq'::regcl
 --
 
 ALTER TABLE ONLY searches ALTER COLUMN id SET DEFAULT nextval('searches_id_seq'::regclass);
+
+
+--
+-- Name: artists artists_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY artists
+    ADD CONSTRAINT artists_pkey PRIMARY KEY (id);
 
 
 --
@@ -256,6 +304,13 @@ CREATE INDEX index_item_fields_on_item_type_id ON item_fields USING btree (item_
 
 
 --
+-- Name: index_items_on_artist_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_artist_id ON items USING btree (artist_id);
+
+
+--
 -- Name: index_items_on_item_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -274,6 +329,14 @@ CREATE INDEX index_searches_on_item_type_id ON searches USING btree (item_type_i
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: items fk_rails_2190cda116; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_2190cda116 FOREIGN KEY (artist_id) REFERENCES artists(id);
 
 
 --
@@ -319,4 +382,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170711004141');
 INSERT INTO schema_migrations (version) VALUES ('20170711205828');
 
 INSERT INTO schema_migrations (version) VALUES ('20170717181834');
+
+INSERT INTO schema_migrations (version) VALUES ('20170724202957');
+
+INSERT INTO schema_migrations (version) VALUES ('20170724203100');
 
