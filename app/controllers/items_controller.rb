@@ -56,12 +56,12 @@ class ItemsController < ApplicationController
 
   def item_params
     #https://stackoverflow.com/questions/19172893/rails-hashes-with-unknown-keys-and-strong-parameters
-    # properties = params[:item].delete(:properties)
-    # params.require(:item).permit(:name, :item_type_id, :artist_id).tap do |whitelisted|
-    #    whitelisted[:properties] = properties
-    #  end
+    properties = params[:item].delete(:properties)
     params.require(:item).permit(:name, :item_type_id, :artist_id).tap do |whitelisted|
-      whitelisted[:properties] = params[:item][:properties]
-    end
+       whitelisted[:properties] = properties
+     end
+    # params.require(:item).permit(:name, :item_type_id, :artist_id).tap do |whitelisted|
+    #   whitelisted[:properties] = params[:item][:properties]
+    # end
   end
 end
