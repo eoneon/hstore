@@ -1,0 +1,13 @@
+<h1>Artists#index</h1>
+
+<% if @artists.empty? %>
+  <p><strong>No Items</strong></p>
+<% end %>
+
+
+<% @artists.each do |artist| %>
+<div class="item">
+  <h2><%= artist.first_name %> <%= artist.last_name %></h2>
+  <%= link_to 'Edit', edit_artist_path(artist) %>
+  <% end %>
+</div>
