@@ -9,6 +9,7 @@
 <div class="item">
   <h2><%= item.name %></h2><br>
   <%= item.item_type.name %>
+  <%= item.artist.try(:full_name) %>
   <%= item.properties.values %>
   <%# end %>
   <%= link_to 'Edit', edit_item_path(item) %>

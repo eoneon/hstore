@@ -7,7 +7,7 @@
 
 <% @artists.each do |artist| %>
 <div class="item">
-  <h2><%= artist.first_name %> <%= artist.last_name %></h2>
+  <h2><%= artist.full_name %></h2>
   <%= link_to 'Edit', edit_artist_path(artist) %>
   <% end %>
 </div>
