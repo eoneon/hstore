@@ -44,11 +44,11 @@ class ItemsController < ApplicationController
     @item = Item.find(params[:id])
 
     if @item.destroy
-      flash[:notice] = "\"#{@item.sku}\" was deleted successfully."
+      flash[:notice] = "\"#{@item.name}\" was deleted successfully."
       redirect_to action: :index
     else
       flash.now[:alert] = "There was an error deleting the item."
-      render :show
+      render :index
     end
   end
 

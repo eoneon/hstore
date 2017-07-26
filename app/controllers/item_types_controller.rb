@@ -41,10 +41,10 @@ class ItemTypesController < ApplicationController
   end
 
   def destroy
-    @item_type.find(params[:id])
+    @item_type = ItemType.find(params[:id])
 
     if @item_type.destroy
-      flash[:notice] = "\"#{@item_type.sku}\" was deleted successfully."
+      flash[:notice] = "\"#{@item_type.name}\" was deleted successfully."
       redirect_to action: :index
     else
       flash.now[:alert] = "There was an error deleting the item_type."
