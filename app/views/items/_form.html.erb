@@ -3,8 +3,8 @@
   <%= f.hidden_field :item_type_id %>
 
   <div class="field">
-    <%#= f.label :artist_name %><br>
-    <%#= f.collection_select :artist_id, Artist.all, :id, :last_name_first, include_blank: true %>
+    <%= f.label :artist_name %><br>
+    <%= f.collection_select :artist_id, Artist.all, :id, :last_name_first, include_blank: true %>
   </div>
 
   <div class="field">
