@@ -14,6 +14,7 @@
 
   <%= f.fields_for :properties, OpenStruct.new(@item.properties) do |builder| %>
     <% @item.item_type.fields.each do |field| %>
+    
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
     <% end %>
   <% end %>

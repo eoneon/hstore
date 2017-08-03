@@ -8,4 +8,14 @@ module ApplicationHelper
     end
     link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
   end
+
+  def property_list(key)
+    items = Item.where("properties ? :key", key: key).distinct
+    properties = items.pluck(:properties)
+    values = []
+    properties.each do |property|
+      values << property[key]
+    end
+    return values
+  end
 end
