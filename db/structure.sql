@@ -91,7 +91,8 @@ CREATE TABLE item_fields (
     item_type_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    name character varying
+    name character varying,
+    mounting_type_id integer
 );
 
 
@@ -156,7 +157,8 @@ CREATE TABLE items (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     item_type_id integer,
-    artist_id integer
+    artist_id integer,
+    mounting_type_id integer
 );
 
 
@@ -177,6 +179,37 @@ CREATE SEQUENCE items_id_seq
 --
 
 ALTER SEQUENCE items_id_seq OWNED BY items.id;
+
+
+--
+-- Name: mounting_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE mounting_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: mounting_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE mounting_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mounting_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE mounting_types_id_seq OWNED BY mounting_types.id;
 
 
 --
@@ -250,6 +283,13 @@ ALTER TABLE ONLY items ALTER COLUMN id SET DEFAULT nextval('items_id_seq'::regcl
 
 
 --
+-- Name: mounting_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY mounting_types ALTER COLUMN id SET DEFAULT nextval('mounting_types_id_seq'::regclass);
+
+
+--
 -- Name: searches id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -289,6 +329,14 @@ ALTER TABLE ONLY items
 
 
 --
+-- Name: mounting_types mounting_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY mounting_types
+    ADD CONSTRAINT mounting_types_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: searches searches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -304,6 +352,13 @@ CREATE INDEX index_item_fields_on_item_type_id ON item_fields USING btree (item_
 
 
 --
+-- Name: index_item_fields_on_mounting_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_mounting_type_id ON item_fields USING btree (mounting_type_id);
+
+
+--
 -- Name: index_items_on_artist_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -315,6 +370,13 @@ CREATE INDEX index_items_on_artist_id ON items USING btree (artist_id);
 --
 
 CREATE INDEX index_items_on_item_type_id ON items USING btree (item_type_id);
+
+
+--
+-- Name: index_items_on_mounting_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_mounting_type_id ON items USING btree (mounting_type_id);
 
 
 --
@@ -364,6 +426,22 @@ ALTER TABLE ONLY item_fields
 
 
 --
+-- Name: items fk_rails_de821dde30; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_de821dde30 FOREIGN KEY (mounting_type_id) REFERENCES mounting_types(id);
+
+
+--
+-- Name: item_fields fk_rails_eeff7f6bad; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_eeff7f6bad FOREIGN KEY (mounting_type_id) REFERENCES mounting_types(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -386,4 +464,10 @@ INSERT INTO schema_migrations (version) VALUES ('20170717181834');
 INSERT INTO schema_migrations (version) VALUES ('20170724202957');
 
 INSERT INTO schema_migrations (version) VALUES ('20170724203100');
+
+INSERT INTO schema_migrations (version) VALUES ('20170806223623');
+
+INSERT INTO schema_migrations (version) VALUES ('20170806224223');
+
+INSERT INTO schema_migrations (version) VALUES ('20170806230231');
 

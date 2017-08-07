@@ -1,6 +1,7 @@
 <%= form_for @item do |f| %>
 
   <%= f.hidden_field :item_type_id %>
+  <%= f.hidden_field :mounting_type_id %>
 
   <div class="field">
     <%= f.label :artist_name %><br>
@@ -14,7 +15,11 @@
 
   <%= f.fields_for :properties, OpenStruct.new(@item.properties) do |builder| %>
     <% @item.item_type.fields.each do |field| %>
-    
+
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+    <% @item.mounting_type.fields.each do |field| %>
+
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
     <% end %>
   <% end %>

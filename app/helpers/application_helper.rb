@@ -18,4 +18,8 @@ module ApplicationHelper
     end
     return values
   end
+
+  def paint_types
+    ["oil", "acrylic", "water color", "mixed media", "unknown", "guache", "oil and acrylic"]
+  end
 end

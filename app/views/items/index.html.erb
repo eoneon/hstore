@@ -26,5 +26,6 @@
 
 <%= form_tag new_item_path, method: :get do %>
   <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
+  <%= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name) %>
   <%= submit_tag "New Item", name: nil %>
 <% end %>
