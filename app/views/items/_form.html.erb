@@ -2,6 +2,7 @@
 
   <%= f.hidden_field :item_type_id %>
   <%= f.hidden_field :mounting_type_id %>
+  <%= f.hidden_field :certificate_type_id %>
 
   <div class="field">
     <%= f.label :artist_name %><br>
@@ -23,5 +24,7 @@
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
     <% end %>
   <% end %>
+
+  <%= @item.certificate_type.name %> </br>
   <%= f.submit "Save" %>
 <% end %>

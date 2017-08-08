@@ -81,6 +81,37 @@ ALTER SEQUENCE artists_id_seq OWNED BY artists.id;
 
 
 --
+-- Name: certificate_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE certificate_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: certificate_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE certificate_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: certificate_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE certificate_types_id_seq OWNED BY certificate_types.id;
+
+
+--
 -- Name: item_fields; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -92,7 +123,8 @@ CREATE TABLE item_fields (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     name character varying,
-    mounting_type_id integer
+    mounting_type_id integer,
+    certificate_type_id integer
 );
 
 
@@ -158,7 +190,8 @@ CREATE TABLE items (
     updated_at timestamp without time zone NOT NULL,
     item_type_id integer,
     artist_id integer,
-    mounting_type_id integer
+    mounting_type_id integer,
+    certificate_type_id integer
 );
 
 
@@ -262,6 +295,13 @@ ALTER TABLE ONLY artists ALTER COLUMN id SET DEFAULT nextval('artists_id_seq'::r
 
 
 --
+-- Name: certificate_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certificate_types ALTER COLUMN id SET DEFAULT nextval('certificate_types_id_seq'::regclass);
+
+
+--
 -- Name: item_fields id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -305,6 +345,14 @@ ALTER TABLE ONLY artists
 
 
 --
+-- Name: certificate_types certificate_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certificate_types
+    ADD CONSTRAINT certificate_types_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: item_fields item_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -345,6 +393,13 @@ ALTER TABLE ONLY searches
 
 
 --
+-- Name: index_item_fields_on_certificate_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_certificate_type_id ON item_fields USING btree (certificate_type_id);
+
+
+--
 -- Name: index_item_fields_on_item_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -363,6 +418,13 @@ CREATE INDEX index_item_fields_on_mounting_type_id ON item_fields USING btree (m
 --
 
 CREATE INDEX index_items_on_artist_id ON items USING btree (artist_id);
+
+
+--
+-- Name: index_items_on_certificate_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_certificate_type_id ON items USING btree (certificate_type_id);
 
 
 --
@@ -426,6 +488,22 @@ ALTER TABLE ONLY item_fields
 
 
 --
+-- Name: items fk_rails_aaaefcdef2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_aaaefcdef2 FOREIGN KEY (certificate_type_id) REFERENCES certificate_types(id);
+
+
+--
+-- Name: item_fields fk_rails_bc0fdfef92; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_bc0fdfef92 FOREIGN KEY (certificate_type_id) REFERENCES certificate_types(id);
+
+
+--
 -- Name: items fk_rails_de821dde30; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -470,4 +548,10 @@ INSERT INTO schema_migrations (version) VALUES ('20170806223623');
 INSERT INTO schema_migrations (version) VALUES ('20170806224223');
 
 INSERT INTO schema_migrations (version) VALUES ('20170806230231');
+
+INSERT INTO schema_migrations (version) VALUES ('20170808004355');
+
+INSERT INTO schema_migrations (version) VALUES ('20170808004542');
+
+INSERT INTO schema_migrations (version) VALUES ('20170808004809');
 

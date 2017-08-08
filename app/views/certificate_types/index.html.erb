@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Certificate Types</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @certificate_types.each do |certificate_type| %>
+      <tr>
+        <td><%= certificate_type.name %></td>
+        <td><%= link_to 'Show', certificate_type %></td>
+        <td><%= link_to 'Edit', edit_certificate_type_path(certificate_type) %></td>
+        <td><%= link_to 'Destroy', certificate_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Certificate type', new_certificate_type_path %>

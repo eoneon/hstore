@@ -8,13 +8,15 @@
 </head>
 <body>
   <div id="container">
-    <p><%= link_to "Back to Items", root_path %></p>
-    <p><%= link_to "Add new Item Type", new_item_type_path %></p>
-    <p><%= link_to "Add new Mounting Type", new_mounting_type_path %></p>
-    <p><%= link_to "Add new Artist", new_artist_path %></p>
-    <p><%= link_to "View Item Type list", item_types_path %></p>
-    <p><%= link_to "View Mounting Type list", mounting_types_path %></p>
-    <p><%= link_to "View Artist list", artists_path %></p>
+    <p><%= link_to "Return to Items index", root_path %></p>
+    <p><%= link_to "+ new Item Type", new_item_type_path %></p>
+    <p><%= link_to "+ new Mounting Type", new_mounting_type_path %></p>
+    <p><%= link_to "+ new Certificate Type", new_certificate_type_path %></p>
+    <p><%= link_to "+ new Artist", new_artist_path %></p>
+    <p><%= link_to "View Item Type index", item_types_path %></p>
+    <p><%= link_to "View Mounting Type index", mounting_types_path %></p>
+    <p><%= link_to "View Certificate Type index", certificate_types_path %></p>
+    <p><%= link_to "View Artist index", artists_path %></p>
 
     <%= yield %>
   </div>
