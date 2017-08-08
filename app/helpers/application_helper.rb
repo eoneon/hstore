@@ -19,7 +19,17 @@ module ApplicationHelper
     return values
   end
 
-  def paint_types
-    ["oil", "acrylic", "water color", "mixed media", "unknown", "guache", "oil and acrylic"]
+  def items_format(item, item_type_name, item_properties)
+    if item_type_name == "original painting"
+      painting_type = item_type_name.split
+      painting_type = painting_type.insert(1, item_properties["paint_type"]) #original oil painting
+      if item.mounting_type.name == "framed" || item.mounting_type == "unframed"
+        painting_type = painting_type.unshift(item.mounting_type.name) #framed original oil painting
+        painting_type << "on " + item_properties["substrate"] #framed original oil painting on canvas
+      elsif item.mounting_type.name == "gallery wrapped" || item.mounting_type == "stretched"
+        painting_type << "on " + item.mounting_type.name + " " + item_properties["substrate"] #original oil painting on stretched canvas
+      end
+    end
+    return painting_type.join(" ")
   end
 end
