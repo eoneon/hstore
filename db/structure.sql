@@ -124,7 +124,8 @@ CREATE TABLE item_fields (
     updated_at timestamp without time zone NOT NULL,
     name character varying,
     mounting_type_id integer,
-    certificate_type_id integer
+    certificate_type_id integer,
+    signature_type_id integer
 );
 
 
@@ -191,7 +192,8 @@ CREATE TABLE items (
     item_type_id integer,
     artist_id integer,
     mounting_type_id integer,
-    certificate_type_id integer
+    certificate_type_id integer,
+    signature_type_id integer
 );
 
 
@@ -288,6 +290,37 @@ ALTER SEQUENCE searches_id_seq OWNED BY searches.id;
 
 
 --
+-- Name: signature_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE signature_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: signature_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE signature_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: signature_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE signature_types_id_seq OWNED BY signature_types.id;
+
+
+--
 -- Name: artists id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -334,6 +367,13 @@ ALTER TABLE ONLY mounting_types ALTER COLUMN id SET DEFAULT nextval('mounting_ty
 --
 
 ALTER TABLE ONLY searches ALTER COLUMN id SET DEFAULT nextval('searches_id_seq'::regclass);
+
+
+--
+-- Name: signature_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY signature_types ALTER COLUMN id SET DEFAULT nextval('signature_types_id_seq'::regclass);
 
 
 --
@@ -393,6 +433,14 @@ ALTER TABLE ONLY searches
 
 
 --
+-- Name: signature_types signature_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY signature_types
+    ADD CONSTRAINT signature_types_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: index_item_fields_on_certificate_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -411,6 +459,13 @@ CREATE INDEX index_item_fields_on_item_type_id ON item_fields USING btree (item_
 --
 
 CREATE INDEX index_item_fields_on_mounting_type_id ON item_fields USING btree (mounting_type_id);
+
+
+--
+-- Name: index_item_fields_on_signature_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_signature_type_id ON item_fields USING btree (signature_type_id);
 
 
 --
@@ -439,6 +494,13 @@ CREATE INDEX index_items_on_item_type_id ON items USING btree (item_type_id);
 --
 
 CREATE INDEX index_items_on_mounting_type_id ON items USING btree (mounting_type_id);
+
+
+--
+-- Name: index_items_on_signature_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_signature_type_id ON items USING btree (signature_type_id);
 
 
 --
@@ -477,6 +539,14 @@ ALTER TABLE ONLY items
 
 ALTER TABLE ONLY searches
     ADD CONSTRAINT fk_rails_8008e11d5a FOREIGN KEY (item_type_id) REFERENCES item_types(id);
+
+
+--
+-- Name: item_fields fk_rails_9cf276619f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_9cf276619f FOREIGN KEY (signature_type_id) REFERENCES signature_types(id);
 
 
 --
@@ -520,6 +590,14 @@ ALTER TABLE ONLY item_fields
 
 
 --
+-- Name: items fk_rails_f33fab0fcc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_f33fab0fcc FOREIGN KEY (signature_type_id) REFERENCES signature_types(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -554,4 +632,10 @@ INSERT INTO schema_migrations (version) VALUES ('20170808004355');
 INSERT INTO schema_migrations (version) VALUES ('20170808004542');
 
 INSERT INTO schema_migrations (version) VALUES ('20170808004809');
+
+INSERT INTO schema_migrations (version) VALUES ('20170808234944');
+
+INSERT INTO schema_migrations (version) VALUES ('20170808235013');
+
+INSERT INTO schema_migrations (version) VALUES ('20170808235312');
 

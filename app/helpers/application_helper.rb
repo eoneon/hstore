@@ -25,7 +25,8 @@ module ApplicationHelper
       painting_type = painting_type.insert(1, item_properties["paint_type"]) #original oil painting
       if item.mounting_type.name == "framed" || item.mounting_type == "unframed"
         painting_type = painting_type.unshift(item.mounting_type.name) #framed original oil painting
-        painting_type << "on " + item_properties["substrate"] #framed original oil painting on canvas
+        painting_type << "on " + item_properties["substrate"] + "," #framed original oil painting on canvas
+        painting_type << item.signature_type.name
       elsif item.mounting_type.name == "gallery wrapped" || item.mounting_type == "stretched"
         painting_type << "on " + item.mounting_type.name + " " + item_properties["substrate"] #original oil painting on stretched canvas
       end
