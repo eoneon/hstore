@@ -1,9 +1,9 @@
 <div class="field">
   <%= f.label field.name %><br/>
-  <% if field.mounting_type_id? %>
-    <%= f.text_field field.name %>
-  <% else %>
-    <%= f.select field.name, options_for_select(property_list(field.name)) %>
-  <% end %>
+  <%# if field.mounting_type_id? %>
+    <%#= f.text_field field.name %>
+  <%# else %>
+    <%#= f.select field.name, options_for_select(property_list(field.name)) %>
+  <%# end %>
   <%= f.text_field field.name %>
 </div>

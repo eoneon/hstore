@@ -31,9 +31,9 @@ module ApplicationHelper
         painting_type << "on " + item.mounting_type.name + " " + item_properties["substrate"] #original oil painting on stretched canvas
       end
 
-      if item.certificate_type.name?
-        painting_type << "with " + item.certificate_type.name
-      end
+      # if item.certificate_type.name?
+      #   painting_type << "with " + item.certificate_type.name
+      # end
     end
     return painting_type.join(" ")
   end
