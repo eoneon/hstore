@@ -5,6 +5,9 @@
   <%= f.hidden_field :certificate_type_id %>
   <%= f.hidden_field :signature_type_id %>
 
+  <%= hidden_field_tag :redirect_location %>
+  <!-- <input style="display:none;" id="redirect_location", name="redirect_location", value="" /> -->
+
   <div class="field">
     <%= f.label :artist_name %><br>
     <%= f.collection_select :artist_id, Artist.all, :id, :last_name_first, include_blank: true %>
@@ -12,23 +15,18 @@
 
   <div class="field">
     <%= f.label :name %><br>
-    <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: ("$('#item_form').submit()") %>
+    <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: ("$('#item_form').submit()") %>
+    <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'submitform()' %>
     <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'getfields()', id: 'signatureSelect' %>
   </div>
 
   <script type="text/javascript">
-    function getfields() {
-      var sig_id = $('#signatureSelect').val();
-      alert(sig_id);
-      /*$.ajax({
-        url: "/update_signature",
-        type: "POST",
-        data: { signature_type_id: sig_id }
-      })*/
+    function submitform(){
+      $('#redirect_location').val(":back");
+      $('#item_form').submit();
     }
   </script>
 
-  <!--  -->
 
   <div class="field">
     <%= f.label :name %><br>

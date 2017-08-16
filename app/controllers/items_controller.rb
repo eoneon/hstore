@@ -16,7 +16,11 @@ class ItemsController < ApplicationController
 
     if @item.save
       flash[:notice] = "Item was saved successfully."
-      redirect_to @item
+      if params[:redirect_location] == ":back"
+        render :edit
+      else
+        redirect_to @item
+      end
     else
       flash.now[:alert] = "Error creating item. Please try again."
       render :new
@@ -33,18 +37,15 @@ class ItemsController < ApplicationController
 
     if @item.save
       flash[:notice] = "Item was updated successfully."
-
-      redirect_to @item
+      if params[:redirect_location] == ":back"
+        render :edit
+      else
+        redirect_to @item
+      end
     else
       flash.now[:alert] = "Error updated item. Please try again."
       render :edit
-
     end
-
-    # respond_to do |format|
-    #   format.html
-    #   format.js
-    # end
   end
 
   def destroy

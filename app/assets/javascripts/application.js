@@ -14,5 +14,10 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
-$(document).ready(function(){
-});
+// $(document).ready(function(){
+//   function submitform(){
+//     var redirect = ':back';
+//     $('#redirect_location').val(":back");
+//     $('#item_form').submit();
+//   };
+// });
