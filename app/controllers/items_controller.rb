@@ -16,7 +16,7 @@ class ItemsController < ApplicationController
 
     if @item.save
       flash[:notice] = "Item was saved successfully."
-      if params[:redirect_location] == ":back"
+      if params[:redirect_location] == ':edit'
         render :edit
       else
         redirect_to @item
@@ -37,7 +37,7 @@ class ItemsController < ApplicationController
 
     if @item.save
       flash[:notice] = "Item was updated successfully."
-      if params[:redirect_location] == ":back"
+      if params[:redirect_location] == ':edit'
         render :edit
       else
         redirect_to @item

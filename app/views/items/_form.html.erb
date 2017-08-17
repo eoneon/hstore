@@ -13,16 +13,16 @@
     <%= f.collection_select :artist_id, Artist.all, :id, :last_name_first, include_blank: true %>
   </div>
 
-  <div class="field">
-    <%= f.label :name %><br>
+  <!-- <div class="field">
+    <%#= f.label :name %><br>
     <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: ("$('#item_form').submit()") %>
-    <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'submitform()' %>
+    <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'submitform()' %>
     <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'getfields()', id: 'signatureSelect' %>
-  </div>
+  </div> -->
 
   <script type="text/javascript">
     function submitform(){
-      $('#redirect_location').val(":back");
+      $('#redirect_location').val(':edit');
       $('#item_form').submit();
     }
   </script>
@@ -39,6 +39,12 @@
     <% end %>
 
     <% @item.mounting_type.fields.each do |field| %>
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+
+    <%= f.label :select_signature %><br>
+    <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'submitform()' %>
+    <% @item.signature_type.fields.each do |field| %>
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
     <% end %>
 
