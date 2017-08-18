@@ -193,7 +193,9 @@ CREATE TABLE items (
     artist_id integer,
     mounting_type_id integer,
     certificate_type_id integer,
-    signature_type_id integer
+    signature_type_id integer,
+    image_width integer,
+    image_height integer
 );
 
 
@@ -638,4 +640,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170808234944');
 INSERT INTO schema_migrations (version) VALUES ('20170808235013');
 
 INSERT INTO schema_migrations (version) VALUES ('20170808235312');
+
+INSERT INTO schema_migrations (version) VALUES ('20170818031334');
 
