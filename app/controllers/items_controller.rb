@@ -8,7 +8,7 @@ class ItemsController < ApplicationController
   end
 
   def new
-    @item = Item.new(item_type_id: params[:item_type_id], mounting_type_id: params[:mounting_type_id], certificate_type_id: params[:certificate_type_id], signature_type_id: params[:signature_type_id])
+    @item = Item.new(item_type_id: params[:item_type_id], mounting_type_id: params[:mounting_type_id], certificate_type_id: params[:certificate_type_id], signature_type_id: params[:signature_type_id], substrate_type_id: params[:substrate_type_id])
   end
 
   def create
@@ -65,7 +65,7 @@ class ItemsController < ApplicationController
   def item_params
     #https://stackoverflow.com/questions/19172893/rails-hashes-with-unknown-keys-and-strong-parameters
     properties = params[:item].delete(:properties)
-    params.require(:item).permit(:name, :image_width, :image_height, :item_type_id, :mounting_type_id, :certificate_type_id, :signature_type_id, :artist_id).tap do |whitelisted|
+    params.require(:item).permit(:name, :image_width, :image_height, :item_type_id, :mounting_type_id, :certificate_type_id, :signature_type_id, :substrate_type_id, :artist_id).tap do |whitelisted|
        whitelisted[:properties] = properties
      end
     # params.require(:item).permit(:name, :item_type_id, :artist_id).tap do |whitelisted|

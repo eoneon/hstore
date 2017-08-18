@@ -125,7 +125,8 @@ CREATE TABLE item_fields (
     name character varying,
     mounting_type_id integer,
     certificate_type_id integer,
-    signature_type_id integer
+    signature_type_id integer,
+    substrate_type_id integer
 );
 
 
@@ -195,7 +196,8 @@ CREATE TABLE items (
     certificate_type_id integer,
     signature_type_id integer,
     image_width integer,
-    image_height integer
+    image_height integer,
+    substrate_type_id integer
 );
 
 
@@ -323,6 +325,37 @@ ALTER SEQUENCE signature_types_id_seq OWNED BY signature_types.id;
 
 
 --
+-- Name: substrate_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE substrate_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: substrate_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE substrate_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: substrate_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE substrate_types_id_seq OWNED BY substrate_types.id;
+
+
+--
 -- Name: artists id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -376,6 +409,13 @@ ALTER TABLE ONLY searches ALTER COLUMN id SET DEFAULT nextval('searches_id_seq':
 --
 
 ALTER TABLE ONLY signature_types ALTER COLUMN id SET DEFAULT nextval('signature_types_id_seq'::regclass);
+
+
+--
+-- Name: substrate_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY substrate_types ALTER COLUMN id SET DEFAULT nextval('substrate_types_id_seq'::regclass);
 
 
 --
@@ -443,6 +483,14 @@ ALTER TABLE ONLY signature_types
 
 
 --
+-- Name: substrate_types substrate_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY substrate_types
+    ADD CONSTRAINT substrate_types_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: index_item_fields_on_certificate_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -468,6 +516,13 @@ CREATE INDEX index_item_fields_on_mounting_type_id ON item_fields USING btree (m
 --
 
 CREATE INDEX index_item_fields_on_signature_type_id ON item_fields USING btree (signature_type_id);
+
+
+--
+-- Name: index_item_fields_on_substrate_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_substrate_type_id ON item_fields USING btree (substrate_type_id);
 
 
 --
@@ -506,6 +561,13 @@ CREATE INDEX index_items_on_signature_type_id ON items USING btree (signature_ty
 
 
 --
+-- Name: index_items_on_substrate_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_substrate_type_id ON items USING btree (substrate_type_id);
+
+
+--
 -- Name: index_searches_on_item_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -520,11 +582,27 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: items fk_rails_1507fef2dd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_1507fef2dd FOREIGN KEY (substrate_type_id) REFERENCES substrate_types(id);
+
+
+--
 -- Name: items fk_rails_2190cda116; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY items
     ADD CONSTRAINT fk_rails_2190cda116 FOREIGN KEY (artist_id) REFERENCES artists(id);
+
+
+--
+-- Name: item_fields fk_rails_58724ce616; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_58724ce616 FOREIGN KEY (substrate_type_id) REFERENCES substrate_types(id);
 
 
 --
@@ -642,4 +720,10 @@ INSERT INTO schema_migrations (version) VALUES ('20170808235013');
 INSERT INTO schema_migrations (version) VALUES ('20170808235312');
 
 INSERT INTO schema_migrations (version) VALUES ('20170818031334');
+
+INSERT INTO schema_migrations (version) VALUES ('20170818145907');
+
+INSERT INTO schema_migrations (version) VALUES ('20170818150111');
+
+INSERT INTO schema_migrations (version) VALUES ('20170818150315');
 

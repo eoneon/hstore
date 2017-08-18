@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :mounting_types
   resources :certificate_types
   resources :signature_types
+  resources :substrate_types
   resources :items
   resources :artists
   resources :searches
