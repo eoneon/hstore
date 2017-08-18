@@ -9,7 +9,7 @@
 <div class="item">
   <h2><%= item.name %></h2><br>
   <%#= item.item_type.name %>
-  <%#= items_format(item, item.item_type.name, item.properties) %>
+  <%= items_format(item, item.item_type.name, item.properties) %>
   <%= item.artist.try(:full_name) %>
   <%#= item.properties.try(:values) %>
   <%= link_to 'Edit', edit_item_path(item) %>

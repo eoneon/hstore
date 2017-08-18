@@ -78,22 +78,28 @@ module ApplicationHelper
   #   return values
   # end
 
-  # def items_format(item, item_type_name, item_properties)
-  #   if item_type_name == "original painting"
-  #     painting_type = item_type_name.split
-  #     painting_type = painting_type.insert(1, item_properties["paint_type"]) #original oil painting
-  #     if item.mounting_type.name == "framed" || item.mounting_type == "unframed"
-  #       painting_type = painting_type.unshift(item.mounting_type.name) #framed original oil painting
-  #       painting_type << "on " + item_properties["substrate"] + "," #framed original oil painting on canvas
-  #       painting_type << item.signature_type.name
-  #     elsif item.mounting_type.name == "gallery wrapped" || item.mounting_type == "stretched"
-  #       painting_type << "on " + item.mounting_type.name + " " + item_properties["substrate"] #original oil painting on stretched canvas
-  #     end
-  #
-  #     # if item.certificate_type.name?
-  #     #   painting_type << "with " + item.certificate_type.name
-  #     # end
-  #   end
-  #   return painting_type.join(" ")
-  # end
+  def items_format(item, item_type_name, item_properties)
+    if item_type_name == "original painting"
+
+      #mounting = 
+      original = item_type_name.partition(" ").first #original
+      painting_type = item_properties["paint_type"] #oil painting
+      original_painting = original + " " + painting_type
+      #painting_type = item_type_name.split
+      #painting_type = painting_type[0]
+      #painting_type << painting_type.insert(1, item_properties["paint_type"]) #original oil painting
+      #if item.mounting_type.name == "framed" || item.mounting_type == "unframed"
+      #   painting_type = painting_type.unshift(item.mounting_type.name) #framed original oil painting
+      #   painting_type << "on " + item_properties["substrate"] + "," #framed original oil painting on canvas
+      #   painting_type << item.signature_type.name
+      # elsif item.mounting_type.name == "gallery wrapped" || item.mounting_type == "stretched"
+      #   painting_type << "on " + item.mounting_type.name + " " + item_properties["substrate"] #original oil painting on stretched canvas
+      # end
+
+      # if item.certificate_type.name?
+      #   painting_type << "with " + item.certificate_type.name
+      # end
+    end
+    return original_painting #painting_type.join(" ")
+  end
 end
