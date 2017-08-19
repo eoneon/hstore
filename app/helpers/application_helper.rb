@@ -55,7 +55,7 @@ module ApplicationHelper
 
   #authentication_type
   def authentication_type
-    ["certificate of authenticiy", "letter of authenticiy", "certificate of authenticiy from Peter Max Studios", "none"] #PSA/BA, presented with...
+    ["certificate of authenticty", "letter of authenticty", "certificate of authenticty from Peter Max Studios", "none"] #PSA/BA, presented with...
   end
 
   #signature_type
