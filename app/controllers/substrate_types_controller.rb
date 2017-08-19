@@ -1,6 +1,6 @@
 class SubstrateTypesController < ApplicationController
   def index
-    @substrate_type = SubstrateType.all
+    @substrate_types = SubstrateType.all
   end
 
   def show

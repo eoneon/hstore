@@ -9,7 +9,8 @@
 <div class="item">
   <h2><%= item.name %></h2><br>
   <%#= item.item_type.name %>
-  <%= items_format(item, item.item_type.name, item.properties) %>
+  <%#= items_format(item, item.item_type.name, item.mounting_type.name, item.substrate_type.name, item.properties) %>
+  <%= items_format(item) %>
   <%= item.artist.try(:full_name) %>
   <%#= item.properties.try(:values) %>
   <%= link_to 'Edit', edit_item_path(item) %>
@@ -29,6 +30,6 @@
   <%= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name) %>
   <%= select_tag :substrate_type_id, options_from_collection_for_select(SubstrateType.all, :id, :name) %>
   <%= select_tag :signature_type_id, options_from_collection_for_select(SignatureType.all, :id, :name) %>
-  <%#= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name) %>
+  <%= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name) %>
   <%= submit_tag "New Item", name: nil %>
 <% end %>
