@@ -1,6 +1,6 @@
 <div class="field">
   <%= f.label field.name %><br/>
-  <% if field.mounting_type_id? || field.signature_type_id? || field.name == "issuer" %>
+  <% if field.mounting_type_id? || field.signature_type_id? || field.name == "issuer" || field.name == "numbering" || field.name == "edition_size" %>
     <%= f.text_field field.name %>
   <% else %>
     <%= f.select field.name, options_for_select(value_list(field.name)) %>

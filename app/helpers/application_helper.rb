@@ -10,9 +10,10 @@ module ApplicationHelper
   end
 
   #ItemType values
-  def item_type
-    ["original painting", "one-of-a-kind", "original sketch"]
-  end
+  # def item_type
+  #   ["original painting", "one-of-a-kind", "original sketch"]
+  #   ["limited edition", "print", "poster"]
+  # end
 
   #substrate_type values*
   def substrate_type
@@ -53,6 +54,23 @@ module ApplicationHelper
     ["wood", "wood panel", "metal", "metal panel", "resin", "board"]
   end
 
+  #limited editions
+  def limited_type
+    ["limited edition", "sold out limited edition", "nfs edition"]
+  end
+
+  def ink_type
+    ["lithograph", "serigraph", "giclee", "etching", "sericel"]
+  end
+
+  def numbering_type
+    ["standard", "AP", "PP", "HC"]
+  end
+
+  def extras_type
+    ["hand embellished", "remarque", "golden leaf", "silver leaf"]
+  end
+
   #authentication_type
   def authentication_type
     ["certificate of authenticty", "letter of authenticty", "certificate of authenticty from Peter Max Studios", "none"] #PSA/BA, presented with...
@@ -79,15 +97,22 @@ module ApplicationHelper
   # end
 
   def items_format(item)
-    if item.item_type.name == "original painting"
-      artist = "#{item.artist.full_name} -" if item.artist
-      item_type = item.item_type.name.split(" ").first #original
-      paint_type = item.properties["paint_type"] #oil painting
-      substrate_type = item.properties["#{item.substrate_type.name}_type"] #equivalent of prev step
-      mounting_type = item.mounting_type.name.split(" ").first if substrate_type.split(" ").first != ("gallery" || "stretched") #get mounting_type_name, conditionally prepend it to  return value if substrate_type not gallery or stretched
-      signature_type = "hand signed by the artist" if item.signature_type.name == "signature"
-      authentication_type = "with #{item.properties["authentication_type"]}" if item.certificate_type.name == "authentication"
+    item_type = item.item_type.name
+    artist = "#{item.artist.full_name} -" if item.artist
+    substrate = item.properties["#{item.substrate_type.name}_type"] #equivalent of prev step
+    mounting = item.mounting_type.name.split(" ").first if substrate.split(" ").first != ("gallery" || "stretched") #get mounting_type_name, conditionally prepend it to  return value if substrate_type not gallery or stretched
+    signature = "hand signed by the artist" if item.signature_type.name == "signature"
+    authentication = "with #{item.properties["authentication_type"]}" if item.certificate_type.name == "authentication"
+    if item_type == "original painting"
+      _item = item.item_type.name.split(" ").first #original
+      media = item.properties["paint_type"] #oil painting
+    elsif item_type == "one-of-a-kind"
+      _item = item_type
+      media = item.properties["mixed_media_type"]
+    elsif item_type == "original sketch"
+      _item = item.item_type.name.split(" ").first
+      media = item.properties["sketch_media_type"]
     end
-    return "#{artist} #{mounting_type} #{item_type} #{paint_type} on #{substrate_type} #{signature_type} #{authentication_type}."
+    return "#{artist} #{mounting} #{_item} #{media} on #{substrate} #{signature} #{authentication}."
   end
 end
