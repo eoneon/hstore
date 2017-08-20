@@ -68,7 +68,7 @@ module ApplicationHelper
   end
 
   def extras_type
-    ["hand embellished", "remarque", "golden leaf", "silver leaf"]
+    ["hand_embellished", "remarque", "golden leaf", "silver leaf"]
   end
 
   #authentication_type
@@ -110,8 +110,14 @@ module ApplicationHelper
       _item = item_type
       media = item.properties["mixed_media_type"]
     elsif item_type == "original sketch"
-      _item = item.item_type.name.split(" ").first
+      _item = item.item_type.name
       media = item.properties["sketch_media_type"]
+    elsif item_type == "limited edition"
+      _item = item.properties["limited_type"]
+      media = item.properties["hand_embellished"] = true ? "hand embellished #{item.properties["ink_type"]}" : item.properties["ink_type"]
+      media = "#{media} with gold leaf" if item.properties["gold_leaf"] = true
+      media = "#{media} with silver leaf" if item.properties["silver_leaf"] = true
+      #media = remarque...
     end
     return "#{artist} #{mounting} #{_item} #{media} on #{substrate} #{signature} #{authentication}."
   end
