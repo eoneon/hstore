@@ -56,7 +56,7 @@ module ApplicationHelper
 
   #limited editions
   def limited_type
-    ["limited edition", "sold out limited edition", "nfs edition"]
+    ["limited edition", "sold out limited edition", "(nfs) limited edition"]
   end
 
   def ink_type
