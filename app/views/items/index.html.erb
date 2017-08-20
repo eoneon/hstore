@@ -13,6 +13,7 @@
   <%= items_format(item) %>
   <%= item.artist.try(:full_name) %>
   <%#= item.properties.try(:values) %>
+  <%= link_to 'show', item_path(item) %>
   <%= link_to 'Edit', edit_item_path(item) %>
   <%= link_to 'Delete', item, method: :delete %>
 </div>

@@ -114,11 +114,14 @@ module ApplicationHelper
       media = item.properties["sketch_media_type"]
     elsif item_type == "limited edition"
       _item = item.properties["limited_type"]
-      media = item.properties["hand_embellished"] = true ? "hand embellished #{item.properties["ink_type"]}" : item.properties["ink_type"]
-      media = "#{media} with gold leaf" if item.properties["gold_leaf"] = true
-      media = "#{media} with silver leaf" if item.properties["silver_leaf"] = true
-      #media = remarque...
+      media = item.properties["hand_embellished"] == "1" ? "hand embellished #{item.properties["ink_type"]}" : item.properties["ink_type"]
+      media = item.properties["gold_leaf"] == "1" ? "#{media} with gold leaf" : media
+      media = item.properties["silver_leaf"] == "1" ? "#{media} with silver leaf" : media
+      remarq = "with hand drawn remarque" if item.properties["remarque"] == "1"
+      numbering = item.properties["numbering_type"] != "standard" ? "#{item.properties["numbering_type"]} numbered" : "numbered"
+      numbering = "#{numbering} #{item.properties["number"]}/#{item.properties["edition_size"]}" unless item.properties["number"].empty?
+      numbering = "#{numbering} from an edition of #{item.properties["edition_size"]}" if item.properties["number"].empty?
     end
-    return "#{artist} #{mounting} #{_item} #{media} on #{substrate} #{signature} #{authentication}."
+    return "#{artist} #{mounting} #{_item} #{media} on #{substrate} #{numbering} #{signature} #{remarq} #{authentication}."
   end
 end
