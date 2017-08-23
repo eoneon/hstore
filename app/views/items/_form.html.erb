@@ -27,6 +27,8 @@
     <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'submitform()' %>
     <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'getfields()', id: 'signatureSelect' %>
   </div> -->
+
+  <!--doesn't work -->
   <div class="field">
     <%#= f.fields_for :artist_items_attributes do |artist_items_fields| %>
       <%#= artist_items_fields.label :artist_id, "Select Artist" %>
@@ -34,18 +36,29 @@
     <%# end %>
   </div>
 
+  <!--works as checkbox -->
   <div class="field">
-    <%= Artist.find_each do |artist| %>
-      <%= check_box_tag "item[artist_ids][]", artist.id, @item.artist_ids.include?(artist.id) %>
-      <%= artist.full_name %><br>
+    <%#= Artist.find_each do |artist| %>
+      <%#= check_box_tag "item[artist_ids][]", artist.id, @item.artist_ids.include?(artist.id) %>
+      <%#= artist.full_name %><br>
       <%#= artist_items_fields.collection_select :artist_items, Artist.all, :id, :last_name_first, include_blank: true %>
-    <% end %>
+    <%# end %>
   </div>
 
+  <!--works as dropdown -->
   <div class="field">
-    <%= select_tag "item[artist_id]", options_for_select(Artist.all ) %>
+    <%# artists_array =  Artist.all.map { |artist| [artist.full_name, artist.id]} %>
+    <%#= f.select :artist_ids, options_for_select(artists_array) %>
     <%#= f.collection_select "item[artist_ids][]", Artist.all, :id, :last_name_first, include_blank: true %>
   </div>
+
+  <!--works as dropdown: most simplified version-->
+  <!--next: how do you access associated attributes?-->
+  <div class="field">
+    <%= f.collection_select( :artist_ids, Artist.all, :id, :full_name, include_blank: true) %>
+  </div>
+
+
 
   <script type="text/javascript">
     function submitform(){
