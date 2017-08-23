@@ -98,7 +98,7 @@ module ApplicationHelper
 
   def items_format(item)
     item_type = item.item_type.name
-    artist = "#{item.artist.full_name} -" if item.artist
+    #artist = "#{item.artist_items.artists.first.name} -" if item.artists
     substrate = item.properties["#{item.substrate_type.name}_type"] #equivalent of prev step
     mounting = item.mounting_type.name.split(" ").first if substrate.split(" ").first != ("gallery" || "stretched") #get mounting_type_name, conditionally prepend it to  return value if substrate_type not gallery or stretched
     signature = "hand signed by the artist" if item.signature_type.name == "signature"
@@ -122,6 +122,6 @@ module ApplicationHelper
       numbering = "#{numbering} #{item.properties["number"]}/#{item.properties["edition_size"]}" unless item.properties["number"].empty?
       numbering = "#{numbering} from an edition of #{item.properties["edition_size"]}" if item.properties["number"].empty?
     end
-    return "#{artist} #{mounting} #{_item} #{media} on #{substrate} #{numbering} #{signature} #{remarq} #{authentication}."
+    return "#{mounting} #{_item} #{media} on #{substrate} #{numbering} #{signature} #{remarq} #{authentication}." #{artist}
   end
 end

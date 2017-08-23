@@ -4,6 +4,10 @@ class Item < ActiveRecord::Base
   belongs_to :certificate_type
   belongs_to :signature_type
   belongs_to :substrate_type
-  belongs_to :artist
+
+  has_many :artist_items
+  has_many :artists, through: :artist_items
+  accepts_nested_attributes_for :artist_items
+
   delegate :first_name, :last_name, :to => :artist
 end

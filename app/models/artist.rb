@@ -1,5 +1,6 @@
 class Artist < ActiveRecord::Base
-  has_many :items
+  has_many :artist_items
+  has_many :items, through: :artist_items
 
   def full_name
     ([first_name, last_name] - ['']).compact.join(' ')

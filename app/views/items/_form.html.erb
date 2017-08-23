@@ -10,8 +10,15 @@
   <!-- <input style="display:none;" id="redirect_location", name="redirect_location", value="" /> -->
 
   <div class="field">
-    <%= f.label :artist_name %><br>
-    <%= f.collection_select :artist_id, Artist.all, :id, :last_name_first, include_blank: true %>
+    <%#= f.label :artist_name %><br>
+    <%#= f.collection_select :artist_items, Artist.all, :id, :last_name_first, include_blank: true %>
+  </div>
+
+  <div class="field">
+  <%#= f.fields_for :artist_items do |form| %>
+    <%#= form.label :artist_id, "here" %>
+    <%#= form.collection_select :artist_id, Artist.all, :id, :last_name_first, include_blank: true %>
+  <%# end %>
   </div>
 
   <!-- <div class="field">
@@ -20,6 +27,25 @@
     <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'submitform()' %>
     <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'getfields()', id: 'signatureSelect' %>
   </div> -->
+  <div class="field">
+    <%#= f.fields_for :artist_items_attributes do |artist_items_fields| %>
+      <%#= artist_items_fields.label :artist_id, "Select Artist" %>
+      <%#= artist_items_fields.collection_select :artist_items, Artist.all, :id, :last_name_first, include_blank: true %>
+    <%# end %>
+  </div>
+
+  <div class="field">
+    <%= Artist.find_each do |artist| %>
+      <%= check_box_tag "item[artist_ids][]", artist.id, @item.artist_ids.include?(artist.id) %>
+      <%= artist.full_name %><br>
+      <%#= artist_items_fields.collection_select :artist_items, Artist.all, :id, :last_name_first, include_blank: true %>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= select_tag "item[artist_id]", options_for_select(Artist.all ) %>
+    <%#= f.collection_select "item[artist_ids][]", Artist.all, :id, :last_name_first, include_blank: true %>
+  </div>
 
   <script type="text/javascript">
     function submitform(){
@@ -27,7 +53,6 @@
       $('#item_form').submit();
     }
   </script>
-
 
   <div class="field">
     <%= f.label :name %><br>
@@ -43,6 +68,7 @@
     <%= f.label :image_height %><br>
     <%= f.text_field :image_height %>
   </div>
+
   <%= f.fields_for :properties, OpenStruct.new(@item.properties) do |builder| %>
     <% @item.item_type.fields.each do |field| %>
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>

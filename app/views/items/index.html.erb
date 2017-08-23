@@ -11,7 +11,7 @@
   <%#= item.item_type.name %>
   <%#= items_format(item, item.item_type.name, item.mounting_type.name, item.substrate_type.name, item.properties) %>
   <%= items_format(item) %>
-  <%= item.artist.try(:full_name) %>
+  <%= item.artists.try(:full_name) %>
   <%#= item.properties.try(:values) %>
   <%= link_to 'show', item_path(item) %>
   <%= link_to 'Edit', edit_item_path(item) %>
