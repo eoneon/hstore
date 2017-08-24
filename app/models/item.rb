@@ -7,7 +7,5 @@ class Item < ActiveRecord::Base
 
   has_many :artist_items
   has_many :artists, through: :artist_items
-  accepts_nested_attributes_for :artist_items
-
   delegate :first_name, :last_name, :to => :artist
 end
