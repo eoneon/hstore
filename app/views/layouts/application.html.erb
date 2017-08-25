@@ -13,16 +13,20 @@
     <p><%= link_to "+ new Mounting Type", new_mounting_type_path %></p>
     <p><%= link_to "+ new Substrate Type", new_substrate_type_path %></p>
     <p><%= link_to "+ new Signature Type", new_signature_type_path %></p>
-    <p><%= link_to "+ new Certificate Type", new_certificate_type_path %></p>
+    <p><%= link_to "+ new Certificate Type", new_certificate_type_path %></p></br>
 
 
-    <p><%= link_to "+ new Artist", new_artist_path %></p> </br>
+    <p><%= link_to "+ new Artist", new_artist_path %></p>
+    <p><%= link_to "+ new Title", new_title_path %></p> </br>
+
     <p><%= link_to "View Item Type index", item_types_path %></p>
     <p><%= link_to "View Mounting Type index", mounting_types_path %></p>
     <p><%= link_to "View Substrate Type index", substrate_types_path %></p>
     <p><%= link_to "View Certificate Type index", certificate_types_path %></p>
-    <p><%= link_to "View Signature Type index", signature_types_path %></p>
+    <p><%= link_to "View Signature Type index", signature_types_path %></p></br>
+
     <p><%= link_to "View Artist index", artists_path %></p>
+    <p><%= link_to "View Title index", titles_path %></p>
 
     <%= yield %>
   </div>

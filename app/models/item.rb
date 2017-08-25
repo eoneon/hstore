@@ -7,5 +7,7 @@ class Item < ActiveRecord::Base
 
   has_many :artist_items
   has_many :artists, through: :artist_items
+  has_many :title_items
+  has_many :titles, through: :title_items
   delegate :first_name, :last_name, :to => :artist
 end

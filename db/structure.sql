@@ -387,6 +387,69 @@ ALTER SEQUENCE substrate_types_id_seq OWNED BY substrate_types.id;
 
 
 --
+-- Name: title_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE title_items (
+    id integer NOT NULL,
+    title_id integer,
+    item_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: title_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE title_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: title_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE title_items_id_seq OWNED BY title_items.id;
+
+
+--
+-- Name: titles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE titles (
+    id integer NOT NULL,
+    title character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: titles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE titles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: titles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE titles_id_seq OWNED BY titles.id;
+
+
+--
 -- Name: artist_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -454,6 +517,20 @@ ALTER TABLE ONLY signature_types ALTER COLUMN id SET DEFAULT nextval('signature_
 --
 
 ALTER TABLE ONLY substrate_types ALTER COLUMN id SET DEFAULT nextval('substrate_types_id_seq'::regclass);
+
+
+--
+-- Name: title_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY title_items ALTER COLUMN id SET DEFAULT nextval('title_items_id_seq'::regclass);
+
+
+--
+-- Name: titles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY titles ALTER COLUMN id SET DEFAULT nextval('titles_id_seq'::regclass);
 
 
 --
@@ -534,6 +611,22 @@ ALTER TABLE ONLY signature_types
 
 ALTER TABLE ONLY substrate_types
     ADD CONSTRAINT substrate_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: title_items title_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY title_items
+    ADD CONSTRAINT title_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: titles titles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY titles
+    ADD CONSTRAINT titles_pkey PRIMARY KEY (id);
 
 
 --
@@ -628,6 +721,20 @@ CREATE INDEX index_searches_on_item_type_id ON searches USING btree (item_type_i
 
 
 --
+-- Name: index_title_items_on_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_title_items_on_item_id ON title_items USING btree (item_id);
+
+
+--
+-- Name: index_title_items_on_title_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_title_items_on_title_id ON title_items USING btree (title_id);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -640,6 +747,14 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 ALTER TABLE ONLY items
     ADD CONSTRAINT fk_rails_1507fef2dd FOREIGN KEY (substrate_type_id) REFERENCES substrate_types(id);
+
+
+--
+-- Name: title_items fk_rails_4cf5b6c98a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY title_items
+    ADD CONSTRAINT fk_rails_4cf5b6c98a FOREIGN KEY (title_id) REFERENCES titles(id);
 
 
 --
@@ -680,6 +795,14 @@ ALTER TABLE ONLY artist_items
 
 ALTER TABLE ONLY item_fields
     ADD CONSTRAINT fk_rails_9cf276619f FOREIGN KEY (signature_type_id) REFERENCES signature_types(id);
+
+
+--
+-- Name: title_items fk_rails_a50849e65b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY title_items
+    ADD CONSTRAINT fk_rails_a50849e65b FOREIGN KEY (item_id) REFERENCES items(id);
 
 
 --
@@ -791,4 +914,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170818150315');
 INSERT INTO schema_migrations (version) VALUES ('20170821191741');
 
 INSERT INTO schema_migrations (version) VALUES ('20170821234701');
+
+INSERT INTO schema_migrations (version) VALUES ('20170824161153');
+
+INSERT INTO schema_migrations (version) VALUES ('20170824162842');
 

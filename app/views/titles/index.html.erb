@@ -1,0 +1,14 @@
+<h1>Titles#index</h1>
+
+<% if @titles.empty? %>
+  <p><strong>No titles</strong></p>
+<% end %>
+
+
+<% @titles.each do |title| %>
+<div class="item">
+  <h2><%= title.title %></h2>
+  <%= link_to 'Edit', edit_title_path(title) %> |
+  <%= link_to 'Delete', title, method: :delete %>
+  <% end %>
+</div>

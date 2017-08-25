@@ -58,6 +58,10 @@
     <%= f.collection_select( :artist_ids, Artist.all, :id, :full_name, include_blank: true) %>
   </div>
 
+  <div class="field">
+    <%= f.collection_select( :title_ids, Title.all, :id, :title, include_blank: true) %>
+  </div>
+
 
 
   <script type="text/javascript">
