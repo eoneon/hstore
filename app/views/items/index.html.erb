@@ -8,8 +8,6 @@
 <% @items.each do |item| %>
 <div class="item">
   <h2><%= item.name %></h2><br>
-  <%#= item.item_type.name %>
-  <%#= items_format(item, item.item_type.name, item.mounting_type.name, item.substrate_type.name, item.properties) %>
   <%= items_format(item) %>
   <%= item.artists.try(:full_name) %>
   <%#= item.properties.try(:values) %>
@@ -24,7 +22,7 @@
 <%= form_tag new_search_path, method: :get do %>
   <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
   <%= submit_tag "New Search", name: nil %>
-<% end %>
+<% end %><br>
 
 <%= form_tag new_item_path, method: :get do %>
   <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>

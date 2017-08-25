@@ -40,7 +40,7 @@
   <div class="field">
     <%#= Artist.find_each do |artist| %>
       <%#= check_box_tag "item[artist_ids][]", artist.id, @item.artist_ids.include?(artist.id) %>
-      <%#= artist.full_name %><br>
+      <%#= artist.full_name %>
       <%#= artist_items_fields.collection_select :artist_items, Artist.all, :id, :last_name_first, include_blank: true %>
     <%# end %>
   </div>
@@ -115,9 +115,5 @@
         <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
       <% end %>
   <% end %>
-
-
-
-  <%#= @item.signature_type.name %>
   <%= f.submit "Save" %>
 <% end %>
