@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :substrate_types
   resources :items
   resources :artists
+  resources :titles
   resources :searches
   root to: 'items#index'
 end
