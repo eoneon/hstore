@@ -97,33 +97,36 @@ module ApplicationHelper
   # end
 
   def items_format(item)
-    item_type = item.item_type.name
-    artists = item.artist_ids.map {|artist| Artist.find(artist)}
-    artists_names = artists.count == 1 ? "#{artists.first.full_name} -" : "{artists.first.full_name} & {artists.last.full_name} -"
-    #artist = "#{item.artist_items.artists.first.name} -" if item.artists
-    substrate = item.properties["#{item.substrate_type.name}_type"] #equivalent of prev step
-    mounting = item.mounting_type.name.split(" ").first if substrate.split(" ").first != ("gallery" || "stretched") #get mounting_type_name, conditionally prepend it to  return value if substrate_type not gallery or stretched
-    signature = "hand signed by the artist" if item.signature_type.name == "signature"
-    authentication = "with #{item.properties["authentication_type"]}" if item.certificate_type.name == "authentication"
-    if item_type == "original painting"
-      _item = item.item_type.name.split(" ").first #original
-      media = item.properties["paint_type"] #oil painting
-    elsif item_type == "one-of-a-kind"
-      _item = item_type
-      media = item.properties["mixed_media_type"]
-    elsif item_type == "original sketch"
-      _item = item.item_type.name
-      media = item.properties["sketch_media_type"]
-    elsif item_type == "limited edition"
-      _item = item.properties["limited_type"]
-      media = item.properties["hand_embellished"] == "1" ? "hand embellished #{item.properties["ink_type"]}" : item.properties["ink_type"]
-      media = item.properties["gold_leaf"] == "1" ? "#{media} with gold leaf" : media
-      media = item.properties["silver_leaf"] == "1" ? "#{media} with silver leaf" : media
-      remarq = "with hand drawn remarque" if item.properties["remarque"] == "1"
-      numbering = item.properties["numbering_type"] != "standard" ? "#{item.properties["numbering_type"]} numbered" : "numbered"
-      numbering = "#{numbering} #{item.properties["number"]}/#{item.properties["edition_size"]}" unless item.properties["number"].empty?
-      numbering = "#{numbering} from an edition of #{item.properties["edition_size"]}" if item.properties["number"].empty?
-    end
-    return "#{artists_names} #{mounting} #{_item} #{media} on #{substrate} #{numbering} #{signature} #{remarq} #{authentication}." #{artist}
+    # unless item.properties.nil?
+    #   item_type = item.item_type.name
+    #   artists = item.artist_ids.map {|artist| Artist.find(artist)}
+    #   artists_names = artists.count == 1 ? "#{artists.first.full_name} -" : "{artists.first.full_name} & {artists.last.full_name} -"
+    #   titles = item.title_ids.map {|title| Title.find(title)}
+    #   titles_names = titles.count == 1 ? "#{titles.title} -"
+    #   substrate = item.properties["#{item.substrate_type.name}_type"]
+    #   mounting = item.mounting_type.name.split(" ").first if substrate.split(" ").first != ("gallery" || "stretched")
+    #   signature = "hand signed by the artist" if item.signature_type.name == "signature"
+    #   authentication = "with #{item.properties["authentication_type"]}" if item.certificate_type.name == "authentication"
+    #   if item_type == "original painting"
+    #     _item = item.item_type.name.split(" ").first #original
+    #     media = item.properties["paint_type"]
+    #   elsif item_type == "one-of-a-kind"
+    #     _item = item_type
+    #     media = item.properties["mixed_media_type"]
+    #   elsif item_type == "original sketch"
+    #     _item = item.item_type.name
+    #     media = item.properties["sketch_media_type"]
+    #   elsif item_type == "limited edition"
+    #     _item = item.properties["limited_type"]
+    #     media = item.properties["hand_embellished"] == "1" ? "hand embellished #{item.properties["ink_type"]}" : item.properties["ink_type"]
+    #     media = item.properties["gold_leaf"] == "1" ? "#{media} with gold leaf" : media
+    #     media = item.properties["silver_leaf"] == "1" ? "#{media} with silver leaf" : media
+    #     remarq = "with hand drawn remarque" if item.properties["remarque"] == "1"
+    #     numbering = item.properties["numbering_type"] != "standard" ? "#{item.properties["numbering_type"]} numbered" : "numbered"
+    #     numbering = "#{numbering} #{item.properties["number"]}/#{item.properties["edition_size"]}" unless item.properties["number"].empty?
+    #     numbering = "#{numbering} from an edition of #{item.properties["edition_size"]}" if item.properties["number"].empty?
+    #   end
+    #   return "#{artists_names} #{mounting} #{_item} #{media} on #{substrate} #{numbering} #{signature} #{remarq} #{authentication}." #{artist}
+    # end
   end
 end
