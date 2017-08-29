@@ -1,0 +1,15 @@
+<h1>Invoice#index</h1>
+
+<% if @invoices.empty? %>
+  <p><strong>No invoice</strong></p>
+<% end %>
+
+
+<% @invoices.each do |invoice| %>
+<div class="item">
+  <h2><%= invoice.invoice %> | <%= invoice.name %></h2>
+
+  <%= link_to 'Edit', edit_invoice_path(invoice) %> |
+  <%= link_to 'Delete', invoice, method: :delete %>
+  <% end %>
+</div>
