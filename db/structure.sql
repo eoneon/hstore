@@ -144,6 +144,38 @@ ALTER SEQUENCE certificate_types_id_seq OWNED BY certificate_types.id;
 
 
 --
+-- Name: invoices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE invoices (
+    id integer NOT NULL,
+    invoice integer,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE invoices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE invoices_id_seq OWNED BY invoices.id;
+
+
+--
 -- Name: item_fields; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -228,7 +260,11 @@ CREATE TABLE items (
     signature_type_id integer,
     image_width integer,
     image_height integer,
-    substrate_type_id integer
+    substrate_type_id integer,
+    retail numeric,
+    title text,
+    sku integer,
+    invoice_id integer
 );
 
 
@@ -471,6 +507,13 @@ ALTER TABLE ONLY certificate_types ALTER COLUMN id SET DEFAULT nextval('certific
 
 
 --
+-- Name: invoices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invoices ALTER COLUMN id SET DEFAULT nextval('invoices_id_seq'::regclass);
+
+
+--
 -- Name: item_fields id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -555,6 +598,14 @@ ALTER TABLE ONLY artists
 
 ALTER TABLE ONLY certificate_types
     ADD CONSTRAINT certificate_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: invoices invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invoices
+    ADD CONSTRAINT invoices_pkey PRIMARY KEY (id);
 
 
 --
@@ -686,6 +737,13 @@ CREATE INDEX index_items_on_certificate_type_id ON items USING btree (certificat
 
 
 --
+-- Name: index_items_on_invoice_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_invoice_id ON items USING btree (invoice_id);
+
+
+--
 -- Name: index_items_on_item_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -739,6 +797,14 @@ CREATE INDEX index_title_items_on_title_id ON title_items USING btree (title_id)
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: items fk_rails_10c92a7db6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_10c92a7db6 FOREIGN KEY (invoice_id) REFERENCES invoices(id);
 
 
 --
@@ -918,4 +984,12 @@ INSERT INTO schema_migrations (version) VALUES ('20170821234701');
 INSERT INTO schema_migrations (version) VALUES ('20170824161153');
 
 INSERT INTO schema_migrations (version) VALUES ('20170824162842');
+
+INSERT INTO schema_migrations (version) VALUES ('20170828233649');
+
+INSERT INTO schema_migrations (version) VALUES ('20170828235333');
+
+INSERT INTO schema_migrations (version) VALUES ('20170829000409');
+
+INSERT INTO schema_migrations (version) VALUES ('20170829000554');
 
