@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   resources :substrate_types
   resources :items
   resources :artists
-  resources :invoices
+  resources :invoices do
+    resources :items, except: [:index]
+  end
   resources :searches
   root to: 'items#index'
 end

@@ -8,11 +8,13 @@ class ItemsController < ApplicationController
   end
 
   def new
+    @invoice = Invoice.find(params[:invoice_id])
     @item = Item.new(item_type_id: params[:item_type_id], mounting_type_id: params[:mounting_type_id], certificate_type_id: params[:certificate_type_id], signature_type_id: params[:signature_type_id], substrate_type_id: params[:substrate_type_id])
   end
 
   def create
-    @item = Item.new(item_params)
+    @invoice = Invoice.find(params[:invoice_id])
+    @item = @invoice.items.build(item_params)
 
     if @item.save
 
@@ -20,7 +22,7 @@ class ItemsController < ApplicationController
       if params[:redirect_location] == ':edit'
         render :edit
       else
-        redirect_to @item
+        redirect_to [@invoice, @item]
       end
     else
       flash.now[:alert] = "Error creating item. Please try again."
@@ -41,7 +43,7 @@ class ItemsController < ApplicationController
       if params[:redirect_location] == ':edit'
         render :edit
       else
-        redirect_to @item
+        redirect_to [@item.invoice, @item] #=> I might need to fix the conditional hidden field redirect #@item
       end
     else
       flash.now[:alert] = "Error updated item. Please try again."
@@ -54,10 +56,10 @@ class ItemsController < ApplicationController
 
     if @item.destroy
       flash[:notice] = "\"#{@item.name}\" was deleted successfully."
-      redirect_to action: :index
+      redirect_to @item.invoice #action: :index
     else
       flash.now[:alert] = "There was an error deleting the item."
-      render :index
+      render :show
     end
   end
 

@@ -1,7 +1,25 @@
 <h1>Invoices#show</h1>
-<p><%= @invoice.invoice %> | <%= invoice.name %></p>
+<p><%= @invoice.invoice %> | <%= @invoice.name %></p>
 
 <p>
   <%= link_to "Edit", edit_invoice_path(@invoice) %>
   <%= link_to "Back to Invoices", invoices_path %>
 </p>
+<br />
+
+<!-- This doesn't work because you need to pass in _type values via form_tag -->
+<%#= link_to "New Item", new_invoice_item_path(@invoice) %><br>
+
+<% @invoice.items.each do |item| %>
+  <%= link_to item.sku, invoice_item_path(@invoice, item) %>
+<% end %>
+
+<%= form_tag new_invoice_item_path(@invoice) , method: :get do %>
+  <%= hidden_field_tag(:invoice_id, @invoice.id) %>
+  <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
+  <%= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name) %>
+  <%= select_tag :substrate_type_id, options_from_collection_for_select(SubstrateType.all, :id, :name) %>
+  <%= select_tag :signature_type_id, options_from_collection_for_select(SignatureType.all, :id, :name) %>
+  <%= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name) %>
+  <%= submit_tag "New Item", name: nil %>
+<% end %>
