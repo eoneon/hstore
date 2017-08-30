@@ -126,7 +126,7 @@ module ApplicationHelper
         numbering = "#{numbering} #{item.properties["number"]}/#{item.properties["edition_size"]}" unless item.properties["number"].empty?
         numbering = "#{numbering} from an edition of #{item.properties["edition_size"]}" if item.properties["number"].empty?
       end
-      return "#{artists_names} #{title} #{mounting} #{art} #{media} on #{substrate} #{numbering} #{signature} #{remarq} #{authentication}. #{retail}"
+      return "#{artists_names} #{title} #{mounting} #{art} #{media} on #{substrate} #{numbering} #{signature} #{remarq} #{authentication}."
     end
   end
 end

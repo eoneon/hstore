@@ -9,6 +9,6 @@
 <% end%>
 
 <p>
-  <%= link_to "Edit", edit_item_path(@item) %>
-  <%= link_to "Back to Items", items_path %>
+  <%= link_to "Edit sku", edit_item_path(@item) %> |
+  <%= link_to "Back to invoice", invoice_path(@item.invoice) %>
 </p>
