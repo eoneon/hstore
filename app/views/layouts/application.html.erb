@@ -7,27 +7,89 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <div id="container">
-    <p><%= link_to "Return to Items index", root_path %></p> </br>
-    <p><%= link_to "+ new Item Type", new_item_type_path %></p>
-    <p><%= link_to "+ new Mounting Type", new_mounting_type_path %></p>
-    <p><%= link_to "+ new Substrate Type", new_substrate_type_path %></p>
-    <p><%= link_to "+ new Signature Type", new_signature_type_path %></p>
-    <p><%= link_to "+ new Certificate Type", new_certificate_type_path %></p></br>
+  <div class="container">
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+      <button type="button" class="btn btn-secondary"><%= link_to "Items index", root_path %></button>
 
+      <div class="btn-group" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Build Items
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <a class="dropdown-item" href="#"><%= link_to "New item type", new_item_type_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "New mounting type", new_mounting_type_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "New substrate type", new_substrate_type_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "New mounting type", new_mounting_type_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "New signature type", new_signature_type_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "New certificate type", new_certificate_type_path %></a>
+        </div>
+      </div>
 
-    <p><%= link_to "+ new Artist", new_artist_path %></p>
-    <p><%= link_to "+ new Invoice", new_invoice_path %></p></br>
+      <div class="btn-group" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          View Types
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <a class="dropdown-item" href="#"><%= link_to "View item type", item_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View mounting type", mounting_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View substrate type", substrate_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View mounting type", mounting_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View signature type", signature_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View certificate type", certificate_types_path %></a>
+        </div>
+      </div>
 
-    <p><%= link_to "View Item Type index", item_types_path %></p>
-    <p><%= link_to "View Mounting Type index", mounting_types_path %></p>
-    <p><%= link_to "View Substrate Type index", substrate_types_path %></p>
-    <p><%= link_to "View Certificate Type index", certificate_types_path %></p>
-    <p><%= link_to "View Signature Type index", signature_types_path %></p></br>
+      <div class="btn-group" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Artist resource
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <a class="dropdown-item" href="#"><%= link_to "New artist", new_artist_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View artists", artists_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "Search artists" %></a>
+        </div>
+      </div>
 
-    <p><%= link_to "View Artist index", artists_path %></p>
-    <p><%= link_to "View Invoice index", invoices_path %></p>
+      <div class="btn-group" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Invoice resource
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <a class="dropdown-item" href="#"><%= link_to "New invoice", new_invoice_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View invoices", invoices_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "Search invoices" %></a>
+        </div>
+      </div>
 
+      <div class="btn-group" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Items resource
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <a class="dropdown-item" href="#"><%= link_to "Search" %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "Edit sku" %></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="flash">
+      <% if flash[:notice] %>
+         <div class="alert alert-success">
+           <button type="button" class="close" data-dismiss="alert">&times;</button>
+           <%= flash[:notice] %>
+         </div>
+       <% elsif flash.now[:alert] %>
+         <div class="alert alert-danger">
+           <button type="button" class="close" data-dismiss="alert">&times;</button>
+           <%= flash.now[:alert] %>
+         </div>
+       <% elsif flash[:alert] %>
+         <div class="alert alert-warning">
+           <button type="button" class="close" data-dismiss="alert">&times;</button>
+           <%= flash[:alert] %>
+         </div>
+       <% end %>
+     </div>
     <%= yield %>
   </div>
 </div>
