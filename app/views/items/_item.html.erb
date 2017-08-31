@@ -1,9 +1,7 @@
-<div class="item">
-  <h2><%= link_to item.name, item %></h2>
-  <div class="details">
-    <%#= number_to_currency(product.price) %>
-    <% if item.item_type %>
-      Item Type: <%= item.item_type.name %>
-    <% end %>
-  </div>
-</div>
+<%= content_tag :div, class: 'media', id: "item-#{item.id}" do %>
+  <tr>
+     <td><%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %></td>
+     <td><%= items_format(item) %></td>
+     <td><%= link_to 'Delete', item, method: :delete %></td>
+   </tr>
+<% end %>

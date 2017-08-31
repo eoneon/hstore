@@ -10,5 +10,5 @@ Rails.application.routes.draw do
     resources :items, except: [:index]
   end
   resources :searches
-  root to: 'items#index'
+  root to: 'invoices#index'
 end

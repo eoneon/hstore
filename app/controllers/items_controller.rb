@@ -15,6 +15,7 @@ class ItemsController < ApplicationController
   def create
     @invoice = Invoice.find(params[:invoice_id])
     @item = @invoice.items.build(item_params)
+    @new_item = Item.new
 
     if @item.save
 
@@ -26,7 +27,9 @@ class ItemsController < ApplicationController
       end
     else
       flash.now[:alert] = "Error creating item. Please try again."
-      render :new
+      respond_to do |format|
+        format.js
+      end
     end
   end
 
@@ -43,7 +46,7 @@ class ItemsController < ApplicationController
     else
       flash.now[:alert] = "Error updated item. Please try again."
     end
-    render :edit
+    redirect_to edit_invoice_item_path(@item.invoice, @item)
     #   flash[:notice] = "Item was updated successfully."
     #   if params[:redirect_location] == ':edit'
     #     render :edit

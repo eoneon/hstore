@@ -1,0 +1,2 @@
+$('.js-items').prepend("<%= escape_javascript(render(@item)) %>");
+$('.new-item').html("<%= escape_javascript(render partial : 'items/form_group', locals: { invoice: @invoice, item: @new_item }) %>");

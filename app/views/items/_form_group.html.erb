@@ -1,0 +1,9 @@
+<%= form_for [invoice, item], remote: true do |f| %>
+  <%= f.collection_select :item_type_id, ItemType.all, :id, :name %>
+  <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name %>
+  <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name %>
+  <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name %>
+  <%= f.collection_select :certificate_type_id, CertificateType.all, :id, :name %>
+
+  <%= f.submit "New Item", name: nil %>
+<% end %>

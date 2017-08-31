@@ -2,7 +2,7 @@
 
 <p>Invoice#: <%= @invoice.invoice %> |Invoice name: <%= @invoice.name %> | <%= link_to "Edit", edit_invoice_path(@invoice) %> | <%= link_to "Back to Invoices", invoices_path %></p>
 
-<br>
+
 
 
 <%#= form_tag new_invoice_item_path(@invoice), method: :get do %>
@@ -14,19 +14,21 @@
   <%#= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name) %>
   <%#= submit_tag "New Item", name: nil %>
 <%# end %>
+<!-- <div class="new-item">
+  <%= form_for [@invoice, Item.new], remote: true do |f| %>
+    <%= f.collection_select :item_type_id, ItemType.all, :id, :name %>
+    <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name %>
+    <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name %>
+    <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name %>
+    <%= f.collection_select :certificate_type_id, CertificateType.all, :id, :name %>
 
-<%= form_for [@invoice, Item.new] do |f| %>
-  <%#= f.hidden_field :invoice_id, @invoice.id %>
-  <%= f.collection_select :item_type_id, ItemType.all, :id, :name %>
-  <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name %>
-  <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name %>
-  <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name %>
-  <%= f.collection_select :certificate_type_id, CertificateType.all, :id, :name %>
+    <%= f.submit "New Item", name: nil %>
+  <% end %>
+</div> -->
 
-  <%= f.submit "New Item", name: nil %>
-<% end %>
-
-
+<div class="new-item">
+  <%= render 'items/form_group', item: Item.new, invoice: @invoice %>
+</div>
 
 <table class="table">
   <thead>
@@ -34,13 +36,15 @@
     <th>Item</th>
     <th>Retail</th>
   </thead>
-  <tbody>
-    <% @invoice.items.each do |item| %>
-    <tr>
-        <td><%= link_to item_sku(item), edit_invoice_item_path(@invoice, item) %></td>
-        <td><%= items_format(item) %></td>
-        <td><%= number_to_currency(item.retail) %></td>
-    </tr>
-    <% end %>
+  <tbody class="js-items">
+    <%# @invoice.items.each do |item| %>
+    <!-- <tr> -->
+      <%= render @invoice.items %>
+        <!-- <td><%#= link_to item_sku(item), edit_invoice_item_path(@invoice, item) %></td>
+        <td><%#= items_format(item) %></td>
+        <td><%#= number_to_currency(item.retail) %></td>
+        <td><%#= link_to 'Delete', item, method: :delete %></td> -->
+    <!-- </tr> -->
+    <%# end %>
   </tbody>
 </table>
