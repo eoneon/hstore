@@ -4,10 +4,16 @@
   <p><strong>No Items</strong></p>
 <% end %>
 
-
-<% @artists.each do |artist| %>
-<div class="item">
-  <h2><%= artist.full_name %></h2>
-  <%= link_to 'Edit', edit_artist_path(artist) %>
-  <% end %>
-</div>
+<table class="table">
+  <thead>
+    <th>Artist's Name</th>
+  </thead>
+  <tbody>
+    <% @artists.each do |artist| %>
+    <tr>
+        <td><%= link_to artist.full_name, artist_path(artist) %></td>
+        <td><%= link_to 'Edit', edit_artist_path(artist) %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
