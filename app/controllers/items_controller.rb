@@ -64,11 +64,15 @@ class ItemsController < ApplicationController
 
     if @item.destroy
       flash[:notice] = "\"#{@item.name}\" was deleted successfully."
-      redirect_to @item.invoice #action: :index
+      # redirect_to @item.invoice #action: :index
+      respond_to do |format|
+        format.js
+      end
     else
       flash.now[:alert] = "There was an error deleting the item."
-      render :show
+      # render :show
     end
+
   end
 
   private

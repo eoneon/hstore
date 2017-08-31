@@ -2,6 +2,6 @@
   <tr>
      <td><%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %></td>
      <td><%= items_format(item) %></td>
-     <td><%= link_to 'Delete', item, method: :delete %></td>
+     <td><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true %></td>
    </tr>
 <% end %>
