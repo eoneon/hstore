@@ -5,14 +5,25 @@
 <br>
 
 
-<%= form_tag new_invoice_item_path(@invoice), method: :get do %>
-  <%= hidden_field_tag(:invoice_id, @invoice.id) %>
-  <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
-  <%= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name) %>
-  <%= select_tag :substrate_type_id, options_from_collection_for_select(SubstrateType.all, :id, :name) %>
-  <%= select_tag :signature_type_id, options_from_collection_for_select(SignatureType.all, :id, :name) %>
-  <%= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name) %>
-  <%= submit_tag "New Item", name: nil %>
+<%#= form_tag new_invoice_item_path(@invoice), method: :get do %>
+  <%#= hidden_field_tag(:invoice_id, @invoice.id) %>
+  <%#= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
+  <%#= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name) %>
+  <%#= select_tag :substrate_type_id, options_from_collection_for_select(SubstrateType.all, :id, :name) %>
+  <%#= select_tag :signature_type_id, options_from_collection_for_select(SignatureType.all, :id, :name) %>
+  <%#= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name) %>
+  <%#= submit_tag "New Item", name: nil %>
+<%# end %>
+
+<%= form_for [@invoice, Item.new] do |f| %>
+  <%#= f.hidden_field :invoice_id, @invoice.id %>
+  <%= f.collection_select :item_type_id, ItemType.all, :id, :name %>
+  <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name %>
+  <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name %>
+  <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name %>
+  <%= f.collection_select :certificate_type_id, CertificateType.all, :id, :name %>
+
+  <%= f.submit "New Item", name: nil %>
 <% end %>
 
 
@@ -26,7 +37,7 @@
   <tbody>
     <% @invoice.items.each do |item| %>
     <tr>
-        <td><%= link_to item.sku, invoice_item_path(@invoice, item) %></td>
+        <td><%= link_to item_sku(item), edit_invoice_item_path(@invoice, item) %></td>
         <td><%= items_format(item) %></td>
         <td><%= number_to_currency(item.retail) %></td>
     </tr>

@@ -22,7 +22,7 @@ class ItemsController < ApplicationController
       if params[:redirect_location] == ':edit'
         render :edit
       else
-        redirect_to [@invoice, @item]
+        redirect_to @item.invoice
       end
     else
       flash.now[:alert] = "Error creating item. Please try again."
@@ -40,15 +40,20 @@ class ItemsController < ApplicationController
 
     if @item.save
       flash[:notice] = "Item was updated successfully."
-      if params[:redirect_location] == ':edit'
-        render :edit
-      else
-        redirect_to [@item.invoice, @item] #=> I might need to fix the conditional hidden field redirect #@item
-      end
     else
       flash.now[:alert] = "Error updated item. Please try again."
-      render :edit
     end
+    render :edit
+    #   flash[:notice] = "Item was updated successfully."
+    #   if params[:redirect_location] == ':edit'
+    #     render :edit
+    #   else
+    #     redirect_to [@item.invoice, @item] #=> I might need to fix the conditional hidden field redirect #@item
+    #   end
+    # else
+    #   flash.now[:alert] = "Error updated item. Please try again."
+    #   render :edit
+    # end
   end
 
   def destroy
