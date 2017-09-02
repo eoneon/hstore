@@ -144,6 +144,38 @@ ALTER SEQUENCE certificate_types_id_seq OWNED BY certificate_types.id;
 
 
 --
+-- Name: displays; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE displays (
+    id integer NOT NULL,
+    name character varying,
+    artist_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: displays_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE displays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: displays_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE displays_id_seq OWNED BY displays.id;
+
+
+--
 -- Name: invoices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -507,6 +539,13 @@ ALTER TABLE ONLY certificate_types ALTER COLUMN id SET DEFAULT nextval('certific
 
 
 --
+-- Name: displays id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY displays ALTER COLUMN id SET DEFAULT nextval('displays_id_seq'::regclass);
+
+
+--
 -- Name: invoices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -601,6 +640,14 @@ ALTER TABLE ONLY certificate_types
 
 
 --
+-- Name: displays displays_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY displays
+    ADD CONSTRAINT displays_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: invoices invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -692,6 +739,13 @@ CREATE INDEX index_artist_items_on_artist_id ON artist_items USING btree (artist
 --
 
 CREATE INDEX index_artist_items_on_item_id ON artist_items USING btree (item_id);
+
+
+--
+-- Name: index_displays_on_artist_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_displays_on_artist_id ON displays USING btree (artist_id);
 
 
 --
@@ -896,6 +950,14 @@ ALTER TABLE ONLY item_fields
 
 
 --
+-- Name: displays fk_rails_c725fa2dec; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY displays
+    ADD CONSTRAINT fk_rails_c725fa2dec FOREIGN KEY (artist_id) REFERENCES artists(id);
+
+
+--
 -- Name: artist_items fk_rails_d905fc3a1a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -992,4 +1054,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170828235333');
 INSERT INTO schema_migrations (version) VALUES ('20170829000409');
 
 INSERT INTO schema_migrations (version) VALUES ('20170829000554');
+
+INSERT INTO schema_migrations (version) VALUES ('20170831215118');
+
+INSERT INTO schema_migrations (version) VALUES ('20170901002002');
 

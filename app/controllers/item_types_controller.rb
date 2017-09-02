@@ -55,7 +55,6 @@ class ItemTypesController < ApplicationController
   private
 
   def item_type_params
-    params.require(:item_type).permit(:id, :name, { :fields_attributes => [:id, :field_type, :name, :required, :item_type_id, :_destroy]})
-
+    params.require(:item_type).permit(:id, :name, { :fields_attributes => [:id, :field_type, :name, :required, :item_type_id, :_destroy] })
   end
 end
