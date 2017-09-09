@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   resources :certificate_types
   resources :signature_types
   resources :substrate_types
-  resources :items
+  resources :items do
+    collection { post :import }
+  end
   resources :artists
   resources :invoices do
     resources :items, except: [:index]

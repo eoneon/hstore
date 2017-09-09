@@ -4,11 +4,18 @@
   <p><strong>No Items</strong></p>
 <% end %>
 
+<h2>Export Items</h2>
 <p>
   Download:
   <%= link_to "CSV", items_path(format: "csv") %> |
   <%= link_to "Excel", items_path(format: "xls") %>
 </p>
+
+<h2>Import Items</h2>
+<%= form_tag import_items_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag "Import" %>
+<% end %>
 
 <% @items.each do |item| %>
 <div class="item">
@@ -48,7 +55,6 @@
   </thead>
 
   <tbody>
-    <!-- in order to return without object, remove "=" from <%= -->
     <% @items.each do |item| %>
       <tr>
         <td><%= item.id %></td>

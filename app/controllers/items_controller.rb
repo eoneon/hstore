@@ -80,6 +80,12 @@ class ItemsController < ApplicationController
 
   end
 
+  def import
+    Item.import(params[:file])
+    redirect_to items_path
+    flash[:notice] = "Items successfully imported."
+  end
+
   private
 
   def item_params

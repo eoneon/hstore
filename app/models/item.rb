@@ -18,4 +18,24 @@ class Item < ActiveRecord::Base
       end
     end
   end
+
+  def self.import(file)
+    CSV.foreach(file.path, headers: true) do |row|
+    #create unless already exists
+    item = find_by_id(row["id"]) || new
+    #don't update id fields
+    item.attributes = row.to_hash
+    item.save!
+
+    end
+  end
+
+  def self.open_spreadsheet(file)
+    case File.extname(file.original_filename)
+    when ".csv" then Csv.new(file.path, nil, :ignore)
+    when ".xls" then Excel.new(file.path, nil, :ignore)
+    when ".xlsx" then Excelx.new(file.path, nil, :ignore)
+    else raise "Unknown file type: #{file.original_filename}"
+    end
+  end
 end
