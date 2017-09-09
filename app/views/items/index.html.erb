@@ -4,6 +4,11 @@
   <p><strong>No Items</strong></p>
 <% end %>
 
+<p>
+  Download:
+  <%= link_to "CSV", items_path(format: "csv") %> |
+  <%= link_to "Excel", items_path(format: "xls") %>
+</p>
 
 <% @items.each do |item| %>
 <div class="item">
@@ -32,3 +37,24 @@
   <%= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name) %>
   <%= submit_tag "New Item", name: nil %>
 <% end %>
+
+<br>
+
+<table class="table">
+  <thead>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Properties</th>
+  </thead>
+
+  <tbody>
+    <!-- in order to return without object, remove "=" from <%= -->
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= item.id %></td>
+        <td><%= item.title %></td>
+        <td><%= item.properties %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

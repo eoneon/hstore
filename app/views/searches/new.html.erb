@@ -16,6 +16,10 @@
     <% @search.item_type.fields.each do |field| %>
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
     <% end %>
+
+    <!-- <%# @search.mounting_type.fields.each do |field| %>
+      <%#= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <%# end %> -->
   <% end %>
   <div class="actions"><%= f.submit "Search" %></div>
 <% end %>

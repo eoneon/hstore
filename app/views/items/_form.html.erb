@@ -65,6 +65,7 @@
   <div class="field">
     <%= f.label :artist_name %><br>
     <%= f.collection_select( :artist_ids, Artist.all, :id, :full_name, include_blank: true) %>
+    <%#= link_to_add_fields "Add Artist", f, :artists %>
   </div>
 
   <div class="field">
