@@ -98,35 +98,171 @@ module ApplicationHelper
 
   def items_format(item)
     unless item.properties.nil?
-      item_type = item.item_type.name
-      artists = item.artist_ids.map {|artist| Artist.find(artist)}
-      artists_names = artists.count == 1 ? "#{artists.first.full_name} -" : "{artists.first.full_name} & {artists.last.full_name} -"
+      item_type_name = item.item_type.name unless item.item_type.nil?
+
+      unless item.artist_ids.nil?
+        artists = item.artist_ids.map {|artist| Artist.find(artist)}
+        if artists.count == 1
+          artists_names = "#{artists.first.full_name} -"
+        elsif artists.count > 1
+          artists_names = "{artists.first.full_name} & {artists.last.full_name} -"
+        end
+      end
+
       title = item.title.blank? ? "untitled" : "\"#{item.title}\""
       retail = "List #{number_to_currency(item.retail)}" if item.retail?
-      substrate = item.properties["#{item.substrate_type.name}_type"]
-      mounting = item.mounting_type.name.split(" ").first if substrate.split(" ").first != ("gallery" || "stretched")
-      signature = "hand signed by the artist" if item.signature_type.name == "signature"
-      authentication = "with #{item.properties["authentication_type"]}" if item.certificate_type.name == "authentication"
-      if item_type == "original painting"
-        art = item.item_type.name.split(" ").first #original
+
+      unless item_type_name.nil?
+        if item_type_name == "original painting"
+          art = item_type_name.split(" ").first
+        elsif item_type_name == ("one-of-a-kind" || "original sketch")
+          art = item_type_name
+        elsif item_type_name == "limited edition"
+          art = item.properties["limited_type"]
+        end
+      end
+
+      if item_type_name == "original painting"
         media = item.properties["paint_type"]
-      elsif item_type == "one-of-a-kind"
-        art = item_type
+      elsif item_type_name == "one-of-a-kind"
         media = item.properties["mixed_media_type"]
-      elsif item_type == "original sketch"
-        art = item.item_type.name
+      elsif item_type_name == "original sketch"
         media = item.properties["sketch_media_type"]
-      elsif item_type == "limited edition"
-        art = item.properties["limited_type"]
+      elsif item_type_name == "limited edition"
         media = item.properties["hand_embellished"] == "1" ? "hand embellished #{item.properties["ink_type"]}" : item.properties["ink_type"]
         media = item.properties["gold_leaf"] == "1" ? "#{media} with gold leaf" : media
         media = item.properties["silver_leaf"] == "1" ? "#{media} with silver leaf" : media
-        remarq = "with hand drawn remarque" if item.properties["remarque"] == "1"
+      end
+
+      remarque = "with hand drawn remarque" if item.properties["remarque"] == "1"
+
+      unless item.properties["numbering_type"].nil?
         numbering = item.properties["numbering_type"] != "standard" ? "#{item.properties["numbering_type"]} numbered" : "numbered"
         numbering = "#{numbering} #{item.properties["number"]}/#{item.properties["edition_size"]}" unless item.properties["number"].empty?
         numbering = "#{numbering} from an edition of #{item.properties["edition_size"]}" if item.properties["number"].empty?
       end
-      return "#{artists_names} #{title} #{mounting} #{art} #{media} on #{substrate} #{numbering} #{signature} #{remarq} #{authentication}."
+
+      substrate = item.properties["#{item.substrate_type.name}_type"] unless item.properties["#{item.substrate_type}"].nil?
+
+      if item.substrate_type.nil? && item.mounting_type != nil
+        mounting = item.mounting_type.name unless item.mounting_type.name.nil? || substrate_type_name.split(" ").first != ("gallery" || "stretched")
+      end
+
+      if item.signature_type != nil && item.signature_type.name == "signature"
+        signature = "hand signed by the artist"
+      end
+
+      unless item.certificate_type.nil?
+        authentication = "with #{item.properties["authentication_type"]}" if item.certificate_type.name == "authentication"
+      end
+
+  #     # substrate = item.properties["#{item.substrate_type.name}_type"] unless item.substrate_type.nil?
+  #     # mounting = Item.mounting_type_name.split(" ").first if substrate.split(" ").first != ("gallery" || "stretched")
+      # signature = "hand signed by the artist" if item.signature_type.name == "signature" && item.signature_type != nil
+  #     # authentication = "with #{item.properties["authentication_type"]}" if item.certificate_type.name == "authentication"
+  #     # if item_type_name == "original painting"
+  #     #   art = Item.item_type_name.split(" ").first #original
+  #     #   media = item.properties["paint_type"]
+  #     # elsif Item.item_type_name == "one-of-a-kind"
+  #     #   art = Item.item_type_name
+  #     #   media = item.properties["mixed_media_type"]
+  #     # elsif Item.item_type_name == "original sketch"
+  #     #   art = Item.item_type_name
+  #     #   media = item.properties["sketch_media_type"]
+  #     # elsif Item.item_type_name == "limited edition"
+  #     #   art = item.properties["limited_type"]
+  #     #   media = item.properties["hand_embellished"] == "1" ? "hand embellished #{item.properties["ink_type"]}" : item.properties["ink_type"]
+  #     #   media = item.properties["gold_leaf"] == "1" ? "#{media} with gold leaf" : media
+  #     #   media = item.properties["silver_leaf"] == "1" ? "#{media} with silver leaf" : media
+  #     #   remarq = "with hand drawn remarque" if item.properties["remarque"] == "1"
+  #     #   numbering = item.properties["numbering_type"] != "standard" ? "#{item.properties["numbering_type"]} numbered" : "numbered"
+  #     #   numbering = "#{numbering} #{item.properties["number"]}/#{item.properties["edition_size"]}" unless item.properties["number"].empty?
+  #     #   numbering = "#{numbering} from an edition of #{item.properties["edition_size"]}" if item.properties["number"].empty?
+  #     # end
+      return "#{artists_names} #{title} #{mounting} #{art} #{media} on #{substrate} #{numbering} #{signature} #{remarque} #{authentication}."
+      #   # return "#{artist} #{title} #{mounting_type_name} #{art} #{media} on #{substrate} #{numbering} #{signature_type} #{remarqe} #{authentication}."
     end
   end
+  #
+  # def item_type_name
+  #   item.item_type.name unless item.item_type.nil?
+  # end
+
+  # def artist
+  #   artists = item.artist_ids.map {|artist| Artist.find(artist)}
+  #   artists.count == 1 ? "#{artists.first.full_name} -" : "{artists.first.full_name} & {artists.last.full_name} -"
+  # end
+
+  # def title
+  #   item.title.blank? ? "untitled" : "\"#{item.title}\""
+  # end
+  #
+  # def retail
+  #   "List #{number_to_currency(item.retail)}" if item.retail?
+  # end
+
+  # def art
+  #   unless item_type_name.nil?
+  #     if item_type_name == "original painting"
+  #       item_type_name.split(" ").first
+  #     elsif item_type_name == ("one-of-a-kind" || "original sketch")
+  #       item_type_name
+  #     elsif item_type_name == "limited edition"
+  #       item.properties["limited_type"]
+  #     end
+  #   end
+  # end
+
+  # def media
+  #   if item_type_name == "original painting"
+  #     media = item.properties["paint_type"]
+  #   elsif item_type_name == "one-of-a-kind"
+  #     media = item.properties["mixed_media_type"]
+  #   elsif item_type_name == "original sketch"
+  #     media = item.properties["sketch_media_type"]
+  #   elsif item_type_name == "limited edition"
+  #     media = item.properties["hand_embellished"] == "1" ? "hand embellished #{item.properties["ink_type"]}" : item.properties["ink_type"]
+  #     media = item.properties["gold_leaf"] == "1" ? "#{media} with gold leaf" : media
+  #     media = item.properties["silver_leaf"] == "1" ? "#{media} with silver leaf" : media
+  #   end
+  # end
+
+  # def remarque
+  #   "with hand drawn remarque" if item.properties["remarque"] == "1"
+  # end
+
+  # def numbering
+  #   unless item.properties["numbering_type"].nil?
+  #     numbering = item.properties["numbering_type"] != "standard" ? "#{item.properties["numbering_type"]} numbered" : "numbered"
+  #     numbering = "#{numbering} #{item.properties["number"]}/#{item.properties["edition_size"]}" unless item.properties["number"].empty?
+  #     numbering = "#{numbering} from an edition of #{item.properties["edition_size"]}" if item.properties["number"].empty?
+  #   end
+  # end
+
+  # def substrate
+  #   self.properties["#{item.substrate_type.name}_type"] unless item.properties["#{item.substrate_type.name}_type"].nil?
+  # end
+
+  # def mounting_type_name
+  #   if substrate_type_name.nil?
+  #     item.mounting_type.name unless item.mounting_type.name.nil? || substrate_type_name.split(" ").first != ("gallery" || "stretched")
+  #   end
+  # end
+
+  # def signature_type
+  #   unless item.signature_type.name.nil? && item.signature_type.name == "signature"
+  #     "hand signed by the artist"
+  #   end
+  # end
+
+  # def authentication
+  #   unless item.certificate_type.nil?
+  #     "with #{item.properties["authentication_type"]}" if item.certificate_type.name == "authentication"
+  #   end
+  # end
+
+  # def items_format(item)
+  #   "#{artist} #{title} #{art}"
+  #   # return "#{artist} #{title} #{mounting_type_name} #{art} #{media} on #{substrate} #{numbering} #{signature_type} #{remarq} #{authentication}."
+  # end
 end

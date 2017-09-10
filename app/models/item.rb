@@ -26,7 +26,6 @@ class Item < ActiveRecord::Base
     #don't update id fields
     item.attributes = row.to_hash
     item.save!
-
     end
   end
 
