@@ -52,13 +52,17 @@ class Item < ActiveRecord::Base
   end
 
   def item_title
-    title = self.title.blank? ? untitled : "#{self.title}"
+    title = self.title.blank? ? "untitled" : "#{self.title}"
     capitalize_words(title)
     # "\"#{capitalize_words(title)}\"" #=> for reference when I need to make this more conditional based on description field
   end
 
   def item_retail
     self.retail
+  end
+
+  def item_image_dim
+    "(#{self.image_width} x #{self.image_height})" unless self.image_width.nil? || self.image_height.nil?
   end
 
   def item_item_type
@@ -71,30 +75,43 @@ class Item < ActiveRecord::Base
     elsif item_item_type == ("one-of-a-kind" || "original sketch")
       item_item_type
     elsif item_item_type == "limited edition"
-      self.properties["limited_type"]
+      self.properties["limited_type"] unless self.properties.nil? || self.properties["limited_type"].nil?
     end
   end
 
   def media_type
-    if item_item_type == "original painting"
-      self.properties["paint_type"]
-    elsif item_item_type == "one-of-a-kind"
-      self.properties["mixed_media_type"]
-    elsif item_item_type == "original sketch"
-      self.properties["sketch_media_type"]
-    elsif item_item_type == "limited edition"
-      media = self.properties["hand_embellished"] == "1" ? "hand embellished #{item.properties["ink_type"]}" : item.properties["ink_type"]
-      media = self.properties["gold_leaf"] == "1" ? "#{media} with gold leaf" : media
-      self.properties["silver_leaf"] == "1" ? "#{media} with silver leaf" : media
+    if self.properties.nil?
+      if item_item_type == "original painting"
+        self.properties["paint_type"]
+      elsif item_item_type == "one-of-a-kind"
+        self.properties["mixed_media_type"]
+      elsif item_item_type == "original sketch"
+        self.properties["sketch_media_type"]
+      elsif item_item_type == "limited edition"
+         
+        media = self.properties["hand_embellished"] == "1" ? "hand embellished #{item.properties["ink_type"]}" : self.properties["ink_type"]
+        media = self.properties["gold_leaf"] == "1" ? "#{media} with gold leaf" : media
+        self.properties["silver_leaf"] == "1" ? "#{media} with silver leaf" : media
+      end
     end
   end
 
   def item_substrate_type
-    " on " + self.properties["#{self.substrate_type.name}_type"]
+    unless self.properties.nil? || self.properties["#{self.substrate_type}"].nil?
+      " on " + self.properties["#{self.substrate_type.name}_type"]
+    end
   end
 
   def item_mounting_type
-    self.mounting_type.name unless item_substrate_type.split(" ").first != ("gallery" || "stretched")
+    self.mounting_type.name unless item_substrate_type.split(" ").first != ("gallery" || "stretched") unless item_substrate_type.nil?
+  end
+
+  def item_framed_dim
+    "(#{self.frame_width} x #{self.frame_height})" if item_mounting_type == "framed"
+  end
+
+  def item_unframed_border_dim
+    "(#{self.border_width} x #{self.border_height})" if item_mounting_type == "unframed with border"
   end
 
   def item_signature_type
@@ -102,16 +119,39 @@ class Item < ActiveRecord::Base
   end
 
   def item_certificate_type
-    "with #{self.properties["authentication_type"]}" if self.certificate_type.name == "authentication"
+    if self.properties?
+      if self.certificate_type != nil && self.certificate_type.name == "authentication"
+        "with #{self.properties["authentication_type"]}"
+      end
+    end
   end
 
   def item_remarque
-    "with hand drawn remarque" if self.properties["remarque"] == "1"
+    if self.properties?
+      "with hand drawn remarque" if self.properties["remarque"] == "1"
+    end
   end
 
-  def item_number_type
-    numbering = self.properties["numbering_type"] != "standard" ? "#{self.properties["numbering_type"]} numbered" : "numbered"
-    numbering = "#{numbering} #{self.properties["number"]}/#{self.properties["edition_size"]}" unless self.properties["number"].nil?
-    "#{numbering} from an edition of #{self.properties["edition_size"]}" if self.properties["number"].nil?
+  #numbering
+  def item_numbering_type
+    if self.properties? && self.properties["numbering_type"] != nil
+      self.properties["numbering_type"]
+    end
+  end
+
+  def item_numbering_or_qty
+    if self.properties?
+      if self.properties["number"] != nil && self.properties["edition_size"] != nil
+        "numbered #{self.properties["number"]}/#{self.properties["edition_size"]}"
+      elsif self.properties["number"].nil? && self.properties["edition_size"] != nil
+        "numbered out of #{self.properties["edition_size"]}"
+      elsif self.properties["number"].nil? && self.properties["edition_size"].nil?
+        "numbered"
+      end
+    end
+  end
+
+  def item_numbering
+    "#{item_numbering_type} #{item_numbering_or_qty}"
   end
 end

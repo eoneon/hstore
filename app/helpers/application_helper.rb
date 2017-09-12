@@ -97,6 +97,6 @@ module ApplicationHelper
   # end
 
   def items_format(item)
-    "#{item.artists_names} #{item.item_title} #{item.item_mounting_type} #{item.art_type} #{item.media_type} #{item.item_substrate_type} #{item.item_number_type} #{item.item_signature_type} #{item.item_remarque} #{item.item_certificate_type}." 
+    "#{item.artists_names} #{item.item_title} #{item.item_mounting_type} #{item.art_type} #{item.media_type} #{item.item_substrate_type} #{item.item_numbering} #{item.item_signature_type} #{item.item_remarque} #{item.item_certificate_type} #{item.item_image_dim}" 
   end
 end
