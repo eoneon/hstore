@@ -7,48 +7,6 @@
   <%= f.hidden_field :signature_type_id %>
 
   <%= hidden_field_tag :redirect_location %>
-  <!-- <input style="display:none;" id="redirect_location", name="redirect_location", value="" /> -->
-
-  <div class="field">
-  <%#= f.fields_for :artist_items do |form| %>
-    <%#= form.label :artist_id, "here" %>
-    <%#= form.collection_select :artist_id, Artist.all, :id, :last_name_first, include_blank: true %>
-  <%# end %>
-  </div>
-
-  <!-- <div class="field">
-    <%#= f.label :name %><br>
-    <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: ("$('#item_form').submit()") %>
-    <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'submitform()' %>
-    <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'getfields()', id: 'signatureSelect' %>
-  </div> -->
-
-  <!--works as checkbox -->
-  <div class="field">
-    <%#= Artist.find_each do |artist| %>
-      <%#= check_box_tag "item[artist_ids][]", artist.id, @item.artist_ids.include?(artist.id) %>
-      <%#= artist.full_name %>
-      <%#= artist_items_fields.collection_select :artist_items, Artist.all, :id, :last_name_first, include_blank: true %>
-    <%# end %>
-  </div>
-
-  <!--works as dropdown -->
-  <div class="field">
-    <%# artists_array =  Artist.all.map { |artist| [artist.full_name, artist.id]} %>
-    <%#= f.select :artist_ids, options_for_select(artists_array) %>
-    <%#= f.collection_select "item[artist_ids][]", Artist.all, :id, :last_name_first, include_blank: true %>
-  </div>
-
-  <!--works as dropdown: most simplified version-->
-  <!--next: how do you access associated attributes?-->
-
-
-  <!--works as dropdown: to select titles and create association via many to many-->
-  <!-- <div class="field">
-    <%#= f.collection_select( :title_ids, Title.all, :id, :title, include_blank: true) %>
-  </div> -->
-
-
 
   <script type="text/javascript">
     function submitform(){
@@ -57,9 +15,27 @@
     }
   </script>
 
-  <div class="field">
-    <%= f.label :sku %><br>
-    <%= f.text_field :sku %>
+  <div class="row">
+    <div class="col-xs-3">
+      <div class="field">
+        <%= f.label :sku %><br>
+        <%= f.text_field :sku %>
+      </div>
+    </div>
+
+    <div class="col-xs-3">
+      <div class="field">
+        <%= f.label :title %><br>
+        <%= f.text_field :title %>
+      </div>
+    </div>
+
+    <div class="col-xs-3">
+      <div class="field">
+        <%= f.label :retail %><br>
+        <%= f.text_field :retail %>
+      </div>
+    </div>
   </div>
 
   <div class="field">
@@ -68,15 +44,7 @@
     <%#= link_to_add_fields "Add Artist", f, :artists %>
   </div>
 
-  <div class="field">
-    <%= f.label :title %><br>
-    <%= f.text_field :title %>
-  </div>
 
-  <div class="field">
-    <%= f.label :retail %><br>
-    <%= f.text_field :retail %>
-  </div>
 
   <div class="field">
     <%= f.label :image_width %><br>
@@ -89,6 +57,9 @@
   </div>
 
   <%= f.fields_for :properties, OpenStruct.new(@item.properties) do |builder| %>
+
+    <%= f.label :select_item_type %><br>
+    <%= f.collection_select :item_type_id, ItemType.all, :id, :name, {}, onchange: 'submitform()' %><br>
     <% @item.item_type.fields.each do |field| %>
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
     <% end %>
@@ -116,6 +87,8 @@
       <% @item.certificate_type.fields.each do |field| %>
         <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
       <% end %>
-  <% end %>
+    <% end %>
+
   <%= f.submit "Save" %>
+
 <% end %>
