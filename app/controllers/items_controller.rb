@@ -65,19 +65,20 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    @item = Item.find(params[:id])
+    @invoice = Invoice.find(params[:invoice_id])
+    # @item = Item.find(params[:id])
+    @item = @invoice.items.find(params[:id])
 
     if @item.destroy
-      flash[:notice] = "\"#{@item.name}\" was deleted successfully."
-      # redirect_to @item.invoice #action: :index
-      respond_to do |format|
-        format.js
-      end
+      flash[:notice] = "Item was deleted successfully."
     else
       flash.now[:alert] = "There was an error deleting the item."
-      # render :show
     end
 
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def import
