@@ -39,7 +39,7 @@ class Item < ActiveRecord::Base
   end
 
   def capitalize_words(str)
-    str.split.map { |word| word.capitalize! }.join(" ")
+    str.split.map { |word| word.downcase.capitalize! }.join(" ")
   end
 
   def artists_names
@@ -52,9 +52,11 @@ class Item < ActiveRecord::Base
   end
 
   def item_title
-    title = self.title.blank? ? "Untitled" : "#{self.title}"
-    # capitalize_words(title)
-    # "\"#{capitalize_words(title)}\"" #=> for reference when I need to make this more conditional based on description field
+    if self.title.blank?
+      "Untitled"
+    else
+      capitalize_words(self.title)
+    end
   end
 
   def item_retail
@@ -116,7 +118,7 @@ class Item < ActiveRecord::Base
   def item_mounting_type
     if self.properties != nil && item_substrate_type != nil
       if item_substrate_type.split(" ").first != "Gallery" && item_substrate_type.split(" ").first != "Stretched"
-        if self.mounting_type.name == "framed"
+        if self.mounting_type.name == "Framed"
           self.mounting_type.name #unless
         elsif self.mounting_type.name == "Unframed without border"
           "Unframed (no border)"
@@ -154,12 +156,12 @@ class Item < ActiveRecord::Base
   end
 
   def item_signature_type
-    "Hand Signed" if self.signature_type.name == "signature"
+    "Hand Signed" if self.signature_type.name == "Signature"
   end
 
   def item_certificate_type
     if self.properties?
-      if self.certificate_type != nil && self.certificate_type.name == "authentication"
+      if self.certificate_type != nil && self.certificate_type.name == "Authentication"
         "with #{self.properties["authentication_type"]}"
       end
     end

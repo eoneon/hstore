@@ -98,8 +98,7 @@ module ApplicationHelper
 
   def items_format(item)
     artists = "#{item.artists_names} -" unless item.artists_names.nil?
-    title = "\"#{item.item_title}\""
-    "#{artists} #{title} #{item.item_mounting_type} #{item.art_type} #{item.embellish_type} #{item.media_type} #{item.item_substrate_type} #{item.leafing_type} #{item.item_remarque} #{item.item_signature_type} #{item.item_certificate_type}. #{item.item_dimensions}"
+    "#{artists} #{item.item_title} #{item.item_mounting_type} #{item.art_type} #{item.embellish_type} #{item.media_type} #{item.item_substrate_type} #{item.leafing_type} #{item.item_remarque} #{item.item_signature_type} #{item.item_certificate_type}. #{item.item_dimensions}"
   end
 
   def items_tagline(item)
@@ -113,18 +112,20 @@ module ApplicationHelper
 
   def items_description(item)
     if item.art_type != nil
-      if item.item_title.downcase == "untitled"
+      if item.item_title == "Untitled"
         intro = item.art_type[0] =~ /\A[^aeiou]/ ? "This is a " : "This is an "
       else
-        intro = "\"#{item.item_title}\" is an " ? item.art_type[0] =~ /\A[aeiou]/ : "\"#{item.item_title}\" is a "
+        intro = item.art_type[0] =~ /\A[aeiou]/ ? "\"#{item.item_title}\" is a " : "\"#{item.item_title}\" is an "
       end
     end
+
     media = "#{item.media_type}"
     artists = "by #{item.artists_names}," unless item.artists_names.nil?
-    title = "\"#{item.item_title}\"" unless item.item_title.downcase == "untitled"
+    title = "#{item.item_title}" unless item.item_title == "Untitled"
     mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
     substrate = "#{item.item_substrate_type}" unless item.item_substrate_type.nil? || item.item_substrate_type.split(" ").last == "Paper"
-    certificate = "Includes Certificate of Authenticity." if item.certificate_type.name == "authentication"
+    signature = "hand signed by the artist" if item.signature_type.name == "Signature"
+    certificate = "Includes Certificate of Authenticity." if item.certificate_type.name == "Authentication"
 
     "Description: #{intro} #{item.art_type} #{item.embellish_type} #{media} #{substrate} #{item.leafing_type} #{artists} #{item.item_remarque} #{item.item_signature_type}. #{certificate} #{item.item_dimensions}.".gsub(/ ,/, ',')
   end
