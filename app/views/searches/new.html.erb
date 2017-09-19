@@ -1,25 +1,50 @@
 <h1>Advanced Search</h1>
 
-<%= form_for @search do |f| %>
+<%= form_for @search, :html => {:id => 'search_form'} do |f| %>
   <%= f.hidden_field :item_type_id %>
-  <div class="field">
-    <%#= f.label :keywords %><br />
-    <%#= f.text_field :keywords %>
-  </div>
+  <%= f.hidden_field :mounting_type_id %>
+  <%= f.hidden_field :substrate_type_id %>
+  <%= f.hidden_field :certificate_type_id %>
+  <%= f.hidden_field :signature_type_id %>
 
-  <div class="field">
-    <%= f.label :item_type_id %><br />
-    <%= f.collection_select :item_type_id, ItemType.order(:name), :id, :name, include_blank: true %>
-  </div>
+  <script type="text/javascript">
+    function submitform(){
+      $('#search_form').submit();
+    }
+  </script>
 
   <%= f.fields_for :properties, OpenStruct.new(@search.properties) do |builder| %>
-    <% @search.item_type.fields.each do |field| %>
+  <%= f.label :select_item_type %><br>
+  <%= f.collection_select :item_type_id, ItemType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+  <% @search.item_type.fields.each do |field| %>
+    <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+  <% end %>
+
+  <%= f.label :select_mounting %><br>
+  <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+  <% @search.mounting_type.fields.each do |field| %>
+    <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+  <% end %>
+
+  <%= f.label :select_substrate %><br>
+  <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+  <% @search.substrate_type.fields.each do |field| %>
+    <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+  <% end %>
+
+  <%= f.label :select_signature %><br>
+  <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+  <% @search.signature_type.fields.each do |field| %>
+    <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+  <% end %>
+
+  <%= f.label :select_certificate %><br>
+  <%= f.collection_select :certificate_type_id, CertificateType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+    <% @search.certificate_type.fields.each do |field| %>
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
     <% end %>
-
-    <!-- <%# @search.mounting_type.fields.each do |field| %>
-      <%#= render "items/fields/#{field.field_type}", field: field, f: builder %>
-    <%# end %> -->
   <% end %>
+
   <div class="actions"><%= f.submit "Search" %></div>
+
 <% end %>

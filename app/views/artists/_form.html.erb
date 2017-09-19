@@ -9,8 +9,9 @@
     <%= f.text_field :last_name %>
   </div>
   <div class="field">
-    <%= f.fields_for :displays_names do |builder| %>
-      <%= render 'field_fields', f: builder %>
+    <%= f.fields_for :displays, @artist.displays.first do |f| %>
+      <%= f.text_field :name, placeholder: "display name" %>
+      <%#= render 'field_fields', f: f %>
     <% end %>
   </div>
   <div class="form-group">

@@ -9,6 +9,7 @@ class ArtistsController < ApplicationController
 
   def new
     @artist = Artist.new
+    @artist.displays.build
   end
 
   def create
@@ -25,6 +26,7 @@ class ArtistsController < ApplicationController
 
   def edit
     @artist = Artist.find(params[:id])
+    @artist.displays.build
   end
 
   def update
@@ -55,6 +57,6 @@ class ArtistsController < ApplicationController
   private
 
   def artist_params
-    params.require(:artist).permit(:id, :first_name, :last_name, { displays_attributes: [:name, :id, :artist_id]})
+    params.require(:artist).permit(:id, :first_name, :last_name, displays_attributes: [:id, :name, :artist_id])
   end
 end

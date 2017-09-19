@@ -2,6 +2,12 @@
 
 <p>Invoice#: <%= @invoice.invoice %> |Invoice name: <%= @invoice.name %> | <%= link_to "Edit", edit_invoice_path(@invoice) %> | <%= link_to "Back to Invoices", invoices_path %></p>
 
+Advanced Search:
+<div class="new-search">
+  <%= render 'searches/form_group', search: Search.new %>
+</div>
+<br>
+New Item:
 <div class="new-item">
   <%= render 'items/form_group', item: Item.new, invoice: @invoice %>
 </div>

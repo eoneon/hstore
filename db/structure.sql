@@ -369,7 +369,11 @@ CREATE TABLE searches (
     item_type_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    properties character varying
+    properties character varying,
+    mounting_type_id integer,
+    substrate_type_id integer,
+    signature_type_id integer,
+    certificate_type_id integer
 );
 
 
@@ -826,10 +830,38 @@ CREATE INDEX index_items_on_substrate_type_id ON items USING btree (substrate_ty
 
 
 --
+-- Name: index_searches_on_certificate_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searches_on_certificate_type_id ON searches USING btree (certificate_type_id);
+
+
+--
 -- Name: index_searches_on_item_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_searches_on_item_type_id ON searches USING btree (item_type_id);
+
+
+--
+-- Name: index_searches_on_mounting_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searches_on_mounting_type_id ON searches USING btree (mounting_type_id);
+
+
+--
+-- Name: index_searches_on_signature_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searches_on_signature_type_id ON searches USING btree (signature_type_id);
+
+
+--
+-- Name: index_searches_on_substrate_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searches_on_substrate_type_id ON searches USING btree (substrate_type_id);
 
 
 --
@@ -854,6 +886,14 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: searches fk_rails_0a13cb5f64; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY searches
+    ADD CONSTRAINT fk_rails_0a13cb5f64 FOREIGN KEY (certificate_type_id) REFERENCES certificate_types(id);
+
+
+--
 -- Name: items fk_rails_10c92a7db6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -870,6 +910,22 @@ ALTER TABLE ONLY items
 
 
 --
+-- Name: searches fk_rails_1ae338f0c0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY searches
+    ADD CONSTRAINT fk_rails_1ae338f0c0 FOREIGN KEY (mounting_type_id) REFERENCES mounting_types(id);
+
+
+--
+-- Name: searches fk_rails_48c976852a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY searches
+    ADD CONSTRAINT fk_rails_48c976852a FOREIGN KEY (substrate_type_id) REFERENCES substrate_types(id);
+
+
+--
 -- Name: title_items fk_rails_4cf5b6c98a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -883,6 +939,14 @@ ALTER TABLE ONLY title_items
 
 ALTER TABLE ONLY item_fields
     ADD CONSTRAINT fk_rails_58724ce616 FOREIGN KEY (substrate_type_id) REFERENCES substrate_types(id);
+
+
+--
+-- Name: searches fk_rails_5e7a92d8a0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY searches
+    ADD CONSTRAINT fk_rails_5e7a92d8a0 FOREIGN KEY (signature_type_id) REFERENCES signature_types(id);
 
 
 --
@@ -1058,4 +1122,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170829000554');
 INSERT INTO schema_migrations (version) VALUES ('20170831215118');
 
 INSERT INTO schema_migrations (version) VALUES ('20170901002002');
+
+INSERT INTO schema_migrations (version) VALUES ('20170916173823');
 
