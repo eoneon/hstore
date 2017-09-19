@@ -44,19 +44,22 @@
     <%#= link_to_add_fields "Add Artist", f, :artists %>
   </div>
 
-
-
   <div class="field">
     <%= f.label :image_width %><br>
     <%= f.text_field :image_width %>
   </div>
 
-  <div class="field">
+  <div class="field dimensions">
     <%= f.label :image_height %><br>
     <%= f.text_field :image_height %>
   </div>
 
   <%= f.fields_for :properties, OpenStruct.new(@item.properties) do |builder| %>
+    <%= f.label :select_mounting %><br>
+    <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+    <% @item.mounting_type.fields.each do |field| %>
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
 
     <%= f.label :select_item_type %><br>
     <%= f.collection_select :item_type_id, ItemType.all, :id, :name, {}, onchange: 'submitform()' %><br>
@@ -64,11 +67,7 @@
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
     <% end %>
 
-    <%= f.label :select_mounting %><br>
-    <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name, {}, onchange: 'submitform()' %><br>
-    <% @item.mounting_type.fields.each do |field| %>
-      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
-    <% end %>
+
 
     <%= f.label :select_substrate %><br>
     <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name, {}, onchange: 'submitform()' %><br>

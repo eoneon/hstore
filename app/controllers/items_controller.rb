@@ -32,9 +32,7 @@ class ItemsController < ApplicationController
       end
     else
       flash.now[:alert] = "Error creating item. Please try again."
-      respond_to do |format|
-        format.js
-      end
+      render :edit
     end
   end
 
@@ -51,22 +49,12 @@ class ItemsController < ApplicationController
     else
       flash.now[:alert] = "Error updated item. Please try again."
     end
-    redirect_to edit_invoice_item_path(@item.invoice, @item)
-    #   flash[:notice] = "Item was updated successfully."
-    #   if params[:redirect_location] == ':edit'
-    #     render :edit
-    #   else
-    #     redirect_to [@item.invoice, @item] #=> I might need to fix the conditional hidden field redirect #@item
-    #   end
-    # else
-    #   flash.now[:alert] = "Error updated item. Please try again."
-    #   render :edit
-    # end
+    render :edit
+    # redirect_to edit_invoice_item_path(@item.invoice, @item)
   end
 
   def destroy
     @invoice = Invoice.find(params[:invoice_id])
-    # @item = Item.find(params[:id])
     @item = @invoice.items.find(params[:id])
 
     if @item.destroy
@@ -74,11 +62,7 @@ class ItemsController < ApplicationController
     else
       flash.now[:alert] = "There was an error deleting the item."
     end
-
-    respond_to do |format|
-      format.html
-      format.js
-    end
+    redirect_to @item.invoice
   end
 
   def import
