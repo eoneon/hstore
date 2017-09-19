@@ -51,7 +51,7 @@ module ApplicationHelper
   end
 
   def other_type
-    ["Wood", "Wood Panel", "Metal", "Metal Panel", "Resin", "Board"]
+    ["Wood", "Wood Panel", "Metal", "Metal Panel", "Resin", "Board", "Tile"]
   end
 
   #limited editions
@@ -115,18 +115,24 @@ module ApplicationHelper
       if item.item_title == "Untitled"
         intro = item.art_type[0] =~ /\A[^aeiou]/ ? "This is a " : "This is an "
       else
-        intro = item.art_type[0] =~ /\A[aeiou]/ ? "\"#{item.item_title}\" is a " : "\"#{item.item_title}\" is an "
+        intro = item.art_type[0] =~ /\A[^aeiou]/ ? "\"#{item.item_title}\" is a " : "\"#{item.item_title}\" is an "
       end
     end
 
-    media = "#{item.media_type}"
+    if item.art_type != nil
+      art_type = item.item_mounting_type == "Framed" && item.properties["custom_framed"] != "1" ? "Framed #{item.art_type.downcase}" : item.art_type.downcase
+    end
+
+    custom_framed = "This piece comes custom framed." if item.properties["custom_framed"] == "1"
+
+    media = "#{item.media_type}".downcase
     artists = "by #{item.artists_names}," unless item.artists_names.nil?
     title = "#{item.item_title}" unless item.item_title == "Untitled"
     mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
-    substrate = "#{item.item_substrate_type}" unless item.item_substrate_type.nil? || item.item_substrate_type.split(" ").last == "Paper"
+    substrate = "#{item.item_substrate_type.downcase}" unless item.item_substrate_type.nil? || item.item_substrate_type.split(" ").last == "Paper"
     signature = "hand signed by the artist" if item.signature_type.name == "Signature"
     certificate = "Includes Certificate of Authenticity." if item.certificate_type.name == "Authentication"
 
-    "Description: #{intro} #{item.art_type} #{item.embellish_type} #{media} #{substrate} #{item.leafing_type} #{artists} #{item.item_remarque} #{item.item_signature_type}. #{certificate} #{item.item_dimensions}.".gsub(/ ,/, ',')
+    "Description: #{intro} #{art_type} #{item.embellish_type} #{media} #{substrate} #{item.leafing_type} #{artists} #{item.item_remarque} #{signature}. #{custom_framed} #{certificate} #{item.item_dimensions}.".gsub(/ ,/, ',')
   end
 end
