@@ -13,5 +13,11 @@
 // = require jquery
 // = require jquery_ujs
 // = require turbolinks
-// = require_tree .
 // = require bootstrap
+// = require_tree .
+$(document).ready(function(){
+  // function submitform(){
+  //   $('#redirect_location').val(':edit');
+  //   $('#item_form').submit();
+  // });
+});
