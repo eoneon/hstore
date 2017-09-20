@@ -1,17 +1,23 @@
 <%= form_for [@invoice, @item], :html => {:id => 'item_form'} do |f| %>
-
   <%= f.hidden_field :item_type_id %>
   <%= f.hidden_field :mounting_type_id %>
   <%= f.hidden_field :substrate_type_id %>
   <%= f.hidden_field :certificate_type_id %>
   <%= f.hidden_field :signature_type_id %>
-
   <%= hidden_field_tag :redirect_location %>
 
   <script type="text/javascript">
     function submitform(){
       $('#redirect_location').val(':edit');
       $('#item_form').submit();
+    }
+  </script>
+
+  <script type="text/javascript">
+    function reload(){
+      var item_type_id = $('#selectItemtype').val();
+      $('#item_item_type_id').val('item_type_id');
+      //set @item.item_type_id =
     }
   </script>
 
@@ -55,19 +61,17 @@
   </div>
 
   <%= f.fields_for :properties, OpenStruct.new(@item.properties) do |builder| %>
-    <%= f.label :select_mounting %><br>
-    <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name, {}, onchange: 'submitform()' %><br>
-    <% @item.mounting_type.fields.each do |field| %>
-      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
-    <% end %>
-
     <%= f.label :select_item_type %><br>
     <%= f.collection_select :item_type_id, ItemType.all, :id, :name, {}, onchange: 'submitform()' %><br>
     <% @item.item_type.fields.each do |field| %>
       <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
     <% end %>
 
-
+    <%= f.label :select_mounting %><br>
+    <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+    <% @item.mounting_type.fields.each do |field| %>
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
 
     <%= f.label :select_substrate %><br>
     <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name, {}, onchange: 'submitform()' %><br>

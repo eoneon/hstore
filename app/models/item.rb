@@ -15,8 +15,8 @@ class Item < ActiveRecord::Base
   validates :image_height, :numericality => { :only_integer => true }
 
 
-  validate :validate_item_properties
-  validate :validate_mounting_properties
+  # validate :validate_item_properties
+  # validate :validate_mounting_properties
 
   def validate_item_properties
     item_type.fields.each do |field|
