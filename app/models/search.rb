@@ -5,6 +5,8 @@ class Search < ActiveRecord::Base
   belongs_to :signature_type
   belongs_to :certificate_type
 
+  serialize :properties, Hash
+
   def items
     @items ||= find_items
   end

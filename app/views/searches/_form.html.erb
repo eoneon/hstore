@@ -1,0 +1,50 @@
+<%= form_for @search, :html => {:id => 'search_form'} do |f| %>
+  <%= f.hidden_field :item_type_id %>
+  <%= f.hidden_field :mounting_type_id %>
+  <%= f.hidden_field :substrate_type_id %>
+  <%= f.hidden_field :certificate_type_id %>
+  <%= f.hidden_field :signature_type_id %>
+
+  <script type="text/javascript">
+    function submitform(){
+      $('#search_form').submit();
+    }
+  </script>
+
+  <%= f.fields_for :properties, OpenStruct.new(@search.properties) do |builder| %>
+
+    <%= f.label :select_item_type %><br>
+    <%= f.collection_select :item_type_id, ItemType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+    <% @search.item_type.fields.each do |field| %>
+      <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+
+    <%= f.label :select_mounting %><br>
+    <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+    <% @search.mounting_type.fields.each do |field| %>
+      <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+
+    <%= f.label :select_substrate %><br>
+    <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+    <% @search.substrate_type.fields.each do |field| %>
+      <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+
+    <%= f.label :select_signature %><br>
+    <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+    <% @search.signature_type.fields.each do |field| %>
+      <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+
+    <%= f.label :select_certificate %><br>
+    <%= f.collection_select :certificate_type_id, CertificateType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+      <% @search.certificate_type.fields.each do |field| %>
+        <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
+      <% end %>
+    <% end %>
+
+    <% if params[:action] == 'edit' %>
+      <div><%= link_to "Search", @search %></div>
+    <% end %>
+<% end %>
