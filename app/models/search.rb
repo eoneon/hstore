@@ -14,10 +14,10 @@ class Search < ActiveRecord::Base
   private
 
   def find_items
-    items = Item.order(:name)
+    items = Item.order(:sku)
     items = items.where("name like ?", "%#{keywords}%") if keywords.present?
     items = items.where(item_type_id: item_type_id) if item_type_id.present?
-    items = items.where("properties @> hstore(:key, :value)", key: "item_type", value: "Original Painting") if properties.present?
+    items = items.where("properties @> hstore(:key, :value)", key: "paint_type", value: "Oil Painting") if properties["paint_type"].present?
     # items = items.where("properties @> hstore(:key, :value)", key: "mounting_type", value: "Framed") if properties.present?
     # items = items.where("properties @> hstore(:key, :value)", key: "mounting", value: "framed") if properties.present?
     #items = items.where("price <= ?", max_price) if max_price.present?

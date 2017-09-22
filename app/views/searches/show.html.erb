@@ -1,3 +1,7 @@
 <h1>Search Results</h1>
-
+New Search:
+<div class="new-search">
+  <%= render 'searches/form_group', search: Search.new %>
+</div>
+<br>
 <%= render @search.items %>

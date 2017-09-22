@@ -4,9 +4,11 @@
   <%= f.hidden_field :substrate_type_id %>
   <%= f.hidden_field :certificate_type_id %>
   <%= f.hidden_field :signature_type_id %>
+  <%= hidden_field_tag :redirect_location %>
 
   <script type="text/javascript">
     function submitform(){
+      $('#redirect_location').val(':edit');
       $('#search_form').submit();
     }
   </script>
@@ -44,7 +46,8 @@
       <% end %>
     <% end %>
 
-    <% if params[:action] == 'edit' %>
-      <div><%= link_to "Search", @search %></div>
-    <% end %>
+    <%= f.submit "Save" %>
+    <%# if params[:action] == 'edit' %>
+      <div><%#= link_to "Search", @search %></div>
+    <%# end %>
 <% end %>

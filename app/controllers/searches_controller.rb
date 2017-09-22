@@ -11,7 +11,11 @@ class SearchesController < ApplicationController
     @search = Search.new(search_params)
 
     if @search.save
-      render :edit
+      if params[:redirect_location] == ':edit'
+        redirect_to edit_search_path(@search)
+      else
+        redirect_to @search
+      end
     else
       flash.now[:alert] = "Error creating search. Please try again."
       render :new
@@ -27,12 +31,14 @@ class SearchesController < ApplicationController
     @search.assign_attributes(search_params)
 
     if @search.save
-      # flash[:notice] = "Item was updated successfully."
-      redirect_to edit_search_path(@search)
+      if params[:redirect_location] == ':edit'
+        redirect_to edit_search_path(@search)
+      else
+        redirect_to @search
+      end
     else
       flash.now[:alert] = "Error updated search. Please try again."
     end
-     #redirect_to edit_search_path(@search)
   end
 
   private
