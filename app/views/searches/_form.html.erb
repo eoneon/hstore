@@ -1,11 +1,5 @@
 <%= form_for @search, :html => {:id => 'search_form'} do |f| %>
-
-  <%= f.hidden_field :item_type_id %>
-  <%= f.hidden_field :mounting_type_id %>
-  <%= f.hidden_field :substrate_type_id %>
-  <%= f.hidden_field :certificate_type_id %>
-  <%= f.hidden_field :signature_type_id %>
-  <%= hidden_field_tag :redirect_location %>
+  <%= render "items/hidden", f: f %>
 
   <script type="text/javascript">
     function submitform(){
@@ -14,54 +8,8 @@
     }
   </script>
 
-  <%= f.fields_for :properties, OpenStruct.new(@search.properties) do |builder| %>
-    <%= f.label :select_item_type %><br>
-    <%= f.collection_select :item_type_id, ItemType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
-      <% unless @search.item_type_id == nil %>
-        <% @search.item_type.fields.each do |field| %>
-          <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
-        <% end %>
-      <% end %>
-
-
-    <%= f.label :select_mounting %><br>
-    <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
-      <% unless @search.mounting_type_id == nil %>
-        <% @search.mounting_type.fields.each do |field| %>
-          <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
-        <% end %>
-      <% end %>
-
-
-    <%= f.label :select_substrate %><br>
-    <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
-      <% unless @search.substrate_type_id == nil %>
-        <% @search.substrate_type.fields.each do |field| %>
-          <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
-        <% end %>
-      <% end %>
-
-
-    <%= f.label :select_signature %><br>
-    <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
-      <% unless @search.signature_type_id == nil %>
-        <% @search.signature_type.fields.each do |field| %>
-          <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
-        <% end %>
-      <% end %>
-
-
-    <%= f.label :select_certificate %><br>
-    <%= f.collection_select :certificate_type_id, CertificateType.all, :id, :name, {}, onchange: 'submitform()' %><br>
-      <% unless @search.certificate_type_id == nil %>
-        <% @search.certificate_type.fields.each do |field| %>
-          <%= render "searches/fields/#{field.field_type}", field: field, f: builder %>
-        <% end %>
-      <% end %>
-    
-  <% end %>
+  <%= render "items/properties", parent: @search, f: f %>
   <%= f.submit "Save" %>
     <%# if params[:action] == 'edit' %>
-      <div><%#= link_to "Search", @search %></div>
     <%# end %>
 <% end %>

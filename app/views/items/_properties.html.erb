@@ -1,0 +1,41 @@
+<%= f.fields_for :properties, OpenStruct.new(parent.properties) do |builder| %>
+  <%= f.label :select_item_type %><br>
+  <%= f.collection_select :item_type_id, ItemType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
+  <% unless parent.item_type_id == nil %>
+    <% parent.item_type.fields.each do |field| %>
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+  <% end %>
+
+  <%= f.label :select_mounting %><br>
+  <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
+  <% unless parent.mounting_type_id == nil %>
+    <% parent.mounting_type.fields.each do |field| %>
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+  <% end %>
+
+  <%= f.label :select_substrate %><br>
+  <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
+  <% unless parent.substrate_type_id == nil %>
+    <% parent.substrate_type.fields.each do |field| %>
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+  <% end %>
+
+  <%= f.label :select_signature %><br>
+  <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
+  <% unless parent.signature_type_id == nil %>
+    <% parent.signature_type.fields.each do |field| %>
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+  <% end %>
+
+  <%= f.label :select_certificate %><br>
+  <%= f.collection_select :certificate_type_id, CertificateType.all, :id, :name, {}, onchange: 'submitform()' %><br>
+  <% unless parent.certificate_type_id == nil %>
+    <% parent.certificate_type.fields.each do |field| %>
+      <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+    <% end %>
+  <% end %>
+<% end %>
