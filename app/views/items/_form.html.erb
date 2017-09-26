@@ -45,16 +45,6 @@
     <%#= link_to_add_fields "Add Artist", f, :artists %>
   </div>
 
-  <div class="field">
-    <%= f.label :image_width %><br>
-    <%= f.text_field :image_width %>
-  </div>
-
-  <div class="field dimensions">
-    <%= f.label :image_height %><br>
-    <%= f.text_field :image_height %>
-  </div>
-
   <%= render "items/properties", parent: @item, f: f %>
   <%= f.submit "Save" %>
 <% end %>

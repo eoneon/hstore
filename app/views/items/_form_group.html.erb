@@ -1,15 +1,3 @@
-<!-- use this if we don't want to redirect after creating sku -->
-
-<%#= form_for [invoice, item], method: :get do |f| %>
-  <%#= f.collection_select :item_type_id, ItemType.all, :id, :name %>
-  <%#= f.collection_select :mounting_type_id, MountingType.all, :id, :name %>
-  <%#= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name %>
-  <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name %>
-  <%#= f.collection_select :certificate_type_id, CertificateType.all, :id, :name %>
-
-  <%#= f.submit "New Item", name: nil %>
-<%# end %>
-
 <%= form_tag new_invoice_item_path(invoice), method: :get do %>
   <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
   <%= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name) %>

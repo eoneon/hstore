@@ -106,7 +106,7 @@ module ApplicationHelper
     title = "\"#{item.item_title}\"" unless item.item_title.downcase == "untitled"
     mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
     media = "#{item.media_type}" if item.media_type != "Giclee"
-    substrate = "#{item.item_substrate_type}" unless item.item_substrate_type.nil? || item.item_substrate_type.split(" ").last == "Paper"
+    substrate = "on #{item.item_substrate_type}" unless item.item_substrate_type.nil? || item.item_substrate_type.split(" ").last == "Paper"
     "Tagline: #{artists} #{title} #{mounting} #{item.art_type} #{item.embellish_type} #{media} #{substrate}, #{item.leafing_type} #{item.item_remarque} #{item.item_signature_type} #{item.item_certificate_type}.".gsub(/ ,/, ',')
   end
 
@@ -129,7 +129,7 @@ module ApplicationHelper
     artists = "by #{item.artists_names}," unless item.artists_names.nil?
     title = "#{item.item_title}" unless item.item_title == "Untitled"
     mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
-    substrate = "#{item.item_substrate_type.downcase}" unless item.item_substrate_type.nil? || item.item_substrate_type.split(" ").last == "Paper"
+    substrate = "on #{item.item_substrate_type.downcase}" unless item.item_substrate_type.nil?
     signature = "hand signed by the artist" if item.signature_type.name == "Signature"
     certificate = "Includes Certificate of Authenticity." if item.certificate_type.name == "Authentication"
 
