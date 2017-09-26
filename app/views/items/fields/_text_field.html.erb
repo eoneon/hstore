@@ -3,8 +3,9 @@
   <% if field.mounting_type_id? || field.signature_type_id? || field.name == "issuer" || field.name == "number" || field.name == "edition_size" %>
     <%= f.text_field field.name %>
   <% else %>
-    <%= f.select field.name, options_for_select(value_list(field.name)) %>
+    <%= f.select field.name, options_for_select(value_list(field.name), {:selected => @item.properties["#{field.name}"]} ) %>
+    <%#= f.collection_select field.name, value_list(field.name), :id, :name %>
     <%#= f.select field.name, options_for_select(property_list(field.name)) %>
   <% end %>
-  <%#= f.text_field field.name %>
+  <%= f.text_field field.name %>
 </div>
