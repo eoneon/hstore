@@ -10,7 +10,7 @@
     <div class="field">
       <% unless parent.item_type_id == nil %>
         <% parent.item_type.fields.each do |field| %>
-          <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+          <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
         <% end %>
       <% end %>
     </div>
@@ -44,7 +44,7 @@
   <% unless parent.mounting_type == nil %>
     <% parent.mounting_type.fields.each do |field| %>
       <div class="col-xs-3">
-        <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+        <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
       </div>
     <% end %>
   <% end %>
@@ -60,7 +60,7 @@
   <div class="col-xs-3">
     <% unless parent.substrate_type_id == nil %>
       <% parent.substrate_type.fields.each do |field| %>
-        <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+        <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
       <% end %>
     <% end %>
   </div>
@@ -76,7 +76,7 @@
     <div class="col-xs-3">
       <% unless parent.signature_type_id == nil %>
         <% parent.signature_type.fields.each do |field| %>
-          <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+          <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
         <% end %>
       <% end %>
     </div>
@@ -92,7 +92,7 @@
     <div class="col-xs-3">
       <% unless parent.certificate_type_id == nil %>
         <% parent.certificate_type.fields.each do |field| %>
-          <%= render "items/fields/#{field.field_type}", field: field, f: builder %>
+          <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
         <% end %>
       <% end %>
     </div>

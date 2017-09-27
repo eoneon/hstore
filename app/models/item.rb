@@ -136,7 +136,7 @@ class Item < ActiveRecord::Base
   end
 
   def item_substrate_type
-    unless self.properties.nil? || self.properties["#{self.substrate_type}"] != nil
+    if self.properties.nil? && self.properties["#{self.substrate_type}"] != nil
       self.properties["#{self.substrate_type.name.downcase}_type"]
     end
   end
@@ -172,17 +172,21 @@ class Item < ActiveRecord::Base
   end
 
   def item_dimensions
-    if self.mounting_type.name == "Framed"
-      "Measures approx. #{self.item_framed_dim} (framed); #{self.item_image_dim} (image)"
-    elsif item_mounting_type == "Unframed (with border)"
-      "Measures approx. #{self.item_unframed_border_dim} (border); #{self.item_image_dim} (image)"
-    elsif item_mounting_type == "Unframed (no border)"
-      "Measures approx. #{self.item_image_dim} (image)"
+    if self.mounting_type_id != nil
+      if self.mounting_type.name == "Framed"
+        "Measures approx. #{self.item_framed_dim} (framed); #{self.item_image_dim} (image)"
+      elsif item_mounting_type == "Unframed (with border)"
+        "Measures approx. #{self.item_unframed_border_dim} (border); #{self.item_image_dim} (image)"
+      elsif item_mounting_type == "Unframed (no border)"
+        "Measures approx. #{self.item_image_dim} (image)"
+      end
     end
   end
 
   def item_signature_type
-    "Hand Signed" if self.signature_type.name == "Signature"
+    if self.properties != nil && self.signature_type != nil
+      "Hand Signed" if self.signature_type.name == "Signature"
+    end
   end
 
   def item_certificate_type

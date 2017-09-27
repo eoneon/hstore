@@ -1,8 +1,8 @@
 <%= form_tag new_search_path, method: :get do %>
-  <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
-  <%= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name) %>
-  <%= select_tag :substrate_type_id, options_from_collection_for_select(SubstrateType.all, :id, :name) %>
-  <%= select_tag :signature_type_id, options_from_collection_for_select(SignatureType.all, :id, :name) %>
-  <%= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name) %>
+  <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name), { prompt: "- Select Item Type -" } %>
+  <%= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name), { prompt: "- Select Mounting Type -" } %>
+  <%= select_tag :substrate_type_id, options_from_collection_for_select(SubstrateType.all, :id, :name), { prompt: "- Select Substrate Type -" } %>
+  <%= select_tag :signature_type_id, options_from_collection_for_select(SignatureType.all, :id, :name), { prompt: "- Select Signature Type -" } %>
+  <%= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name), { prompt: "- Select Certificate Type -" } %>
   <%= submit_tag "New Search", name: nil %>
 <% end %>

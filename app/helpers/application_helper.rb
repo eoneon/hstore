@@ -11,8 +11,7 @@ module ApplicationHelper
 
   #ItemType values
   # def item_type
-  #   ["original painting", "one-of-a-kind", "original sketch"]
-  #   ["limited edition", "print", "poster"]
+  #   ["Original Painting", "Limited Edition", "One-of-a-Kind", "Print", "Poster", "Original Sketch"]
   # end
 
   #substrate_type values*
@@ -27,7 +26,7 @@ module ApplicationHelper
 
   #original medias
   def paint_type
-    ["Oil Painting", "Acrylic Painting", "Watercolor Painting", "Oil and Acrylic Painting", "Pastel Painting", "Guache Painting", "Etching"]
+    ["Oil Painting", "Acrylic Painting", "Watercolor Painting", "Oil and Acrylic Painting", "Pastel Painting", "Guache Painting"]
   end
 
   def mixed_media_type
@@ -43,7 +42,11 @@ module ApplicationHelper
   end
 
   def canvas_type
-    ["Canvas", "Gallery Wrapped Canvas", "Stretched Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
+    if @item.mounting_type.name == "Framed"
+      ["Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
+    else
+      ["Canvas", "Gallery Wrapped Canvas", "Stretched Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
+    end
   end
 
   def paper_type
@@ -82,10 +85,16 @@ module ApplicationHelper
   end
 
   def value_list(property)
-    return send(property)
+    send(property)
   end
 
-
+  def set_value(value)
+    if value != nil
+      @item.properties["#{value}"]
+    else
+      nil
+    end
+  end
   # def property_list(key)
   #   items = Item.where("properties ? :key", key: key).distinct
   #   properties = items.pluck(:properties)
@@ -104,7 +113,9 @@ module ApplicationHelper
   def items_tagline(item)
     artists = "#{item.artists_names} -" unless item.artists_names.nil?
     title = "\"#{item.item_title}\"" unless item.item_title.downcase == "untitled"
-    mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
+    if item.item_mounting_type != nil
+      mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
+    end
     media = "#{item.media_type}" if item.media_type != "Giclee"
     substrate = "on #{item.item_substrate_type}" unless item.item_substrate_type.nil? || item.item_substrate_type.split(" ").last == "Paper"
     "Tagline: #{artists} #{title} #{mounting} #{item.art_type} #{item.embellish_type} #{media} #{substrate}, #{item.leafing_type} #{item.item_remarque} #{item.item_signature_type} #{item.item_certificate_type}.".gsub(/ ,/, ',')
@@ -123,15 +134,23 @@ module ApplicationHelper
       art_type = item.item_mounting_type == "Framed" && item.properties["custom_framed"] != "1" ? "Framed #{item.art_type.downcase}" : item.art_type.downcase
     end
 
-    custom_framed = "This piece comes custom framed." if item.properties["custom_framed"] == "1"
+    if item.properties != nil
+      custom_framed = "This piece comes custom framed." if item.properties["custom_framed"] == "1"
+    end
+
+    if item.properties != nil && item.signature_type != nil
+      signature = "hand signed by the artist" if item.signature_type.name == "Signature"
+    end
+
+    if item.properties != nil && item.certificate_type != nil
+      certificate = "Includes Certificate of Authenticity." if item.certificate_type.name == "Authentication"
+    end
 
     media = "#{item.media_type}".downcase
     artists = "by #{item.artists_names}," unless item.artists_names.nil?
     title = "#{item.item_title}" unless item.item_title == "Untitled"
     mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
     substrate = "on #{item.item_substrate_type.downcase}" unless item.item_substrate_type.nil?
-    signature = "hand signed by the artist" if item.signature_type.name == "Signature"
-    certificate = "Includes Certificate of Authenticity." if item.certificate_type.name == "Authentication"
 
     "Description: #{intro} #{art_type} #{item.embellish_type} #{media} #{substrate} #{item.leafing_type} #{artists} #{item.item_remarque} #{signature}. #{custom_framed} #{certificate} #{item.item_dimensions}.".gsub(/ ,/, ',')
   end
