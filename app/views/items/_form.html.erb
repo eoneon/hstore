@@ -12,7 +12,6 @@
     function reload(){
       var item_type_id = $('#selectItemtype').val();
       $('#item_item_type_id').val('item_type_id');
-      //set @item.item_type_id =
     }
   </script>
 
@@ -41,8 +40,7 @@
 
   <div class="field">
     <%= f.label :artist_name %><br>
-    <%= f.collection_select( :artist_ids, Artist.all, :id, :full_name, include_blank: true) %>
-    <%#= link_to_add_fields "Add Artist", f, :artists %>
+    <%= f.collection_select( :artist_ids, Artist.all, :id, :full_name, prompt: "- Artist -") %>
   </div>
 
   <%= render "items/properties", parent: @item, f: f %>

@@ -105,6 +105,41 @@ module ApplicationHelper
   #   return values
   # end
 
+  def item_values(item)
+    item_hash = {"title" => item.title, "artist" => item.artist_ids, "retail" => item.retail, "retail" => item.retail, "image_width" => item.image_width, "image_height" => item.image_height}
+    unless item.properties.blank?
+      item.properties.each do |k, v|
+        item_hash[k] = v unless v.blank? || v == "0"
+      end
+    end
+    item_hash
+  end
+
+  # def item_values(item)
+  #   item_hash = Hash.new
+  #   item.attributes.except("id", "created_at", "updated_at", "item_type_id", "mounting_type_id", "substrate_type_id", "signature_type_id", "certificate_type_id", "sku").each do |k, v|
+  #     next if k == "properties" && v.blank?
+  #     if k == "properties" && !v.blank?
+  #       item.properties.each do |k, v|
+  #         item_hash[k] = v unless v.blank? || v == "0"
+  #       end
+  #     else
+  #       item_hash[k] = v
+  #     end
+  #   end
+  #   item_hash
+  # end
+
+  # def item_values(item)
+  #   unless item.properties.blank?
+  #     item_hash = Hash.new
+  #     item.properties.each do |k, v|
+  #       item_hash[k] = v unless v.blank? || v == "0"
+  #     end
+  #   end
+  #   item_hash
+  # end
+
   def items_format(item)
     artists = "#{item.artists_names} -" unless item.artists_names.nil?
     "#{artists} #{item.item_title} #{item.item_mounting_type} #{item.art_type} #{item.embellish_type} #{item.media_type} #{item.item_substrate_type} #{item.leafing_type} #{item.item_remarque} #{item.item_signature_type} #{item.item_certificate_type}. #{item.item_dimensions}"

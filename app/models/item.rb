@@ -10,31 +10,31 @@ class Item < ActiveRecord::Base
   has_many :artists, through: :artist_items, dependent: :destroy
   delegate :first_name, :last_name, :to => :artist
 
-  validates :sku, :numericality => { :only_integer => true }
-  validates :image_width, :numericality => { :only_integer => true }
-  validates :image_height, :numericality => { :only_integer => true }
+  # validates :sku, :numericality => { :only_integer => true }
+  # validates :image_width, :numericality => { :only_integer => true }
+  # validates :image_height, :numericality => { :only_integer => true }
 
 
   # validate :validate_item_properties
   # validate :validate_mounting_properties
 
-  def validate_item_properties
-    item_type.fields.each do |field|
-      if field.required? && properties[field.name].blank?
-        errors.add field.name, "must not be blank"
-      end
-    end
-  end
+  # def validate_item_properties
+  #   item_type.fields.each do |field|
+  #     if field.required? && properties[field.name].blank?
+  #       errors.add field.name, "must not be blank"
+  #     end
+  #   end
+  # end
 
-  def validate_mounting_properties
-    mounting_type.fields.each do |field|
-      if field.required? && properties[field.name].blank?
-        errors.add field.name, "must not be blank"
-      elsif (field.name == 'frame_width' || field.name == 'frame_width') && properties[field.name].class != Fixnum
-        errors.add field.name, "must be a number"
-      end
-    end
-  end
+  # def validate_mounting_properties
+  #   mounting_type.fields.each do |field|
+  #     if field.required? && properties[field.name].blank?
+  #       errors.add field.name, "must not be blank"
+  #     elsif (field.name == 'frame_width' || field.name == 'frame_width') && properties[field.name].class != Fixnum
+  #       errors.add field.name, "must be a number"
+  #     end
+  #   end
+  # end
 
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
@@ -90,7 +90,7 @@ class Item < ActiveRecord::Base
   end
 
   def item_item_type
-    self.item_type.name
+    self.try(:item_type).try(:name)
   end
 
   def art_type
@@ -136,8 +136,8 @@ class Item < ActiveRecord::Base
   end
 
   def item_substrate_type
-    if self.properties.nil? && self.properties["#{self.substrate_type}"] != nil
-      self.properties["#{self.substrate_type.name.downcase}_type"]
+    if self.properties != nil && self.properties["#{substrate_type}"] != nil
+      self.properties["#{substrate_type.name.downcase}_type"]
     end
   end
 
