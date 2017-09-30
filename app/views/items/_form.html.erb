@@ -40,7 +40,7 @@
 
   <div class="field">
     <%= f.label :artist_name %><br>
-    <%= f.collection_select( :artist_ids, Artist.all, :id, :full_name, prompt: "- Artist -") %>
+    <%= f.collection_select( :artist_ids, Artist.all, :id, :full_name, prompt: "- Artist -", include_blank: true) %>
   </div>
 
   <%= render "items/properties", parent: @item, f: f %>

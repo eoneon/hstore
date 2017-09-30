@@ -68,6 +68,69 @@ class Item < ActiveRecord::Base
     str.split.map { |word| word.downcase.capitalize! }.join(" ")
   end
 
+  def item_title
+    self.title.blank? ? "Untitled" : capitalize_words(self.title)
+  end
+
+  def artists
+    artists = self.artist_ids.map { |a| Artist.find(a).full_name }
+    if artists.count == 1
+      artists.first
+    elsif artists.count > 1
+      "#{artists.first} and #{artists.last}"
+    end
+  end
+
+  def hashed_item_values
+    obj_hash = {
+      "title" => item_title,
+      "artist" => self.artists,
+      "retail" => self.retail,
+      "image_width" => self.image_width,
+      "image_height" => self.image_height
+    }
+
+    assoc_hash = {
+      "item_type" => self.try(:item_type).try(:name),
+      "mounting_type" => self.try(:mounting_type).try(:name),
+      "substrate_type" => self.try(:substrate_type).try(:name),
+      "signature_type" => self.try(:signature_type).try(:name),
+      "certificate_type" => self.try(:certificate_type).try(:name)
+    }
+
+    #dynamically generate
+    medium_hash = Hash.new
+    if self.item_type.present? && self.properties.present?
+      medium_fields = self.item_type.fields.where(required: "1").pluck(:name)
+      if medium_fields.present?
+        medium_type = []
+        medium_fields.each do |f|
+          medium_type << self.properties[f]
+        end
+      end
+    medium_type.join(" ") #join not working
+    medium_hash = { "medium_type" => medium_type }
+    end
+
+
+    prop_hash = Hash.new
+    if self.properties.present?
+      self.properties.each do |k, v|
+        prop_hash[k] = v unless v.blank? || v == "0" #update embellish_type/leafing_type and remove second condition to account for border_width and border_height
+      end
+    end
+
+    #attributes hash
+    attr_hash = Hash.new
+    if self.item_type.present?
+      art_type = ["Original", "One-of-a-Kind"].any? { |word| assoc_hash["item_type"].include?(word) } ? "original" : assoc_hash["item_type"].downcase
+      attr_hash = { "art_type" =>  art_type }
+    end
+
+    {"item_values" => {"obj_hash" => obj_hash, "assoc_hash" => assoc_hash, "prop_hash" => prop_hash, "attr_hash" => attr_hash, "medium_hash" => medium_hash}}
+  end
+
+  #kill
   def artists_names
     artists = self.artist_ids.map { |artist| Artist.find(artist) }
     if artists.count == 1
@@ -77,18 +140,12 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def item_title
-    if self.title.blank?
-      "Untitled"
-    else
-      capitalize_words(self.title)
-    end
-  end
-
+  #kill
   def item_retail
     self.retail
   end
 
+  #kill
   def item_item_type
     self.try(:item_type).try(:name)
   end

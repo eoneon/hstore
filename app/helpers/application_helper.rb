@@ -42,7 +42,7 @@ module ApplicationHelper
   end
 
   def canvas_type
-    if @item.mounting_type.name == "Framed"
+    if @item.mounting_type.present? && @item.mounting_type.name == "Framed"
       ["Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
     else
       ["Canvas", "Gallery Wrapped Canvas", "Stretched Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
@@ -105,15 +105,15 @@ module ApplicationHelper
   #   return values
   # end
 
-  def item_values(item)
-    item_hash = {"title" => item.title, "artist" => item.artist_ids, "retail" => item.retail, "retail" => item.retail, "image_width" => item.image_width, "image_height" => item.image_height}
-    unless item.properties.blank?
-      item.properties.each do |k, v|
-        item_hash[k] = v unless v.blank? || v == "0"
-      end
-    end
-    item_hash
-  end
+  # def item_values(item)
+  #   item_hash = {"title" => item.title, "artist" => item.artist_ids, "retail" => item.retail, "retail" => item.retail, "image_width" => item.image_width, "image_height" => item.image_height}
+  #   unless item.properties.blank?
+  #     item.properties.each do |k, v|
+  #       item_hash[k] = v unless v.blank? || v == "0"
+  #     end
+  #   end
+  #   item_hash
+  # end
 
   # def item_values(item)
   #   item_hash = Hash.new
