@@ -99,6 +99,19 @@ class Item < ActiveRecord::Base
     }
 
     #dynamically generate
+    assoc_hash2 = assoc_hash.keep_if { |k ,v| v.present? } #get _type.names if...
+    assoc_array = assoc_hash2.keys #get _types, e.g., item_name
+
+    if assoc_array.present?
+      loop_obj = Hash.new #store variables here
+      assoc_array.each do |v| #build item, then assign to hash
+        # obj_hash = v.gsub(/name/, "hash") #item_type_hash
+        obj_hash = v.gsub(/type/, "hash") #item_type_hash
+        # obj_hash = { "obj_fields" => v.gsub(/name/, "fields"), "obj_type" => v.gsub(/_name/, "") , "obj_arr" => v.gsub(/name/, "arr") }
+        loop_obj[v] = { "obj_fields" => v.gsub(/type/, "fields"), "obj_type" => v, "obj_arr" => v.gsub(/type/, "arr") }
+      end
+    end
+
     medium_hash = Hash.new
     if self.item_type.present? && self.properties.present?
       medium_fields = self.item_type.fields.where(required: "1").pluck(:name)
@@ -108,8 +121,9 @@ class Item < ActiveRecord::Base
           medium_type << self.properties[f]
         end
       end
-    medium_type.join(" ") #join not working
-    medium_hash = { "medium_type" => medium_type }
+
+    medium_hash = { "medium_type" => medium_type.join(" ") }
+    # medium_hash = { "medium_type" => loop_obj }
     end
 
 
@@ -127,7 +141,8 @@ class Item < ActiveRecord::Base
       attr_hash = { "art_type" =>  art_type }
     end
 
-    {"item_values" => {"obj_hash" => obj_hash, "assoc_hash" => assoc_hash, "prop_hash" => prop_hash, "attr_hash" => attr_hash, "medium_hash" => medium_hash}}
+    # {"item_values" => {"obj_hash" => obj_hash, "assoc_hash" => assoc_hash, "prop_hash" => prop_hash, "attr_hash" => attr_hash, "medium_hash" => medium_hash}}
+    {"loop_obj" => loop_obj }
   end
 
   #kill
