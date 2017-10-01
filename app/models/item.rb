@@ -98,17 +98,31 @@ class Item < ActiveRecord::Base
       "certificate_type" => self.try(:certificate_type).try(:name)
     }
 
-    #dynamically generate
-    assoc_hash2 = assoc_hash.keep_if { |k ,v| v.present? } #get _type.names if...
-    assoc_array = assoc_hash2.keys #get _types, e.g., item_name
+    #retrieve object
+    assoc_hash2 = {
+      "item_type" => self.try(:item_type),
+      "mounting_type" => self.try(:mounting_type),
+      "substrate_type" => self.try(:substrate_type),
+      "signature_type" => self.try(:signature_type),
+      "certificate_type" => self.try(:certificate_type)
+    }
 
-    if assoc_array.present?
-      loop_obj = Hash.new #store variables here
-      assoc_array.each do |v| #build item, then assign to hash
-        # obj_hash = v.gsub(/name/, "hash") #item_type_hash
-        obj_hash = v.gsub(/type/, "hash") #item_type_hash
-        # obj_hash = { "obj_fields" => v.gsub(/name/, "fields"), "obj_type" => v.gsub(/_name/, "") , "obj_arr" => v.gsub(/name/, "arr") }
-        loop_obj[v] = { "obj_fields" => v.gsub(/type/, "fields"), "obj_type" => v, "obj_arr" => v.gsub(/type/, "arr") }
+    #dynamically generate
+    assoc_hash3 = assoc_hash2.keep_if { |k ,v| v.present? } #remove k/v pairs with nil values
+
+    if assoc_hash3.present? && self.properties.present? #with assoc_hash we already have level #1 values; no need to loop unless we have some  values at level #2
+      obj_values = Hash.new #store variables here
+      assoc_hash3.each do |k, v| #build item, then assign to hash
+        obj_hash = k.gsub(/type/, "hash")
+        obj_values[obj_hash] = {k.gsub(/type/, "type_name") => v.name}
+
+        if v.fields.present?
+          field_values = []
+          v.fields.where(required: "1").pluck(:name).each do |f|
+            field_values << self.properties[f]
+          end
+          obj_values[k.gsub(/type/, "field_values")] = field_values #k.gsub(/type/, "field_values") => field_values }
+        end
       end
     end
 
@@ -122,8 +136,8 @@ class Item < ActiveRecord::Base
         end
       end
 
-    medium_hash = { "medium_type" => medium_type.join(" ") }
-    # medium_hash = { "medium_type" => loop_obj }
+    # medium_hash = { "medium_type" => medium_type.join(" ") }
+    medium_hash = { "medium_type" => assoc_hash2 }
     end
 
 
@@ -142,7 +156,7 @@ class Item < ActiveRecord::Base
     end
 
     # {"item_values" => {"obj_hash" => obj_hash, "assoc_hash" => assoc_hash, "prop_hash" => prop_hash, "attr_hash" => attr_hash, "medium_hash" => medium_hash}}
-    {"loop_obj" => loop_obj }
+    {"obj_values" => obj_values }
   end
 
   #kill
