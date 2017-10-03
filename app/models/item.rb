@@ -10,31 +10,26 @@ class Item < ActiveRecord::Base
   has_many :artists, through: :artist_items, dependent: :destroy
   delegate :first_name, :last_name, :to => :artist
 
-  validates :sku, :numericality => { :only_integer => true }
-  validates :image_width, :numericality => { :only_integer => true }
-  validates :image_height, :numericality => { :only_integer => true }
-
-
   # validate :validate_item_properties
   # validate :validate_mounting_properties
 
-  def validate_item_properties
-    item_type.fields.each do |field|
-      if field.required? && properties[field.name].blank?
-        errors.add field.name, "must not be blank"
-      end
-    end
-  end
+  # def validate_item_properties
+  #   item_type.fields.each do |field|
+  #     if field.required? && properties[field.name].blank?
+  #       errors.add field.name, "must not be blank"
+  #     end
+  #   end
+  # end
 
-  def validate_mounting_properties
-    mounting_type.fields.each do |field|
-      if field.required? && properties[field.name].blank?
-        errors.add field.name, "must not be blank"
-      elsif (field.name == 'frame_width' || field.name == 'frame_width') && properties[field.name].class != Fixnum
-        errors.add field.name, "must be a number"
-      end
-    end
-  end
+  # def validate_mounting_properties
+  #   mounting_type.fields.each do |field|
+  #     if field.required? && properties[field.name].blank?
+  #       errors.add field.name, "must not be blank"
+  #     elsif (field.name == 'frame_width' || field.name == 'frame_width') && properties[field.name].class != Fixnum
+  #       errors.add field.name, "must be a number"
+  #     end
+  #   end
+  # end
 
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
@@ -68,6 +63,100 @@ class Item < ActiveRecord::Base
     str.split.map { |word| word.downcase.capitalize! }.join(" ")
   end
 
+  def item_title
+    self.title.blank? ? "Untitled" : capitalize_words(self.title)
+  end
+
+  def artists
+    artists = self.artist_ids.map { |a| Artist.find(a).full_name }
+    if artists.count == 1
+      artists.first
+    elsif artists.count > 1
+      "#{artists.first} and #{artists.last}"
+    end
+  end
+
+  def format_item_type_values(obj_values, k, v, field_values)
+    if ["Original", "One-of-a-Kind"].any? { |word| v.name.include?(word) } #get match value here then no need to repeate for limited edition
+      obj_values["media_hash"] = "#{v.name.split.first} #{field_values.join(" ")}"
+      obj_values["item_hash"]["item_type_name"] = "original"
+      obj_values["item_hash"]["art_type"] = obj_values["item_hash"]["item_type_name"]
+      obj_values["item_hash"].delete("item_type_name")
+    #elsif ["Limited"].any? { |word| v.name.include?(word) }
+    else
+      obj_values[k.gsub(/type/, "field_values")] = field_values
+    end
+  end
+
+  def hashed_item_values
+    obj_hash = {
+      "title" => item_title,
+      "artist" => self.artists,
+      "retail" => self.retail,
+      "image_width" => self.image_width,
+      "image_height" => self.image_height
+    }
+
+    assoc_hash = {
+      "item_type" => self.try(:item_type).try(:name),
+      "mounting_type" => self.try(:mounting_type).try(:name),
+      "substrate_type" => self.try(:substrate_type).try(:name),
+      "signature_type" => self.try(:signature_type).try(:name),
+      "certificate_type" => self.try(:certificate_type).try(:name)
+    }
+
+    #retrieve object
+    assoc_hash2 = {
+      "item_type" => self.try(:item_type),
+      "mounting_type" => self.try(:mounting_type),
+      "substrate_type" => self.try(:substrate_type),
+      "signature_type" => self.try(:signature_type),
+      "certificate_type" => self.try(:certificate_type)
+    }
+
+    #dynamically generate
+    assoc_hash3 = assoc_hash2.keep_if { |k ,v| v.present? } #remove k/v pairs with nil values
+
+    if assoc_hash3.present? && self.properties.present? #with assoc_hash we already have level #1 values; no need to loop unless we have some  values at level #2
+      obj_values = Hash.new #store variables here
+      assoc_hash3.each do |k, v| #build item, then assign to hash
+        obj_hash = k.gsub(/type/, "hash")
+        obj_values[obj_hash] = {k.gsub(/type/, "type_name") => v.name}
+
+        if v.fields.present?
+          field_values = []
+          v.fields.where(required: "1").each do |f|
+            #array of field names
+            field_values << self.properties[f.name] #method to handle/format obj-specific field values? by using f.name vs f, now we can use f to grab f.type
+          end
+          #kv = eval("format_#{k}_values(k, v, obj_hash, field_values)") #this works. think about passing in obj_values and then updating and returning hash inside type-specific foramtting method
+          format_item_type_values(obj_values, k, v, field_values)
+          #kv = format_item_type_values(obj_values, k, v, field_values)
+          #obj_values[kv[0]] = kv[1]
+
+        end
+      end
+    end
+
+    prop_hash = Hash.new
+    if self.properties.present?
+      self.properties.each do |k, v|
+        prop_hash[k] = v unless v.blank? || v == "0" #update embellish_type/leafing_type and remove second condition to account for border_width and border_height
+      end
+    end
+
+    #attributes hash
+    attr_hash = Hash.new
+    if self.item_type.present?
+      art_type = ["Original", "One-of-a-Kind"].any? { |word| assoc_hash["item_type"].include?(word) } ? "original" : assoc_hash["item_type"].downcase
+      attr_hash = { "art_type" =>  art_type }
+    end
+
+    # {"item_values" => {"obj_hash" => obj_hash, "assoc_hash" => assoc_hash, "prop_hash" => prop_hash, "attr_hash" => attr_hash, "medium_hash" => medium_hash}}
+    {"obj_values" => obj_values }
+  end
+
+  #kill
   def artists_names
     artists = self.artist_ids.map { |artist| Artist.find(artist) }
     if artists.count == 1
@@ -77,20 +166,14 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def item_title
-    if self.title.blank?
-      "Untitled"
-    else
-      capitalize_words(self.title)
-    end
-  end
-
+  #kill
   def item_retail
     self.retail
   end
 
+  #kill
   def item_item_type
-    self.item_type.name
+    self.try(:item_type).try(:name)
   end
 
   def art_type
@@ -136,8 +219,8 @@ class Item < ActiveRecord::Base
   end
 
   def item_substrate_type
-    unless self.properties.nil? || self.properties["#{self.substrate_type}"] != nil
-      self.properties["#{self.substrate_type.name.downcase}_type"]
+    if self.properties != nil && self.properties["#{substrate_type}"] != nil
+      self.properties["#{substrate_type.name.downcase}_type"]
     end
   end
 
@@ -172,17 +255,21 @@ class Item < ActiveRecord::Base
   end
 
   def item_dimensions
-    if self.mounting_type.name == "Framed"
-      "Measures approx. #{self.item_framed_dim} (framed); #{self.item_image_dim} (image)"
-    elsif item_mounting_type == "Unframed (with border)"
-      "Measures approx. #{self.item_unframed_border_dim} (border); #{self.item_image_dim} (image)"
-    elsif item_mounting_type == "Unframed (no border)"
-      "Measures approx. #{self.item_image_dim} (image)"
+    if self.mounting_type_id != nil
+      if self.mounting_type.name == "Framed"
+        "Measures approx. #{self.item_framed_dim} (framed); #{self.item_image_dim} (image)"
+      elsif item_mounting_type == "Unframed (with border)"
+        "Measures approx. #{self.item_unframed_border_dim} (border); #{self.item_image_dim} (image)"
+      elsif item_mounting_type == "Unframed (no border)"
+        "Measures approx. #{self.item_image_dim} (image)"
+      end
     end
   end
 
   def item_signature_type
-    "Hand Signed" if self.signature_type.name == "Signature"
+    if self.properties != nil && self.signature_type != nil
+      "Hand Signed" if self.signature_type.name == "Signature"
+    end
   end
 
   def item_certificate_type

@@ -1,20 +1,8 @@
-<!-- use this if we don't want to redirect after creating sku -->
-
-<%#= form_for [invoice, item], method: :get do |f| %>
-  <%#= f.collection_select :item_type_id, ItemType.all, :id, :name %>
-  <%#= f.collection_select :mounting_type_id, MountingType.all, :id, :name %>
-  <%#= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name %>
-  <%#= f.collection_select :signature_type_id, SignatureType.all, :id, :name %>
-  <%#= f.collection_select :certificate_type_id, CertificateType.all, :id, :name %>
-
-  <%#= f.submit "New Item", name: nil %>
-<%# end %>
-
 <%= form_tag new_invoice_item_path(invoice), method: :get do %>
-  <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name) %>
-  <%= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name) %>
-  <%= select_tag :substrate_type_id, options_from_collection_for_select(SubstrateType.all, :id, :name) %>
-  <%= select_tag :signature_type_id, options_from_collection_for_select(SignatureType.all, :id, :name) %>
-  <%= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name) %>
+  <%= select_tag :item_type_id, options_from_collection_for_select(ItemType.all, :id, :name), { prompt: "- Select Item Type -" } %>
+  <%= select_tag :mounting_type_id, options_from_collection_for_select(MountingType.all, :id, :name), { prompt: "- Select Mounting Type -" } %>
+  <%= select_tag :substrate_type_id, options_from_collection_for_select(SubstrateType.all, :id, :name), { prompt: "- Select Substrate Type -" } %>
+  <%= select_tag :signature_type_id, options_from_collection_for_select(SignatureType.all, :id, :name), { prompt: "- Select Signature Type -" } %>
+  <%= select_tag :certificate_type_id, options_from_collection_for_select(CertificateType.all, :id, :name), { prompt: "- Select Certificate Type -" } %>
   <%= submit_tag "New Item", name: nil %>
 <% end %>

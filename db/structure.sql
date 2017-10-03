@@ -373,7 +373,9 @@ CREATE TABLE searches (
     mounting_type_id integer,
     substrate_type_id integer,
     signature_type_id integer,
-    certificate_type_id integer
+    certificate_type_id integer,
+    image_width integer,
+    image_height integer
 );
 
 
@@ -1126,4 +1128,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170901002002');
 INSERT INTO schema_migrations (version) VALUES ('20170916173823');
 
 INSERT INTO schema_migrations (version) VALUES ('20170921184659');
+
+INSERT INTO schema_migrations (version) VALUES ('20170927180330');
 
