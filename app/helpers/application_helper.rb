@@ -88,6 +88,10 @@ module ApplicationHelper
     send(property)
   end
 
+  def v_list
+    Item.where(title: "Smokes").pluck(:sku)
+  end
+
   def set_value(value)
     if value != nil
       @item.properties["#{value}"]

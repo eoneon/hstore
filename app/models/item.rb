@@ -10,11 +10,6 @@ class Item < ActiveRecord::Base
   has_many :artists, through: :artist_items, dependent: :destroy
   delegate :first_name, :last_name, :to => :artist
 
-  # validates :sku, :numericality => { :only_integer => true }
-  # validates :image_width, :numericality => { :only_integer => true }
-  # validates :image_height, :numericality => { :only_integer => true }
-
-
   # validate :validate_item_properties
   # validate :validate_mounting_properties
 
@@ -81,6 +76,18 @@ class Item < ActiveRecord::Base
     end
   end
 
+  def format_item_type_values(obj_values, k, v, field_values)
+    if ["Original", "One-of-a-Kind"].any? { |word| v.name.include?(word) } #get match value here then no need to repeate for limited edition
+      obj_values["media_hash"] = "#{v.name.split.first} #{field_values.join(" ")}"
+      obj_values["item_hash"]["item_type_name"] = "original"
+      obj_values["item_hash"]["art_type"] = obj_values["item_hash"]["item_type_name"]
+      obj_values["item_hash"].delete("item_type_name")
+    #elsif ["Limited"].any? { |word| v.name.include?(word) }
+    else
+      obj_values[k.gsub(/type/, "field_values")] = field_values
+    end
+  end
+
   def hashed_item_values
     obj_hash = {
       "title" => item_title,
@@ -118,28 +125,18 @@ class Item < ActiveRecord::Base
 
         if v.fields.present?
           field_values = []
-          v.fields.where(required: "1").pluck(:name).each do |f|
-            field_values << self.properties[f]
+          v.fields.where(required: "1").each do |f|
+            #array of field names
+            field_values << self.properties[f.name] #method to handle/format obj-specific field values? by using f.name vs f, now we can use f to grab f.type
           end
-          obj_values[k.gsub(/type/, "field_values")] = field_values #k.gsub(/type/, "field_values") => field_values }
+          #kv = eval("format_#{k}_values(k, v, obj_hash, field_values)") #this works. think about passing in obj_values and then updating and returning hash inside type-specific foramtting method
+          format_item_type_values(obj_values, k, v, field_values)
+          #kv = format_item_type_values(obj_values, k, v, field_values)
+          #obj_values[kv[0]] = kv[1]
+
         end
       end
     end
-
-    medium_hash = Hash.new
-    if self.item_type.present? && self.properties.present?
-      medium_fields = self.item_type.fields.where(required: "1").pluck(:name)
-      if medium_fields.present?
-        medium_type = []
-        medium_fields.each do |f|
-          medium_type << self.properties[f]
-        end
-      end
-
-    # medium_hash = { "medium_type" => medium_type.join(" ") }
-    medium_hash = { "medium_type" => assoc_hash2 }
-    end
-
 
     prop_hash = Hash.new
     if self.properties.present?

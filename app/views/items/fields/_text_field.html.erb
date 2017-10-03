@@ -1,7 +1,7 @@
 <div class="field">
   <% if field.mounting_type_id? || field.name == "number" || field.name == "edition_size" %>
     <%= f.label field.name %><br/>
-    <%= f.number_field field.name, :value => 0 %>
+    <%= f.number_field field.name %>
   <% elsif  field.signature_type_id? || field.name == "issuer" %>
     <%= f.label field.name %><br/>
     <%= f.text_field field.name %>
