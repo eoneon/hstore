@@ -1,7 +1,7 @@
 <fieldset>
     <!-- we could move this to constant on item_field model to do validations -->
     <%= f.select :field_type, %w[text_field check_box number_field] %>
-    <%#= f.select :name, options_for_select(v_list) %>
+    <%#= f.select :name, options_for_select(ValueItem.where(kind: "paint_media").pluck(:name)) %>
     <%= f.text_field :name, placeholder: "field_name" %>
     <%= f.check_box :required %><%= f.label :required %>
     <!-- link to destroy picked up by js -->

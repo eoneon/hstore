@@ -2,7 +2,8 @@
 
   <div class="field">
     <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.select :name, options_for_select(ValueItem.where(kind: "item_type").pluck(:name)) %>
+    <%#= f.text_field :name %>
   </div>
 
   <!-- loop through each field -->

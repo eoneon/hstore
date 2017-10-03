@@ -8,16 +8,16 @@
     <Table>
       <Row>
         <Cell><Data ss:Type="String">ID</Data></Cell>
-        <Cell><Data ss:Type="String">Sku</Data></Cell>
-        <Cell><Data ss:Type="String">Title</Data></Cell>
-        <Cell><Data ss:Type="String">Properties</Data></Cell>
+        <Cell><Data ss:Type="String">Kind</Data></Cell>
+        <Cell><Data ss:Type="String">Name</Data></Cell>
+        <Cell><Data ss:Type="String">Sort</Data></Cell>
       </Row>
-    <% @items.each do |item| %>
+    <% @value_items.each do |value_item| %>
       <Row>
         <Cell><Data ss:Type="Number"><%= value_item.id %></Data></Cell>
-        <Cell><Data ss:Type="String"><%= value_item.sku %></Data></Cell>
-        <Cell><Data ss:Type="String"><%= value_item.title %></Data></Cell>
-        <Cell><Data ss:Type="String"><%= value_item.properties %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= value_item.kind %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= value_item.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= value_item.sort %></Data></Cell>
       </Row>
     <% end %>
     </Table>
