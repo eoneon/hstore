@@ -1,0 +1,38 @@
+<h1>Value Items#index</h1>
+
+<% if @value_items.empty? %>
+  <p><strong>No Value Items</strong></p>
+<% end %>
+
+<h2>Export Value Items</h2>
+<p>
+  Download:
+  <%= link_to "CSV", value_items_path(format: "csv") %> |
+  <%= link_to "Excel", value_items_path(format: "xls") %>
+</p>
+
+<h2>Import Value Items</h2>
+<%= form_tag import_value_items_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag "Import" %>
+<% end %>
+
+<table class="table">
+  <thead>
+    <th>ID</th>
+    <th>Kind</th>
+    <th>Name</th>
+    <th>Sort</th>
+  </thead>
+
+  <tbody>
+    <% @value_items.each do |value_item| %>
+      <tr>
+        <td><%= value_item.id %></td>
+        <td><%= value_item.kind %></td>
+        <td><%= value_item.name %></td>
+        <td><%= value_item.sort %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

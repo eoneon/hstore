@@ -524,6 +524,39 @@ ALTER SEQUENCE titles_id_seq OWNED BY titles.id;
 
 
 --
+-- Name: value_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE value_items (
+    id integer NOT NULL,
+    kind character varying,
+    name character varying,
+    sort integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: value_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE value_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: value_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE value_items_id_seq OWNED BY value_items.id;
+
+
+--
 -- Name: artist_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -619,6 +652,13 @@ ALTER TABLE ONLY title_items ALTER COLUMN id SET DEFAULT nextval('title_items_id
 --
 
 ALTER TABLE ONLY titles ALTER COLUMN id SET DEFAULT nextval('titles_id_seq'::regclass);
+
+
+--
+-- Name: value_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY value_items ALTER COLUMN id SET DEFAULT nextval('value_items_id_seq'::regclass);
 
 
 --
@@ -731,6 +771,14 @@ ALTER TABLE ONLY title_items
 
 ALTER TABLE ONLY titles
     ADD CONSTRAINT titles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: value_items value_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY value_items
+    ADD CONSTRAINT value_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -1130,4 +1178,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170916173823');
 INSERT INTO schema_migrations (version) VALUES ('20170921184659');
 
 INSERT INTO schema_migrations (version) VALUES ('20170927180330');
+
+INSERT INTO schema_migrations (version) VALUES ('20171003022542');
 

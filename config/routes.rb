@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   resources :items do
     collection { post :import }
   end
+  resources :value_items do
+    collection { post :import }
+  end
   resources :artists
   resources :invoices do
     resources :items, except: [:index]
