@@ -1,11 +1,11 @@
-<%= form_for(parent) do |f| %>
+<%= form_for parent do |f| %>
   <div class="field">
     <%= f.label :name %><br>
-    <%= f.select :name, options_for_select(ValueItem.where(kind: obj_to_s(parent)).pluck(:name), { :selected => parent.name}) %>
+    <%= f.select :name, options_for_select(ValueItem.where(kind: obj_to_s(parent)).pluck(:name), parent.name, {:include_blank => true} ) %>
     <%#= f.text_field :name %>
   </div>
 
-  <!-- loop through each field -->
+  <!-- loop through each field { :selected => }-->
   <%= f.fields_for :fields do |builder| %>
     <!-- for each field, render field partial
     we're generating fields to make other fields -->
