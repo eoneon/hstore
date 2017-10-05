@@ -13,79 +13,79 @@ module ApplicationHelper
     obj.class.name.underscore
   end
 
-  #substrate_type values*
-  def substrate_type
-    ["Canvas", "Paper", "Other"]
-  end
-
-  #mounting_type values
-  def mounting_type
-    ["Framed", "Unframed without border", "Unframed with border"]
-  end
-
-  #original medias
-  def paint_type
-    ["Oil Painting", "Acrylic Painting", "Watercolor Painting", "Oil and Acrylic Painting", "Pastel Painting", "Guache Painting"]
-  end
-
-  def mixed_media_type
-    ["Mixed Media", "Mixed Media Acrylic", "Monoprint", "Numbered Monoprint"]
-  end
-
-  def sketch_type
-    ["Pencil", "Colored Pencil", "Pen & Ink"]
-  end
-
-  def sketch_media_type
-    ["Sketch", "Drawing"]
-  end
-
-  def canvas_type
-    if @item.mounting_type.present? && @item.mounting_type.name == "Framed"
-      ["Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
-    else
-      ["Canvas", "Gallery Wrapped Canvas", "Stretched Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
-    end
-  end
-
-  def paper_type
-    ["Paper", "Archival Paper", "Deckle Edge Paper", "Rice Paper", "Japanese Rice Paper"]
-  end
-
-  def other_type
-    ["Wood", "Wood Panel", "Metal", "Metal Panel", "Resin", "Board", "Tile"]
-  end
-
-  #limited editions
-  def limited_type
-    ["Limited Edition", "Sold Out Limited Edition", "(NFS) Limited Edition"]
-  end
-
-  def ink_type
-    ["Lithograph", "Serigraph", "Giclee", "Etching", "Sericel"]
-  end
-
-  def numbering_type
-    ["Standard", "AP", "PP", "HC"]
-  end
-
-  def extras_type
-    ["Hand Embellished", "Remarque", "Gold Leaf", "Silver Leaf"]
-  end
-
-  #authentication_type
-  def authentication_type
-    ["Certificate of Authenticty", "Letter of Authenticty", "Certificate of Authenticty from Peter Max Studios", "none"] #PSA/BA, presented with...
-  end
-
-  #signature_type
-  def signature_type
-    ["Hand Signed", "Plate Signed", "Official Signature"] #double-signature, nom-de-plum
-  end
-
-  def value_list(property)
-    send(property)
-  end
+  # #substrate_type values*
+  # def substrate_type
+  #   ["Canvas", "Paper", "Other"]
+  # end
+  #
+  # #mounting_type values
+  # def mounting_type
+  #   ["Framed", "Unframed without border", "Unframed with border"]
+  # end
+  #
+  # #original medias
+  # def paint_type
+  #   ["Oil Painting", "Acrylic Painting", "Watercolor Painting", "Oil and Acrylic Painting", "Pastel Painting", "Guache Painting"]
+  # end
+  #
+  # def mixed_media_type
+  #   ["Mixed Media", "Mixed Media Acrylic", "Monoprint", "Numbered Monoprint"]
+  # end
+  #
+  # def sketch_type
+  #   ["Pencil", "Colored Pencil", "Pen & Ink"]
+  # end
+  #
+  # def sketch_media_type
+  #   ["Sketch", "Drawing"]
+  # end
+  #
+  # def canvas_type
+  #   if @item.mounting_type.present? && @item.mounting_type.name == "Framed"
+  #     ["Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
+  #   else
+  #     ["Canvas", "Gallery Wrapped Canvas", "Stretched Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
+  #   end
+  # end
+  #
+  # def paper_type
+  #   ["Paper", "Archival Paper", "Deckle Edge Paper", "Rice Paper", "Japanese Rice Paper"]
+  # end
+  #
+  # def other_type
+  #   ["Wood", "Wood Panel", "Metal", "Metal Panel", "Resin", "Board", "Tile"]
+  # end
+  #
+  # #limited editions
+  # def limited_type
+  #   ["Limited Edition", "Sold Out Limited Edition", "(NFS) Limited Edition"]
+  # end
+  #
+  # def ink_type
+  #   ["Lithograph", "Serigraph", "Giclee", "Etching", "Sericel"]
+  # end
+  #
+  # def numbering_type
+  #   ["Standard", "AP", "PP", "HC"]
+  # end
+  #
+  # def extras_type
+  #   ["Hand Embellished", "Remarque", "Gold Leaf", "Silver Leaf"]
+  # end
+  #
+  # #authentication_type
+  # def authentication_type
+  #   ["Certificate of Authenticty", "Letter of Authenticty", "Certificate of Authenticty from Peter Max Studios", "none"] #PSA/BA, presented with...
+  # end
+  #
+  # #signature_type
+  # def signature_type
+  #   ["Hand Signed", "Plate Signed", "Official Signature"] #double-signature, nom-de-plum
+  # end
+  #
+  # def value_list(property)
+  #   send(property)
+  # end
 
   def set_value(value)
     if value != nil
