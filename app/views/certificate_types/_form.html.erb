@@ -1,8 +1,8 @@
-<%= form_for(@certificate_type) do |f| %>
+<%= form_for(parent) do |f| %>
 
   <div class="field">
     <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.select :name, options_for_select(ValueItem.where(kind: obj_to_s(parent)).pluck(:name)) %>
   </div>
 
   <!-- loop through each field -->

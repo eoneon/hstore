@@ -1,4 +1,7 @@
 class ValueItem < ActiveRecord::Base
+  has_many :child_values, class_name: "ValueItem", foreign_key: "parent_value_id"
+  belongs_to :parent_value, class_name: "ValueItem"
+
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << column_names

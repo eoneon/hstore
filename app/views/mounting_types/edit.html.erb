@@ -1,6 +1,6 @@
 <h1>Editing Mounting Type</h1>
-
-<%= render 'form' %>
+<%= link_to 'Back to Item Type Index', mounting_types_path %>
+<%= render 'item_types/form', parent: @mounting_type %>
 
 <%= link_to 'Show', @mounting_type %> |
 <%= link_to 'Back', mounting_types_path %>

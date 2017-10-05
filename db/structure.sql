@@ -533,7 +533,8 @@ CREATE TABLE value_items (
     name character varying,
     sort integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    parent_value_id integer
 );
 
 
@@ -929,6 +930,13 @@ CREATE INDEX index_title_items_on_title_id ON title_items USING btree (title_id)
 
 
 --
+-- Name: index_value_items_on_parent_value_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_value_items_on_parent_value_id ON value_items USING btree (parent_value_id);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1180,4 +1188,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170921184659');
 INSERT INTO schema_migrations (version) VALUES ('20170927180330');
 
 INSERT INTO schema_migrations (version) VALUES ('20171003022542');
+
+INSERT INTO schema_migrations (version) VALUES ('20171003210537');
 

@@ -9,10 +9,9 @@ module ApplicationHelper
     link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
   end
 
-  #ItemType values
-  # def item_type
-  #   ["Original Painting", "Limited Edition", "One-of-a-Kind", "Print", "Poster", "Original Sketch"]
-  # end
+  def obj_to_s(obj)
+    obj.class.name.underscore
+  end
 
   #substrate_type values*
   def substrate_type
@@ -88,10 +87,6 @@ module ApplicationHelper
     send(property)
   end
 
-  def v_list
-    Item.where(title: "Smokes").pluck(:sku)
-  end
-
   def set_value(value)
     if value != nil
       @item.properties["#{value}"]
@@ -99,98 +94,54 @@ module ApplicationHelper
       nil
     end
   end
-  # def property_list(key)
-  #   items = Item.where("properties ? :key", key: key).distinct
-  #   properties = items.pluck(:properties)
-  #   values = []
-  #   properties.each do |property|
-  #     values << property[key]
-  #   end
-  #   return values
-  # end
 
-  # def item_values(item)
-  #   item_hash = {"title" => item.title, "artist" => item.artist_ids, "retail" => item.retail, "retail" => item.retail, "image_width" => item.image_width, "image_height" => item.image_height}
-  #   unless item.properties.blank?
-  #     item.properties.each do |k, v|
-  #       item_hash[k] = v unless v.blank? || v == "0"
-  #     end
-  #   end
-  #   item_hash
+  # def items_format(item)
+  #   artists = "#{item.artists_names} -" unless item.artists_names.nil?
+  #   "#{artists} #{item.item_title} #{item.item_mounting_type} #{item.art_type} #{item.embellish_type} #{item.media_type} #{item.item_substrate_type} #{item.leafing_type} #{item.item_remarque} #{item.item_signature_type} #{item.item_certificate_type}. #{item.item_dimensions}"
   # end
-
-  # def item_values(item)
-  #   item_hash = Hash.new
-  #   item.attributes.except("id", "created_at", "updated_at", "item_type_id", "mounting_type_id", "substrate_type_id", "signature_type_id", "certificate_type_id", "sku").each do |k, v|
-  #     next if k == "properties" && v.blank?
-  #     if k == "properties" && !v.blank?
-  #       item.properties.each do |k, v|
-  #         item_hash[k] = v unless v.blank? || v == "0"
-  #       end
+  #
+  # def items_tagline(item)
+  #   artists = "#{item.artists_names} -" unless item.artists_names.nil?
+  #   title = "\"#{item.item_title}\"" unless item.item_title.downcase == "untitled"
+  #   if item.item_mounting_type != nil
+  #     mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
+  #   end
+  #   media = "#{item.media_type}" if item.media_type != "Giclee"
+  #   substrate = "on #{item.item_substrate_type}" unless item.item_substrate_type.nil? || item.item_substrate_type.split(" ").last == "Paper"
+  #   "Tagline: #{artists} #{title} #{mounting} #{item.art_type} #{item.embellish_type} #{media} #{substrate}, #{item.leafing_type} #{item.item_remarque} #{item.item_signature_type} #{item.item_certificate_type}.".gsub(/ ,/, ',')
+  # end
+  #
+  # def items_description(item)
+  #   if item.art_type != nil
+  #     if item.item_title == "Untitled"
+  #       intro = item.art_type[0] =~ /\A[^aeiou]/ ? "This is a " : "This is an "
   #     else
-  #       item_hash[k] = v
+  #       intro = item.art_type[0] =~ /\A[^aeiou]/ ? "\"#{item.item_title}\" is a " : "\"#{item.item_title}\" is an "
   #     end
   #   end
-  #   item_hash
-  # end
-
-  # def item_values(item)
-  #   unless item.properties.blank?
-  #     item_hash = Hash.new
-  #     item.properties.each do |k, v|
-  #       item_hash[k] = v unless v.blank? || v == "0"
-  #     end
+  #
+  #   if item.art_type != nil
+  #     art_type = item.item_mounting_type == "Framed" && item.properties["custom_framed"] != "1" ? "Framed #{item.art_type.downcase}" : item.art_type.downcase
   #   end
-  #   item_hash
+  #
+  #   if item.properties != nil
+  #     custom_framed = "This piece comes custom framed." if item.properties["custom_framed"] == "1"
+  #   end
+  #
+  #   if item.properties != nil && item.signature_type != nil
+  #     signature = "hand signed by the artist" if item.signature_type.name == "Signature"
+  #   end
+  #
+  #   if item.properties != nil && item.certificate_type != nil
+  #     certificate = "Includes Certificate of Authenticity." if item.certificate_type.name == "Authentication"
+  #   end
+  #
+  #   media = "#{item.media_type}".downcase
+  #   artists = "by #{item.artists_names}," unless item.artists_names.nil?
+  #   title = "#{item.item_title}" unless item.item_title == "Untitled"
+  #   mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
+  #   substrate = "on #{item.item_substrate_type.downcase}" unless item.item_substrate_type.nil?
+  #
+  #   "Description: #{intro} #{art_type} #{item.embellish_type} #{media} #{substrate} #{item.leafing_type} #{artists} #{item.item_remarque} #{signature}. #{custom_framed} #{certificate} #{item.item_dimensions}.".gsub(/ ,/, ',')
   # end
-
-  def items_format(item)
-    artists = "#{item.artists_names} -" unless item.artists_names.nil?
-    "#{artists} #{item.item_title} #{item.item_mounting_type} #{item.art_type} #{item.embellish_type} #{item.media_type} #{item.item_substrate_type} #{item.leafing_type} #{item.item_remarque} #{item.item_signature_type} #{item.item_certificate_type}. #{item.item_dimensions}"
-  end
-
-  def items_tagline(item)
-    artists = "#{item.artists_names} -" unless item.artists_names.nil?
-    title = "\"#{item.item_title}\"" unless item.item_title.downcase == "untitled"
-    if item.item_mounting_type != nil
-      mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
-    end
-    media = "#{item.media_type}" if item.media_type != "Giclee"
-    substrate = "on #{item.item_substrate_type}" unless item.item_substrate_type.nil? || item.item_substrate_type.split(" ").last == "Paper"
-    "Tagline: #{artists} #{title} #{mounting} #{item.art_type} #{item.embellish_type} #{media} #{substrate}, #{item.leafing_type} #{item.item_remarque} #{item.item_signature_type} #{item.item_certificate_type}.".gsub(/ ,/, ',')
-  end
-
-  def items_description(item)
-    if item.art_type != nil
-      if item.item_title == "Untitled"
-        intro = item.art_type[0] =~ /\A[^aeiou]/ ? "This is a " : "This is an "
-      else
-        intro = item.art_type[0] =~ /\A[^aeiou]/ ? "\"#{item.item_title}\" is a " : "\"#{item.item_title}\" is an "
-      end
-    end
-
-    if item.art_type != nil
-      art_type = item.item_mounting_type == "Framed" && item.properties["custom_framed"] != "1" ? "Framed #{item.art_type.downcase}" : item.art_type.downcase
-    end
-
-    if item.properties != nil
-      custom_framed = "This piece comes custom framed." if item.properties["custom_framed"] == "1"
-    end
-
-    if item.properties != nil && item.signature_type != nil
-      signature = "hand signed by the artist" if item.signature_type.name == "Signature"
-    end
-
-    if item.properties != nil && item.certificate_type != nil
-      certificate = "Includes Certificate of Authenticity." if item.certificate_type.name == "Authentication"
-    end
-
-    media = "#{item.media_type}".downcase
-    artists = "by #{item.artists_names}," unless item.artists_names.nil?
-    title = "#{item.item_title}" unless item.item_title == "Untitled"
-    mounting = "#{item.item_mounting_type}" if item.item_mounting_type == "Framed"
-    substrate = "on #{item.item_substrate_type.downcase}" unless item.item_substrate_type.nil?
-
-    "Description: #{intro} #{art_type} #{item.embellish_type} #{media} #{substrate} #{item.leafing_type} #{artists} #{item.item_remarque} #{signature}. #{custom_framed} #{certificate} #{item.item_dimensions}.".gsub(/ ,/, ',')
-  end
 end

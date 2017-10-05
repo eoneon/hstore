@@ -1,17 +1,10 @@
 <div class="field">
-  <% if field.mounting_type_id? || field.name == "number" || field.name == "edition_size" %>
-    <%= f.label field.name %><br/>
-    <%= f.number_field field.name %>
-  <% elsif  field.signature_type_id? || field.name == "issuer" %>
-    <%= f.label field.name %><br/>
-    <%= f.text_field field.name %>
+  <%= f.label field.name %><br/>
+  <%# if parent.properties? %>
+  <% if parent.properties? && parent.properties["#{field.name}"].present? %>
+    <%#= f.select field.name, options_for_select(value_list(field.name), { :selected => parent.properties["#{field.name}"] }) %>
+    <%= f.select :name, options_for_select(ValueItem.where(kind: field.name).pluck(:name), { :selected => parent.properties["#{field.name}"] }) %>
   <% else %>
-    <%= f.label field.name %><br/>
-    <%# if parent.properties? %>
-    <% if parent.properties? && parent.properties["#{field.name}"].present? %>
-      <%= f.select field.name, options_for_select(value_list(field.name), { :selected => parent.properties["#{field.name}"] }) %>
-    <% else %>
-      <%= f.select field.name, options_for_select(value_list(field.name), { :selected => nil } ) %>
-    <% end %>
+    <%= f.select field.name, options_for_select(ValueItem.where(kind: field.name).pluck(:name), { :selected => nil } ) %>
   <% end %>
 </div>
