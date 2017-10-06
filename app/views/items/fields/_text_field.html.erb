@@ -1,4 +1,8 @@
 <div class="field">
   <%= f.label field.name %><br>
-  <%= f.select field.name, options_for_select(ValueItem.where(kind: field.name).pluck(:name), parent.properties[field.name]), {:include_blank => true}  %>
+  <% if parent.properties.present? && parent.properties[field.name].present? %>
+    <%= f.select field.name, options_for_select(ValueItem.where(kind: field.name).pluck(:name), parent.properties[field.name] ), {:include_blank => true}  %>
+  <% else %>
+    <%= f.select field.name, options_for_select(ValueItem.where(kind: field.name).pluck(:name)), {:include_blank => true}  %>
+  <% end %>
 </div>
