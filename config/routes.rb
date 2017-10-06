@@ -4,16 +4,24 @@ Rails.application.routes.draw do
   resources :certificate_types
   resources :signature_types
   resources :substrate_types
+  resources :categories
+  resources :artists
+  resources :searches
+
   resources :items do
     collection { post :import }
   end
   resources :value_items do
     collection { post :import }
   end
-  resources :artists
+
+  resources :categories do
+    collection { post :import }
+  end
+
   resources :invoices do
     resources :items, except: [:index]
   end
-  resources :searches
+
   root to: 'invoices#index'
 end

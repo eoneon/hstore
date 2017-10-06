@@ -113,6 +113,40 @@ ALTER SEQUENCE artists_id_seq OWNED BY artists.id;
 
 
 --
+-- Name: categories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE categories (
+    id integer NOT NULL,
+    name character varying,
+    sort integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    category character varying,
+    art_type character varying
+);
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE categories_id_seq OWNED BY categories.id;
+
+
+--
 -- Name: certificate_types; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -572,6 +606,13 @@ ALTER TABLE ONLY artists ALTER COLUMN id SET DEFAULT nextval('artists_id_seq'::r
 
 
 --
+-- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
+
+
+--
 -- Name: certificate_types id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -676,6 +717,14 @@ ALTER TABLE ONLY artist_items
 
 ALTER TABLE ONLY artists
     ADD CONSTRAINT artists_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY categories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1190,4 +1239,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170927180330');
 INSERT INTO schema_migrations (version) VALUES ('20171003022542');
 
 INSERT INTO schema_migrations (version) VALUES ('20171003210537');
+
+INSERT INTO schema_migrations (version) VALUES ('20171006211405');
+
+INSERT INTO schema_migrations (version) VALUES ('20171006221810');
 

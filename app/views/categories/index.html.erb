@@ -1,0 +1,38 @@
+<h1>Value Categories#index</h1>
+
+<% if @categories.empty? %>
+  <p><strong>No Categories</strong></p>
+<% end %>
+
+<h2>Export Categories</h2>
+<p>
+  Download:
+  <%= link_to "CSV", categories_path(format: "csv") %> |
+  <%= link_to "Excel", categories_path(format: "xls") %>
+</p>
+
+<h2>Import Categories</h2>
+<%= form_tag import_categories_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag "Import" %>
+<% end %>
+
+<table class="table">
+  <thead>
+    <th>ID</th>
+    <th>Category Name</th>
+    <th>Sort Order</th>
+  </thead>
+
+  <tbody>
+    <% @categories.each do |category| %>
+      <tr>
+        <td><%= category.id %></td>
+        <td><%= category.name %></td>
+        <td><%= category.art_type %></td>
+        <td><%= category.category %></td>
+        <td><%= category.sort %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
