@@ -1,5 +1,5 @@
 class Category < ActiveRecord::Base
-  before_create :set_sort
+  # before_create :set_sort
   before_destroy :update_sort
 
   private
