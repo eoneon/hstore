@@ -15,9 +15,10 @@ Rails.application.routes.draw do
     collection { post :import }
   end
 
+  # post '/sort_up' => 'categories#sort_up'
   resources :categories do
     collection { post :import }
-    post :sort_up
+    # post :sort_up
   end
 
   resources :invoices do

@@ -10,26 +10,29 @@ class Item < ActiveRecord::Base
   has_many :artists, through: :artist_items, dependent: :destroy
   delegate :first_name, :last_name, :to => :artist
 
-  # validate :validate_item_properties
-  # validate :validate_mounting_properties
+  before_save :set_art_type, :set_category
 
-  # def validate_item_properties
-  #   item_type.fields.each do |field|
-  #     if field.required? && properties[field.name].blank?
-  #       errors.add field.name, "must not be blank"
-  #     end
-  #   end
-  # end
+  def set_art_type
+    if ["original", "one-of-a-kind"].any? { |word| self.item_type.name.include?(word) }
+      self.art_type = "original"
+    elsif ["sculpture", "glass"].any? { |word| self.item_type.name.include?(word) }
+      self.art_type = "sculpture/glass"
+    elsif ["limited", "print", "poster"].any? { |word| self.item_type.name.include?(word) }
+      self.art_type = self.item_type.name
+    end
+  end
 
-  # def validate_mounting_properties
-  #   mounting_type.fields.each do |field|
-  #     if field.required? && properties[field.name].blank?
-  #       errors.add field.name, "must not be blank"
-  #     elsif (field.name == 'frame_width' || field.name == 'frame_width') && properties[field.name].class != Fixnum
-  #       errors.add field.name, "must be a number"
-  #     end
-  #   end
-  # end
+  def set_category
+    if ["original", "one-of-a-kind"].any? { |word| self.item_type.name.include?(word) }
+      self.category = "original painting"
+    elsif ["limited", "print", "poster"].any? { |word| self.item_type.name.include?(word) }
+      self.category = "limited edition"
+    elsif ["glass"].any? { |word| self.item_type.name.include?(word) }
+      self.category = "hand blown glass"
+    elsif ["sculpture"].any? { |word| self.item_type.name.include?(word) }
+      self.category = "sculpture"
+    end
+  end
 
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
@@ -76,35 +79,38 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def format_values(obj_values, k, v, field_values)
-    if ["original", "one-of-a-kind"].any? { |word| v.name.include?(word) } #get match value here then no need to repeate for limited edition
-      obj_values["item_hash"]["art_type"] = "original"
+  def format_values(obj_values)
+    #if ["original", "one-of-a-kind"].any? { |word| v.name.include?(word) } #get match value here then no need to repeate for limited edition
+
+      obj_values["attr_hash"] = {"category" => self.category}
       #update [k][v] to [k2][v2] -> for attributes hash
       # obj_values["item_hash"]["item_type_name"] = "original"
       # obj_values["item_hash"]["art_type"] = obj_values["item_hash"]["item_type_name"]
       # obj_values["item_hash"].delete("item_type_name")
 
       #just required values
-      obj_values["media_hash"] = "#{v.name.split.first} #{field_values.join(" ")}"
-    elsif ["limited"].any? { |word| v.name.include?(word) }
+      #obj_values["media_hash"] = "#{v.name.split.first} #{field_values.join(" ")}"
+    #elsif ["limited"].any? { |word| v.name.include?(word) }
       #duplication...
       # obj_values["item_hash"]["item_type_name"] #= "limited edition"
       # obj_values["item_hash"]["art_type"] = obj_values["item_hash"]["item_type_name"]
       # obj_values["item_hash"].delete("item_type_name")
 
-      obj_values["media_hash"] = field_values.join(" ")
-    else
-      obj_values[k.gsub(/type/, "field_values")] = field_values
-    end
+      #obj_values["media_hash"] = field_values.join(" ")
+    #else
+    #  obj_values[k.gsub(/type/, "field_values")] = field_values
+    #end
   end
 
   def hashed_item_values
-    obj_hash = {
-      "title" => item_title,
+    item_fields = {
+      "sku" => self.sku,
+      "title" => self.item_title,
       "artist" => self.artists,
       "retail" => self.retail,
       "image_width" => self.image_width,
-      "image_height" => self.image_height
+      "image_height" => self.image_height,
+      "art_type" => self.art_type,
     }
 
     #1 retrieve <type> objects
@@ -121,6 +127,7 @@ class Item < ActiveRecord::Base
     #3 k: "type", v: <type> object
     if assoc_hash2.present? && self.properties.present? #with assoc_hash we already have level #1 values; no need to loop unless we have some  values at level #2
       obj_values = Hash.new #top key
+      #obj_values = {"item_fields" => item_fields, "attr_hash" => "", "tagline_hash" => "", "description_hash" => ""}
       assoc_hash2.each do |k, v|
         #3 obj_hash: <type> specific hash nested under top key
         obj_hash = k.gsub(/type/, "hash")
@@ -130,14 +137,19 @@ class Item < ActiveRecord::Base
         if v.fields.present?
           #6 retrieve required fields and assign name values to <type> speicific array
           #field_values = []
-          v.fields.where(required: "1").each do |f|
+          # v.fields.where(required: "1").each do |f|
+          v.fields.each do |f|
             #field_values << self.properties[f.name]
-            obj_values[obj_hash][f.name] = self.properties[f.name]
+            if v.name = "original painting" && f.name == "paint_media"
+              obj_values["media"] = "#{self.art_type} #{properties[f.name]} painting"
+            elsif v.name = "one-of-a-kind" && f.name == "mixed_media"
+              obj_values["media"] = "#{v.name} #{properties[f.name]}"
+            end
           end
-
-          #format_values(obj_values, k, v, field_values)
-
+          # obj_values[obj_hash][f.name]
+          format_values(obj_values)
         end
+
       end
     end
 

@@ -2,6 +2,7 @@
   <div class="field">
     <%= f.label :name %><br>
     <%= f.select :name, options_for_select(ValueItem.where(kind: obj_to_s(parent)).pluck(:name), parent.name), {:include_blank => true} %>
+    <%#= f.select :name, options_for_select(Category.where(kind: obj_to_s(parent)).pluck(:name), parent.name), {:include_blank => true} %>
   </div>
 
   <!-- loop through each field { :selected => }-->

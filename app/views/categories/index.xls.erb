@@ -9,16 +9,14 @@
       <Row>
         <Cell><Data ss:Type="Number">ID</Data></Cell>
         <Cell><Data ss:Type="String">Category Name</Data></Cell>
-        <Cell><Data ss:Type="String">Art Type</Data></Cell>
-        <Cell><Data ss:Type="String">Category </Data></Cell>
+        <Cell><Data ss:Type="String">Category Kind</Data></Cell>
         <Cell><Data ss:Type="Number">Sort Order</Data></Cell>
       </Row>
     <% @value_items.each do |value_item| %>
       <Row>
         <Cell><Data ss:Type="Number"><%= category.id %></Data></Cell>
         <Cell><Data ss:Type="String"><%= category.name %></Data></Cell>
-        <Cell><Data ss:Type="String"><%= category.art_type %></Data></Cell>
-        <Cell><Data ss:Type="String"><%= category.category %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= category.kind %></Data></Cell>
         <Cell><Data ss:Type="Number"><%= category.sort %></Data></Cell>
       </Row>
     <% end %>

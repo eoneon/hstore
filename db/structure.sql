@@ -122,8 +122,7 @@ CREATE TABLE categories (
     sort integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    category character varying,
-    art_type character varying
+    kind character varying
 );
 
 
@@ -330,7 +329,9 @@ CREATE TABLE items (
     retail numeric,
     title text,
     sku integer,
-    invoice_id integer
+    invoice_id integer,
+    art_type character varying,
+    category character varying
 );
 
 
@@ -1243,4 +1244,12 @@ INSERT INTO schema_migrations (version) VALUES ('20171003210537');
 INSERT INTO schema_migrations (version) VALUES ('20171006211405');
 
 INSERT INTO schema_migrations (version) VALUES ('20171006221810');
+
+INSERT INTO schema_migrations (version) VALUES ('20171007181058');
+
+INSERT INTO schema_migrations (version) VALUES ('20171007183115');
+
+INSERT INTO schema_migrations (version) VALUES ('20171007183242');
+
+INSERT INTO schema_migrations (version) VALUES ('20171009025717');
 

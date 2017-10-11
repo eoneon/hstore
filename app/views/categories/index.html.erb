@@ -20,8 +20,9 @@
 <table class="table">
   <thead>
     <th>ID</th>
-    <th>Category Name</th>
-    <th>Sort Order</th>
+    <th>Name</th>
+    <th>Kind</th>
+    <th>Sort</th>
   </thead>
 
   <tbody>
@@ -29,10 +30,9 @@
       <tr>
         <td><%= category.id %></td>
         <td><%= category.name %></td>
-        <td><%= category.art_type %></td>
-        <td><%= category.category %></td>
+        <td><%= category.kind %></td>
         <td><%= category.sort %></td>
-        <td><%= link_to " ", category_sort_up_path(category), class: 'glyphicon glyphicon-chevron-up', method: :post %></td>
+        <!-- <td><%#= link_to " ", category_path(category, category: {sort: category.sort + 1}), class: 'glyphicon glyphicon-chevron-up', method: :put %></td> -->
       </tr>
     <% end %>
   </tbody>

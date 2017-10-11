@@ -2,23 +2,26 @@ class Category < ActiveRecord::Base
   # before_create :set_sort
   before_destroy :update_sort
 
-  private
   def set_sort
     self.sort = Category.count == 0 ? 1 : Category.maximum('sort') + 1
   end
 
-  def update_sort
-    sort_objs = Category.where("sort > ?", self.sort)
-    sort_objs.each do |obj|
-      obj.sort = obj.sort - 1
-      obj.save!
-    end
-  end
+  # def update_sort
+  #   sort_objs = Category.where("sort > ?", self.sort)
+  #   sort_objs.each do |obj|
+  #     obj.sort = obj.sort - 1
+  #     obj.save!
+  #   end
+  # end
 
   #own controller? start with category controller then move
-  # def sort_up
-  #   prev = Category.where("sort = ?", self.sort - 1)
-  #
+  # def self.sort_up
+  #   current_sort = self.current_sort
+  #   new_sort = current_sort - 1
+  #   prev = Category.where(sort: new_sort)
+  #   prev.sort = current_sort
+  #   prev.save!
+  #   new_sort
   # end
 
   def self.to_csv(options = {})

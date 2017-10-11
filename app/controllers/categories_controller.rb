@@ -38,7 +38,7 @@ class CategoriesController < ApplicationController
 
     if @category.save
       flash[:notice] = "Category was updated successfully."
-      redirect_to @categories
+      redirect_to '/categories'
     else
       flash.now[:alert] = "Error updated category. Please try again."
       render :edit
@@ -60,20 +60,6 @@ class CategoriesController < ApplicationController
     Category.import(params[:file])
     redirect_to categories_path
     flash[:notice] = "Categories successfully imported."
-  end
-
-  #revisit
-  def sort_up
-    @category = Category.find(params[:category_id])
-    prev = Category.where("sort = ?", @category.sort - 1)
-    prev[sort] = prev.sort + 1
-    prev.save!
-    @category.sort = @category.sort - 1
-    @category.save!
-    redirect_to :back
-  end
-
-  def sort_down
   end
 
   private
