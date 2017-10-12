@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Remarque Types</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @remarque_types.each do |remarque_type| %>
+      <tr>
+        <td><%= remarque_type.name %></td>
+        <td><%= link_to 'Show', remarque_type %></td>
+        <td><%= link_to 'Edit', edit_remarque_type_path(remarque_type) %></td>
+        <td><%= link_to 'Destroy', remarque_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Remarque type', new_remarque_type_path %>

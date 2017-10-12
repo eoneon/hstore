@@ -177,6 +177,37 @@ ALTER SEQUENCE certificate_types_id_seq OWNED BY certificate_types.id;
 
 
 --
+-- Name: dimension_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE dimension_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: dimension_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE dimension_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dimension_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE dimension_types_id_seq OWNED BY dimension_types.id;
+
+
+--
 -- Name: displays; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -206,6 +237,37 @@ CREATE SEQUENCE displays_id_seq
 --
 
 ALTER SEQUENCE displays_id_seq OWNED BY displays.id;
+
+
+--
+-- Name: embellish_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE embellish_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: embellish_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE embellish_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: embellish_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE embellish_types_id_seq OWNED BY embellish_types.id;
 
 
 --
@@ -355,6 +417,37 @@ ALTER SEQUENCE items_id_seq OWNED BY items.id;
 
 
 --
+-- Name: leafing_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE leafing_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: leafing_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE leafing_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: leafing_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE leafing_types_id_seq OWNED BY leafing_types.id;
+
+
+--
 -- Name: mounting_types; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -383,6 +476,37 @@ CREATE SEQUENCE mounting_types_id_seq
 --
 
 ALTER SEQUENCE mounting_types_id_seq OWNED BY mounting_types.id;
+
+
+--
+-- Name: remarque_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE remarque_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: remarque_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE remarque_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: remarque_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE remarque_types_id_seq OWNED BY remarque_types.id;
 
 
 --
@@ -621,10 +745,24 @@ ALTER TABLE ONLY certificate_types ALTER COLUMN id SET DEFAULT nextval('certific
 
 
 --
+-- Name: dimension_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY dimension_types ALTER COLUMN id SET DEFAULT nextval('dimension_types_id_seq'::regclass);
+
+
+--
 -- Name: displays id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY displays ALTER COLUMN id SET DEFAULT nextval('displays_id_seq'::regclass);
+
+
+--
+-- Name: embellish_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY embellish_types ALTER COLUMN id SET DEFAULT nextval('embellish_types_id_seq'::regclass);
 
 
 --
@@ -656,10 +794,24 @@ ALTER TABLE ONLY items ALTER COLUMN id SET DEFAULT nextval('items_id_seq'::regcl
 
 
 --
+-- Name: leafing_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY leafing_types ALTER COLUMN id SET DEFAULT nextval('leafing_types_id_seq'::regclass);
+
+
+--
 -- Name: mounting_types id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY mounting_types ALTER COLUMN id SET DEFAULT nextval('mounting_types_id_seq'::regclass);
+
+
+--
+-- Name: remarque_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY remarque_types ALTER COLUMN id SET DEFAULT nextval('remarque_types_id_seq'::regclass);
 
 
 --
@@ -737,11 +889,27 @@ ALTER TABLE ONLY certificate_types
 
 
 --
+-- Name: dimension_types dimension_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY dimension_types
+    ADD CONSTRAINT dimension_types_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: displays displays_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY displays
     ADD CONSTRAINT displays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: embellish_types embellish_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY embellish_types
+    ADD CONSTRAINT embellish_types_pkey PRIMARY KEY (id);
 
 
 --
@@ -777,11 +945,27 @@ ALTER TABLE ONLY items
 
 
 --
+-- Name: leafing_types leafing_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY leafing_types
+    ADD CONSTRAINT leafing_types_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: mounting_types mounting_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY mounting_types
     ADD CONSTRAINT mounting_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: remarque_types remarque_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY remarque_types
+    ADD CONSTRAINT remarque_types_pkey PRIMARY KEY (id);
 
 
 --
@@ -1252,4 +1436,12 @@ INSERT INTO schema_migrations (version) VALUES ('20171007183115');
 INSERT INTO schema_migrations (version) VALUES ('20171007183242');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009025717');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012220244');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012220701');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012220748');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012220830');
 

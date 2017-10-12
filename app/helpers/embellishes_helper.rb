@@ -1,0 +1,2 @@
+module EmbellishesHelper
+end
