@@ -9,8 +9,24 @@ module ApplicationHelper
     link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
   end
 
+  def obj_type_list
+    [ItemType, MountingType, SubstrateType, SignatureType, CertificateType]
+  end
+
   def obj_to_s(obj)
+    obj.to_s.underscore
+  end
+
+  def obj_to_str(obj)
     obj.class.name.underscore
+  end
+
+  def obj_to_fk(obj)
+    obj.to_s.underscore + "_id"
+  end
+
+  def obj_to_type(parent, obj)
+    parent.public_send(obj.to_s.underscore)
   end
 
   # def canvas_type
@@ -25,7 +41,7 @@ module ApplicationHelper
   # def authentication_type
   #   ["Certificate of Authenticty", "Letter of Authenticty", "Certificate of Authenticty from Peter Max Studios", "none"] #PSA/BA, presented with...
   # end
-  
+
   # def value_list(property)
   #   send(property)
   # end

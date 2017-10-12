@@ -1,100 +1,22 @@
 <%= f.fields_for :properties, OpenStruct.new(parent.properties) do |builder| %>
-<div class="row">
-  <div class="col-xs-3">
-    <div class="field">
-      <%= f.label :select_item_type %><br>
-      <%= f.collection_select :item_type_id, ItemType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
-    </div>
-  </div>
-  <div class="col-xs-3">
-    <div class="field">
-      <% unless parent.item_type_id == nil %>
-        <% parent.item_type.fields.each do |field| %>
-          <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-xs-3">
-    <div class="field">
-      <%= f.label :select_mounting %><br>
-      <%= f.collection_select :mounting_type_id, MountingType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-3">
-    <div class="field">
-      <%= f.label :image_width %><br>
-      <%= f.number_field :image_width %>
-    </div>
-  </div>
-  <div class="col-xs-3">
-    <div class="field">
-      <%= f.label :image_height %><br>
-      <%= f.number_field :image_height %>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <% unless parent.mounting_type == nil %>
-    <% parent.mounting_type.fields.each do |field| %>
-      <div class="col-xs-3">
-        <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
+<% obj_type_list.each do |type| %>
+  <div class="row">
+    <div class="col-xs-3">
+      <div class="field">
+        <%= f.label obj_to_s(type) %><br>
+        <%= f.collection_select obj_to_fk(type), type.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
       </div>
-    <% end %>
+    </div>
+    <div class="col-xs-3">
+      <div class="field">
+        <%# unless parent.item_type_id == nil %>
+        <% unless obj_to_type(parent, type) == nil %>
+          <% obj_to_type(parent, type).fields.each do |field| %>
+            <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
   <% end %>
-</div>
-
-<div class="row">
-  <div class="col-xs-3">
-    <div class="field">
-      <%= f.label :select_substrate %><br>
-      <%= f.collection_select :substrate_type_id, SubstrateType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %>
-    </div>
-  </div>
-  <div class="col-xs-3">
-    <% unless parent.substrate_type_id == nil %>
-      <% parent.substrate_type.fields.each do |field| %>
-        <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
-      <% end %>
-    <% end %>
-  </div>
-</div>
-
-  <div class="row">
-    <div class="col-xs-3">
-      <div class="field">
-        <%= f.label :select_signature %><br>
-        <%= f.collection_select :signature_type_id, SignatureType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
-      </div>
-    </div>
-    <div class="col-xs-3">
-      <% unless parent.signature_type_id == nil %>
-        <% parent.signature_type.fields.each do |field| %>
-          <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-3">
-      <div class="field">
-        <%= f.label :select_certificate %><br>
-        <%= f.collection_select :certificate_type_id, CertificateType.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
-      </div>
-    </div>
-    <div class="col-xs-3">
-      <% unless parent.certificate_type_id == nil %>
-        <% parent.certificate_type.fields.each do |field| %>
-          <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
 <% end %>
