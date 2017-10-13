@@ -10,7 +10,7 @@ module ApplicationHelper
   end
 
   def obj_type_list
-    [ItemType, MountingType, SubstrateType, SignatureType, CertificateType]
+    [ItemType, DimensionType, SubstrateType, EmbellishType, LeafingType, RemarqueType, SignatureType, CertificateType]
   end
 
   def obj_to_s(obj)

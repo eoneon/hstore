@@ -393,7 +393,11 @@ CREATE TABLE items (
     sku integer,
     invoice_id integer,
     art_type character varying,
-    category character varying
+    category character varying,
+    dimension_type_id integer,
+    embellish_type_id integer,
+    leafing_type_id integer,
+    remarque_type_id integer
 );
 
 
@@ -1080,6 +1084,20 @@ CREATE INDEX index_items_on_certificate_type_id ON items USING btree (certificat
 
 
 --
+-- Name: index_items_on_dimension_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_dimension_type_id ON items USING btree (dimension_type_id);
+
+
+--
+-- Name: index_items_on_embellish_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_embellish_type_id ON items USING btree (embellish_type_id);
+
+
+--
 -- Name: index_items_on_invoice_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1094,10 +1112,24 @@ CREATE INDEX index_items_on_item_type_id ON items USING btree (item_type_id);
 
 
 --
+-- Name: index_items_on_leafing_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_leafing_type_id ON items USING btree (leafing_type_id);
+
+
+--
 -- Name: index_items_on_mounting_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_items_on_mounting_type_id ON items USING btree (mounting_type_id);
+
+
+--
+-- Name: index_items_on_remarque_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_remarque_type_id ON items USING btree (remarque_type_id);
 
 
 --
@@ -1178,6 +1210,14 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: items fk_rails_079304ee1d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_079304ee1d FOREIGN KEY (remarque_type_id) REFERENCES remarque_types(id);
+
+
+--
 -- Name: searches fk_rails_0a13cb5f64; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1191,6 +1231,14 @@ ALTER TABLE ONLY searches
 
 ALTER TABLE ONLY items
     ADD CONSTRAINT fk_rails_10c92a7db6 FOREIGN KEY (invoice_id) REFERENCES invoices(id);
+
+
+--
+-- Name: items fk_rails_1240dd3783; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_1240dd3783 FOREIGN KEY (dimension_type_id) REFERENCES dimension_types(id);
 
 
 --
@@ -1223,6 +1271,14 @@ ALTER TABLE ONLY searches
 
 ALTER TABLE ONLY title_items
     ADD CONSTRAINT fk_rails_4cf5b6c98a FOREIGN KEY (title_id) REFERENCES titles(id);
+
+
+--
+-- Name: items fk_rails_56a4639c34; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_56a4639c34 FOREIGN KEY (embellish_type_id) REFERENCES embellish_types(id);
 
 
 --
@@ -1311,6 +1367,14 @@ ALTER TABLE ONLY item_fields
 
 ALTER TABLE ONLY displays
     ADD CONSTRAINT fk_rails_c725fa2dec FOREIGN KEY (artist_id) REFERENCES artists(id);
+
+
+--
+-- Name: items fk_rails_d1c24a839f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_d1c24a839f FOREIGN KEY (leafing_type_id) REFERENCES leafing_types(id);
 
 
 --
@@ -1444,4 +1508,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171012220701');
 INSERT INTO schema_migrations (version) VALUES ('20171012220748');
 
 INSERT INTO schema_migrations (version) VALUES ('20171012220830');
+
+INSERT INTO schema_migrations (version) VALUES ('20171013011210');
 

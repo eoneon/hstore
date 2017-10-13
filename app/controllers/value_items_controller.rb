@@ -1,6 +1,6 @@
 class ValueItemsController < ApplicationController
   def index
-    @value_items = ValueItem.all
+    @value_items = ValueItem.all.order(:id)
     respond_to do |format|
       format.html
       format.csv { send_data @value_items.to_csv }

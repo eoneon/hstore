@@ -1,7 +1,6 @@
 class Item < ActiveRecord::Base
   belongs_to :item_type
   belongs_to :dimension_type
-  belongs_to :mounting_type
   belongs_to :embellish_type
   belongs_to :leafing_type
   belongs_to :remarque_type
@@ -119,6 +118,7 @@ class Item < ActiveRecord::Base
 
     #1 retrieve <type> objects
     assoc_hash = {
+      #k => v
       "item_type" => self.try(:item_type),
       "mounting_type" => self.try(:mounting_type),
       "substrate_type" => self.try(:substrate_type),
@@ -134,26 +134,24 @@ class Item < ActiveRecord::Base
       #obj_values = {"item_fields" => item_fields, "attr_hash" => "", "tagline_hash" => "", "description_hash" => ""}
       assoc_hash2.each do |k, v|
         #3 obj_hash: <type> specific hash nested under top key
-        obj_hash = k.gsub(/type/, "hash")
+        #obj_hash = k.gsub(/type/, "hash")
         #4 set k/v where v: <type> name, i.e., original painting
-        obj_values[obj_hash] = {k.gsub(/type/, "type_name") => v.name}
+        #obj_values[obj_hash] = {k.gsub(/type/, "type_name") => v.name}
         #5 <type> object's <fields>
         if v.fields.present?
           #6 retrieve required fields and assign name values to <type> speicific array
-          #field_values = []
+          medium = []
           # v.fields.where(required: "1").each do |f|
           v.fields.each do |f|
             #field_values << self.properties[f.name]
-            if v.name = "original painting" && f.name == "paint_media"
-              obj_values["media"] = "#{self.art_type} #{properties[f.name]} painting"
-            elsif v.name = "one-of-a-kind" && f.name == "mixed_media"
-              obj_values["media"] = "#{v.name} #{properties[f.name]}"
+            if k = "item_type"
+              medium << self.properties[f.name]
             end
+            obj_values["medium"] = medium.join(" ")
           end
           # obj_values[obj_hash][f.name]
-          format_values(obj_values)
+          #format_values(obj_values)
         end
-
       end
     end
 
