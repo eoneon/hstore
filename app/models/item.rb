@@ -106,52 +106,63 @@ class Item < ActiveRecord::Base
   end
 
   def hashed_item_values
-    item_fields = {
-      "sku" => self.sku,
-      "title" => self.item_title,
-      "artist" => self.artists,
-      "retail" => self.retail,
-      "image_width" => self.image_width,
-      "image_height" => self.image_height,
-      "art_type" => self.art_type,
-    }
+    # item_fields = {
+    #   "sku" => self.sku,
+    #   "title" => self.item_title,
+    #   "artist" => self.artists,
+    #   "retail" => self.retail,
+    #   "image_width" => self.image_width,
+    #   "image_height" => self.image_height,
+    #   "art_type" => self.art_type,
+    # }
 
     #1 retrieve <type> objects
     assoc_hash = {
-      #k => v
+      #k => v, if v.present?
       "item_type" => self.try(:item_type),
-      "mounting_type" => self.try(:mounting_type),
+      "dimension_type" => self.try(:dimension_type),
       "substrate_type" => self.try(:substrate_type),
       "signature_type" => self.try(:signature_type),
       "certificate_type" => self.try(:certificate_type)
     }
 
-    #2 fiter out nil k/v pairs
-    assoc_hash2 = assoc_hash.keep_if { |k ,v| v.present? } #remove k/v pairs with nil values
-    #3 k: "type", v: <type> object
-    if assoc_hash2.present? && self.properties.present? #with assoc_hash we already have level #1 values; no need to loop unless we have some  values at level #2
-      obj_values = Hash.new #top key
-      #obj_values = {"item_fields" => item_fields, "attr_hash" => "", "tagline_hash" => "", "description_hash" => ""}
+    #3 k: "item_type", v: ItemType.find(n) #=> remove k/v pairs with nil values
+    assoc_hash2 = assoc_hash.keep_if { |k ,v| v.present? }
+
+    if assoc_hash2.present? && self.properties.present?
+
+      #top key set before assoc_hash2 loop
+      obj_values = Hash.new
+      #assoc_hash2 loop
       assoc_hash2.each do |k, v|
-        #3 obj_hash: <type> specific hash nested under top key
-        #obj_hash = k.gsub(/type/, "hash")
-        #4 set k/v where v: <type> name, i.e., original painting
-        #obj_values[obj_hash] = {k.gsub(/type/, "type_name") => v.name}
-        #5 <type> object's <fields>
+        #e.g. item_type -> item_hash #=> this value is set for each k/v, string at this point
+        obj_values[k] = {k.gsub(/_type/, "") => v.name}
+
         if v.fields.present?
-          #6 retrieve required fields and assign name values to <type> speicific array
+          #e.g., item_type.fields.each
           medium = []
-          # v.fields.where(required: "1").each do |f|
           v.fields.each do |f|
-            #field_values << self.properties[f.name]
-            if k = "item_type"
+
+
+            #obj_values[]
+            if k == "item_type"
               medium << self.properties[f.name]
+            else
+              obj_values[k][f.name] = self.properties[f.name]
             end
-            obj_values["medium"] = medium.join(" ")
+            #obj_values[k][f.name] = self.properties[f.name]
+            #obj_values[obj_hash] = {f.name => self.properties[f.name]}
+
           end
-          # obj_values[obj_hash][f.name]
+          #^end: v.fields loop
+
           #format_values(obj_values)
+          obj_values[k]["medium"] = medium.join(" ")
+
         end
+        #^end: v.present condition
+
+
       end
     end
 

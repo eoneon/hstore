@@ -317,7 +317,10 @@ CREATE TABLE item_fields (
     mounting_type_id integer,
     certificate_type_id integer,
     signature_type_id integer,
-    substrate_type_id integer
+    substrate_type_id integer,
+    dimension_type_id integer,
+    leafing_type_id integer,
+    remarque_type_id integer
 );
 
 
@@ -1049,6 +1052,13 @@ CREATE INDEX index_item_fields_on_certificate_type_id ON item_fields USING btree
 
 
 --
+-- Name: index_item_fields_on_dimension_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_dimension_type_id ON item_fields USING btree (dimension_type_id);
+
+
+--
 -- Name: index_item_fields_on_item_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1056,10 +1066,24 @@ CREATE INDEX index_item_fields_on_item_type_id ON item_fields USING btree (item_
 
 
 --
+-- Name: index_item_fields_on_leafing_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_leafing_type_id ON item_fields USING btree (leafing_type_id);
+
+
+--
 -- Name: index_item_fields_on_mounting_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_item_fields_on_mounting_type_id ON item_fields USING btree (mounting_type_id);
+
+
+--
+-- Name: index_item_fields_on_remarque_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_remarque_type_id ON item_fields USING btree (remarque_type_id);
 
 
 --
@@ -1210,6 +1234,14 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: item_fields fk_rails_06eaf1db85; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_06eaf1db85 FOREIGN KEY (dimension_type_id) REFERENCES dimension_types(id);
+
+
+--
 -- Name: items fk_rails_079304ee1d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1258,6 +1290,14 @@ ALTER TABLE ONLY searches
 
 
 --
+-- Name: item_fields fk_rails_37b0924afc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_37b0924afc FOREIGN KEY (remarque_type_id) REFERENCES remarque_types(id);
+
+
+--
 -- Name: searches fk_rails_48c976852a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1303,6 +1343,14 @@ ALTER TABLE ONLY searches
 
 ALTER TABLE ONLY items
     ADD CONSTRAINT fk_rails_6bed0f90a5 FOREIGN KEY (item_type_id) REFERENCES item_types(id);
+
+
+--
+-- Name: item_fields fk_rails_7ac6da6f8e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_7ac6da6f8e FOREIGN KEY (leafing_type_id) REFERENCES leafing_types(id);
 
 
 --
@@ -1510,4 +1558,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171012220748');
 INSERT INTO schema_migrations (version) VALUES ('20171012220830');
 
 INSERT INTO schema_migrations (version) VALUES ('20171013011210');
+
+INSERT INTO schema_migrations (version) VALUES ('20171014011058');
 
