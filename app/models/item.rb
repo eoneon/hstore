@@ -83,9 +83,56 @@ class Item < ActiveRecord::Base
   end
 
   def format_values(obj_values)
-    #if ["original", "one-of-a-kind"].any? { |word| v.name.include?(word) } #get match value here then no need to repeate for limited edition
+    obj_values.each do |k, v|
+      if k == "item_type"
+        medium = []
+        v.each do |k2, v2|
+          next if k2 == "item_name"
+          medium << v2
+        end
+        obj_values[k]["medium"] = medium.join(" ")
+      elsif k == "dimension_type"
+        name_to_a = obj_values["dimension_type"]["dimension_name"].split(" & ")
+        if name_to_a[-1] != "weight"
+          image_dim = "#{obj_values["dimension_type"]["width"]} x #{obj_values["dimension_type"]["height"]}"
+          obj_values["dimension_type"]["image_dim"] = "(#{image_dim})"
+          if name_to_a[0] == name_to_a[-1]
+            obj_values["dimension_type"]["measurements"] = "Measures approx. #{image_dim} (#{name_to_a[0]})."
+          elsif name_to_a[0] != name_to_a[-1]
+            obj_values["dimension_type"]["measurements"] = "Measures approx. #{obj_values["dimension_type"]["outer_width"]} x #{obj_values["dimension_type"]["outer_height"]} (#{name_to_a[-1]}); #{image_dim} (#{name_to_a[0]})."
+            obj_values["dimension_type"]["frame_description"] = "This piece is #{obj_values["dimension_type"]["frame_kind"]}." if name_to_a[-1] == "frame"
+          end
+        else
+          measurements = []
+          name_to_a.each do |dim|
+            measurements << "#{obj_values["dimension_type"][dim]} (#{dim})"
+          end
+          obj_values["dimension_type"]["measurements"] = "Measures approx. #{measurements.join(" x ")}."
+        end
 
-      obj_values["attr_hash"] = {"category" => self.category}
+      #   if obj_values["dimension_type"]["dimension_name"] == "image & frame"
+      #     inner = []
+      #     outer = []
+      #     v.each do |k2, v2|
+      #       next if k2 == "dimension_name" || k2 == "frame_kind"
+      #       if k2 == "width" || k2 == "height"
+      #         inner << v2
+      #       else
+      #         outer << v2
+      #       end
+      #     end
+      #   end
+      #   obj_values[k]["inner"] = inner.join(" x ")
+      #   inner = inner.join(" x ")
+      #   outer = outer.join(" x ")
+      #   obj_values[k]["measurements"] = "Measures approx. #{outer} (frame); #{inner} (image)."
+      #   obj_values[k]["image_dim"] = "(#{inner})"
+      #obj_values[k]["outer_dim"] = outer_dim
+      end
+    end
+  end
+
+
       #update [k][v] to [k2][v2] -> for attributes hash
       # obj_values["item_hash"]["item_type_name"] = "original"
       # obj_values["item_hash"]["art_type"] = obj_values["item_hash"]["item_type_name"]
@@ -103,7 +150,7 @@ class Item < ActiveRecord::Base
     #else
     #  obj_values[k.gsub(/type/, "field_values")] = field_values
     #end
-  end
+
 
   def hashed_item_values
     # item_fields = {
@@ -136,34 +183,30 @@ class Item < ActiveRecord::Base
       #assoc_hash2 loop
       assoc_hash2.each do |k, v|
         #e.g. item_type -> item_hash #=> this value is set for each k/v, string at this point
-        obj_values[k] = {k.gsub(/_type/, "") => v.name}
+        obj_values[k] = {k.gsub(/type/, "name") => v.name}
+        #obj_values[k] = {k.gsub(/_type/, "") => "name"}
 
         if v.fields.present?
           #e.g., item_type.fields.each
-          medium = []
+          #medium = []
           v.fields.each do |f|
-
-
-            #obj_values[]
-            if k == "item_type"
-              medium << self.properties[f.name]
-            else
-              obj_values[k][f.name] = self.properties[f.name]
-            end
-            #obj_values[k][f.name] = self.properties[f.name]
-            #obj_values[obj_hash] = {f.name => self.properties[f.name]}
-
+            obj_values[k][f.name] = self.properties[f.name]
+            # if k == "item_type"
+            #   medium << self.properties[f.name]
+            # elsif k == "dimension_type"
+            #   obj_values[k][f.name] = self.properties[f.name]
+            # else
+            #   obj_values[k][f.name] = self.properties[f.name]
+            # end
           end
           #^end: v.fields loop
-
           #format_values(obj_values)
-          obj_values[k]["medium"] = medium.join(" ")
-
+          #obj_values[k]["medium"] = medium.join(" ")
         end
         #^end: v.present condition
-
-
       end
+      #^end: assoc_hash2.present?
+      format_values(obj_values)
     end
 
     # prop_hash = Hash.new
