@@ -88,6 +88,11 @@ class Item < ActiveRecord::Base
         medium = []
         v.each do |k2, v2|
           next if k2 == "item_name"
+          if k2 == "leafing_kind"
+            v2 = "with #{v2}"
+          elsif k2 == "remarque_kind"
+            v2 = obj_values[k]["leafing_kind"].present? ? "and #{v2}" : "with #{v2}"
+          end
           medium << v2
         end
         obj_values[k]["medium"] = medium.join(" ")
@@ -109,7 +114,16 @@ class Item < ActiveRecord::Base
           end
           obj_values["dimension_type"]["measurements"] = "Measures approx. #{measurements.join(" x ")}."
         end
+      elsif k == "edition_type"
+        numbered = obj_values["edition_type"]["edition_kind"] != "standard" ? "#{obj_values["edition_type"]["edition_kind"]} numbered" : "numbered" #if we remove "standard" from valist, we don't need this condition
+        if obj_values["edition_type"]["number"].present? && obj_values["edition_type"]["edition_size"].present?
+          numbering = "#{numbered} #{obj_values["edition_type"]["number"]}/#{obj_values["edition_type"]["edition_size"]}"
+        elsif obj_values["edition_type"]["number"].blank? && obj_values["edition_type"]["edition_size"].present?
+          numbering = "#{numbered} out of #{obj_values["edition_type"]["edition_size"]}"
+        end
+        obj_values["edition_type"]["numbering"] = numbering
       end
+      #^end of k == _type conditions
     end
   end
 
@@ -148,6 +162,7 @@ class Item < ActiveRecord::Base
     assoc_hash = {
       #k => v, if v.present?
       "item_type" => self.try(:item_type),
+      "edition_type" => self.try(:edition_type),
       "dimension_type" => self.try(:dimension_type),
       "substrate_type" => self.try(:substrate_type),
       "signature_type" => self.try(:signature_type),
