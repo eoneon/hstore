@@ -240,6 +240,37 @@ ALTER SEQUENCE displays_id_seq OWNED BY displays.id;
 
 
 --
+-- Name: edition_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE edition_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: edition_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE edition_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: edition_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE edition_types_id_seq OWNED BY edition_types.id;
+
+
+--
 -- Name: embellish_types; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -320,7 +351,8 @@ CREATE TABLE item_fields (
     substrate_type_id integer,
     dimension_type_id integer,
     leafing_type_id integer,
-    remarque_type_id integer
+    remarque_type_id integer,
+    edition_type_id integer
 );
 
 
@@ -400,7 +432,8 @@ CREATE TABLE items (
     dimension_type_id integer,
     embellish_type_id integer,
     leafing_type_id integer,
-    remarque_type_id integer
+    remarque_type_id integer,
+    edition_type_id integer
 );
 
 
@@ -766,6 +799,13 @@ ALTER TABLE ONLY displays ALTER COLUMN id SET DEFAULT nextval('displays_id_seq':
 
 
 --
+-- Name: edition_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY edition_types ALTER COLUMN id SET DEFAULT nextval('edition_types_id_seq'::regclass);
+
+
+--
 -- Name: embellish_types id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -909,6 +949,14 @@ ALTER TABLE ONLY dimension_types
 
 ALTER TABLE ONLY displays
     ADD CONSTRAINT displays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: edition_types edition_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY edition_types
+    ADD CONSTRAINT edition_types_pkey PRIMARY KEY (id);
 
 
 --
@@ -1059,6 +1107,13 @@ CREATE INDEX index_item_fields_on_dimension_type_id ON item_fields USING btree (
 
 
 --
+-- Name: index_item_fields_on_edition_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_edition_type_id ON item_fields USING btree (edition_type_id);
+
+
+--
 -- Name: index_item_fields_on_item_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1112,6 +1167,13 @@ CREATE INDEX index_items_on_certificate_type_id ON items USING btree (certificat
 --
 
 CREATE INDEX index_items_on_dimension_type_id ON items USING btree (dimension_type_id);
+
+
+--
+-- Name: index_items_on_edition_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_edition_type_id ON items USING btree (edition_type_id);
 
 
 --
@@ -1314,6 +1376,14 @@ ALTER TABLE ONLY title_items
 
 
 --
+-- Name: items fk_rails_53473d0118; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_53473d0118 FOREIGN KEY (edition_type_id) REFERENCES edition_types(id);
+
+
+--
 -- Name: items fk_rails_56a4639c34; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1458,6 +1528,14 @@ ALTER TABLE ONLY items
 
 
 --
+-- Name: item_fields fk_rails_f444bd9019; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_f444bd9019 FOREIGN KEY (edition_type_id) REFERENCES edition_types(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -1560,4 +1638,14 @@ INSERT INTO schema_migrations (version) VALUES ('20171012220830');
 INSERT INTO schema_migrations (version) VALUES ('20171013011210');
 
 INSERT INTO schema_migrations (version) VALUES ('20171014011058');
+
+INSERT INTO schema_migrations (version) VALUES ('20171017012712');
+
+INSERT INTO schema_migrations (version) VALUES ('20171017012916');
+
+INSERT INTO schema_migrations (version) VALUES ('20171017012937');
+
+INSERT INTO schema_migrations (version) VALUES ('20171017013933');
+
+INSERT INTO schema_migrations (version) VALUES ('20171017014115');
 

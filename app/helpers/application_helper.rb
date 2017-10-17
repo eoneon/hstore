@@ -10,17 +10,17 @@ module ApplicationHelper
   end
 
   def obj_type_list
-    type_list = [ItemType, SubstrateType, DimensionType, RemarqueType, SignatureType,  CertificateType] #all +EditionType,
+    type_list = [ItemType, EditionType, SubstrateType, DimensionType, RemarqueType, SignatureType,  CertificateType] #all +EditionType,
     if @item.item_type.name == "limited edition"
-      type_list #[ItemType, EditionType, SubstrateType, DimensionType, RemarqueType, SignatureType,  CertificateType] #all
+      type_list
     elsif @item.item_type.name == "print"
-      type_list #- [EditionType] #[ItemType, SubstrateType, DimensionType, RemarqueType, SignatureType, CertificateType] #no edition
+      type_list - [EditionType]
     elsif @item.item_type.name == "limited edition sculpture"
-      type_list - [SubstrateType] #[ItemType, EditionType, DimensionType, RemarqueType, SignatureType, CertificateType] #no substrate
+      type_list - [SubstrateType]
     elsif @item.item_type.name == "one-of-a-kind"
-      type_list - [RemarqueType] #[ItemType, EditionType, SubstrateType, DimensionType, SignatureType, CertificateType] #no remarque
+      type_list - [RemarqueType]
     elsif @item.item_type.name == "original painting" || @item.item_type.name == "sketch"
-      type_list - [RemarqueType] #[ItemType, SubstrateType, DimensionType, SignatureType, CertificateType] +EditionType,
+      type_list - [EditionType, RemarqueType] #- [EditionType]
     end
   end
 

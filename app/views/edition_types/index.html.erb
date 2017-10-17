@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Edition Types</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @edition_types.each do |edition_type| %>
+      <tr>
+        <td><%= edition_type.name %></td>
+        <td><%= link_to 'Show', edition_type %></td>
+        <td><%= link_to 'Edit', edit_edition_type_path(edition_type) %></td>
+        <td><%= link_to 'Destroy', edition_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Edition type', new_edition_type_path %>
