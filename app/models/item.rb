@@ -88,40 +88,64 @@ class Item < ActiveRecord::Base
         medium = []
         v.each do |k2, v2|
           next if k2 == "item_name"
-          if k2 == "leafing_kind"
+          if k2 == "leafing_kind" && v2.present?
             v2 = "with #{v2}"
-          elsif k2 == "remarque_kind"
+          elsif k2 == "remarque_kind" && v2.present?
             v2 = obj_values[k]["leafing_kind"].present? ? "and #{v2}" : "with #{v2}"
           end
           medium << v2
         end
         obj_values[k]["medium"] = medium.join(" ")
       elsif k == "dimension_type"
-        name_to_a = obj_values["dimension_type"]["dimension_name"].split(" & ")
+        name_to_a = obj_values[k]["dimension_name"].split(" & ")
         if name_to_a[-1] != "weight"
-          image_dim = "#{obj_values["dimension_type"]["width"]} x #{obj_values["dimension_type"]["height"]}"
+          image_dim = "#{obj_values[k]["width"]} x #{obj_values[k]["height"]}"
           obj_values["dimension_type"]["image_dim"] = "(#{image_dim})"
           if name_to_a[0] == name_to_a[-1]
-            obj_values["dimension_type"]["measurements"] = "Measures approx. #{image_dim} (#{name_to_a[0]})."
+            obj_values[k]["measurements"] = "Measures approx. #{image_dim} (#{name_to_a[0]})."
           elsif name_to_a[0] != name_to_a[-1]
-            obj_values["dimension_type"]["measurements"] = "Measures approx. #{obj_values["dimension_type"]["outer_width"]} x #{obj_values["dimension_type"]["outer_height"]} (#{name_to_a[-1]}); #{image_dim} (#{name_to_a[0]})."
-            obj_values["dimension_type"]["frame_description"] = "This piece is #{obj_values["dimension_type"]["frame_kind"]}." if name_to_a[-1] == "frame"
+            obj_values[k]["measurements"] = "Measures approx. #{obj_values[k]["outer_width"]} x #{obj_values[k]["outer_height"]} (#{name_to_a[-1]}); #{image_dim} (#{name_to_a[0]})."
+            obj_values[k]["frame_description"] = "This piece is #{obj_values[k]["frame_kind"]}." if name_to_a[-1] == "frame"
           end
         else
           measurements = []
           name_to_a.each do |dim|
-            measurements << "#{obj_values["dimension_type"][dim]} (#{dim})"
+            measurements << "#{obj_values[k][dim]} (#{dim})"
           end
-          obj_values["dimension_type"]["measurements"] = "Measures approx. #{measurements.join(" x ")}."
+          obj_values[k]["measurements"] = "Measures approx. #{measurements.join(" x ")}."
         end
       elsif k == "edition_type"
-        numbered = obj_values["edition_type"]["edition_kind"] != "standard" ? "#{obj_values["edition_type"]["edition_kind"]} numbered" : "numbered" #if we remove "standard" from valist, we don't need this condition
-        if obj_values["edition_type"]["number"].present? && obj_values["edition_type"]["edition_size"].present?
-          numbering = "#{numbered} #{obj_values["edition_type"]["number"]}/#{obj_values["edition_type"]["edition_size"]}"
-        elsif obj_values["edition_type"]["number"].blank? && obj_values["edition_type"]["edition_size"].present?
-          numbering = "#{numbered} out of #{obj_values["edition_type"]["edition_size"]}"
+        if obj_values[k]["edition_name"] == "x/y"
+          numbered = obj_values[k]["edition_kind"].present? ? "#{obj_values[k]["edition_kind"]} numbered" : "numbered"
+          if obj_values[k]["number"].present? && obj_values[k]["edition_size"].present?
+            numbering = "#{numbered} #{obj_values[k]["number"]}/#{obj_values[k]["edition_size"]}"
+          elsif obj_values[k]["number"].blank? && obj_values[k]["edition_size"].present?
+            numbering = "#{numbered} out of #{obj_values[k]["edition_size"]}"
+          end
+        else
+          numbering = "numbered from a #{obj_values[k]["edition_kind"]} edition"
         end
-        obj_values["edition_type"]["numbering"] = numbering
+        obj_values[k]["numbering"] = numbering
+      elsif k == "signature_type"
+        if obj_values[k]["signature_kind"] == "hand signed" || obj_values[k]["signature_kind"] == "hand signed and thumb printed"
+          signature_tag = "#{obj_values[k]["signature_kind"]}"
+          signature_description = "#{signature_tag} by the artist."
+        elsif obj_values[k]["signature_kind"] == "plate signature" || obj_values[k]["signature_kind"] == "authorized signature"
+          signature_tag = "signed" #"and " given some conditions
+          signature_description = "bearing the #{obj_values[k]["signature_kind"]} of the artist."
+        elsif obj_values[k]["signature_kind"] == "autographed"
+          signature_tag = "#{obj_values[k]["signature_kind"]} by #{artists}."
+          signature_description = signature_tag
+        elsif obj_values[k]["signature_kind"] == "unsigned"
+          signature_description = "This piece is not signed."
+        end
+        obj_values[k]["signature_tag"] = signature_tag
+        obj_values[k]["signature_description"] = signature_description
+      elsif k == "certificate_type"
+        certificate_tag = "with #{obj_values[k]["certificate_kind"]}."
+        certificate_description = "Includes #{obj_values[k]["certificate_kind"]}."
+        obj_values[k]["certificate_tag"] = certificate_tag
+        obj_values[k]["certificate_description"] = certificate_description
       end
       #^end of k == _type conditions
     end
@@ -197,65 +221,4 @@ class Item < ActiveRecord::Base
     # {"item_values" => {"obj_hash" => obj_hash, "assoc_hash" => assoc_hash, "prop_hash" => prop_hash, "attr_hash" => attr_hash, "medium_hash" => medium_hash}}
     {"obj_values" => obj_values }
   end
-
-  # def item_image_dim
-  #   "#{self.image_width}\" x #{self.image_height}\"" unless self.image_width.nil? || self.image_height.nil?
-  # end
-  #
-  # def item_framed_dim
-  #   if self.properties != nil
-  #     "#{self.properties["frame_width"]}\" x #{self.properties["frame_height"]}\"" unless self.properties["frame_width"].nil? || self.properties["frame_height"].nil?
-  #   end
-  # end
-  #
-  # def item_unframed_border_dim
-  #   if self.properties != nil
-  #     "#{self.properties["border_width"]}\" x #{self.properties["border_height"]}\"" if item_mounting_type == "Unframed (with border)"
-  #   end
-  # end
-
-  # def item_signature_type
-  #   if self.properties != nil && self.signature_type != nil
-  #     "Hand Signed" if self.signature_type.name == "Signature"
-  #   end
-  # end
-  #
-  # def item_certificate_type
-  #   if self.properties?
-  #     if self.certificate_type != nil && self.certificate_type.name == "Authentication"
-  #       "with #{self.properties["authentication_type"]}"
-  #     end
-  #   end
-  # end
-  #
-  # def item_remarque
-  #   if self.properties? && item_item_type == "Limited Edition"
-  #     "with Hand Drawn Remarque" if self.properties["remarque"] == "1"
-  #   end
-  # end
-
-  #numbering
-  # def item_numbering_type
-  #   if self.properties? && item_item_type == "Limited Edition"
-  #     self.properties["numbering_type"] unless self.properties["numbering_type"] == "standard"
-  #   end
-  # end
-  #
-  # def item_numbering_or_qty
-  #   if item_item_type == "Limited Edition"
-  #     if self.properties["number"] != nil && self.properties["edition_size"] != nil
-  #       "Numbered #{self.properties["number"]}/#{self.properties["edition_size"]}"
-  #     elsif self.properties["number"].nil? && self.properties["edition_size"] != nil
-  #       "Numbered out of #{self.properties["edition_size"]}"
-  #     elsif self.properties["number"].nil? && self.properties["edition_size"].nil?
-  #       "Numbered"
-  #     end
-  #   end
-  # end
-  #
-  # def item_numbering
-  #   if item_item_type == "Limited Edition"
-  #     "#{item_numbering_type} #{item_numbering_or_qty}"
-  #   end
-  # end
 end
