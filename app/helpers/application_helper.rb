@@ -42,19 +42,6 @@ module ApplicationHelper
     parent.public_send(obj.to_s.underscore)
   end
 
-  # def canvas_type
-  #   if @item.mounting_type.present? && @item.mounting_type.name == "Framed"
-  #     ["Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
-  #   else
-  #     ["Canvas", "Gallery Wrapped Canvas", "Stretched Canvas", "Canvas Board", "Textured Canvas", "Textured Canvas Board"]
-  #   end
-  # end
-
-  # #authentication_type
-  # def authentication_type
-  #   ["Certificate of Authenticty", "Letter of Authenticty", "Certificate of Authenticty from Peter Max Studios", "none"] #PSA/BA, presented with...
-  # end
-
   # def value_list(property)
   #   send(property)
   # end

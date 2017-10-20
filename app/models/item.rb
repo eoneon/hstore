@@ -82,38 +82,129 @@ class Item < ActiveRecord::Base
     end
   end
 
+  def sculpture_description(v2, medium_tag, medium_description)
+    medium_tag << v2
+    medium_description << v2
+  end
+
+  def flat_tag(obj_values, k2, v2, substrate_kind, medium_tag)
+    if ["paint_media", "mixed_media", "ink_media", "sketch_media", "print_media"].any? { |word| k2.include?(word) }
+      if v2 == "giclee" && substrate_kind == "paper_kind"
+        v2 = nil
+      elsif v2 != "giclee" && substrate_kind != "paper_kind"
+        v2 = "#{v2} on #{obj_values["substrate_type"][substrate_kind]}"
+      elsif v2 == "giclee" && substrate_kind != "paper_kind"
+        v2 = "on #{obj_values["substrate_type"][substrate_kind]}"
+      end
+    elsif k2 == "leafing_kind"
+      v2 = "with #{v2}"
+    elsif k2 == "remarque_kind"
+      v2 = obj_values["item_type"]["leafing_kind"].present? ? "and #{v2}" : "with #{v2}"
+    end
+    medium_tag << v2
+  end
+
+  def flat_description(obj_values, k2, v2, substrate_kind, medium_description)
+    #both: add substrate after media ["ink_media", "sketch_media", "print_media"]
+    if ["paint_media", "mixed_media", "ink_media", "sketch_media", "print_media"].any? { |word| k2.include?(word) }
+      v2 = "#{v2} on #{obj_values["substrate_type"][substrate_kind]}"
+    elsif k2 == "leafing_kind"
+      v2 = "with #{v2}"
+    elsif k2 == "remarque_kind"
+      v2 = obj_values["item_type"]["leafing_kind"].present? ? "and #{v2}" : "with #{v2}"
+    end
+    medium_description << v2
+  end
+
+  def format_sculpture_dimensions(name_to_a, obj_values, measurements)
+    name_to_a.each do |dim|
+      measurements << "#{obj_values["dimension_type"][dim]} (#{dim})"
+    end
+  end
+
   def format_values(obj_values)
     obj_values.each do |k, v|
       if k == "item_type"
-        medium = []
+        medium_tag = []
+        medium_description = []
         v.each do |k2, v2|
-          next if k2 == "item_name"
-          if k2 == "leafing_kind" && v2.present?
-            v2 = "with #{v2}"
-          elsif k2 == "remarque_kind" && v2.present?
-            v2 = obj_values[k]["leafing_kind"].present? ? "and #{v2}" : "with #{v2}"
+          next if k2 == "item_name" || v2.blank?
+          #building medium: flat art specific conditions
+          if obj_values["dimension_type"]["dimension_name"].split(" & ").last == "weight"
+            sculpture_description(v2, medium_tag, medium_description)
+          else
+            substrate_kind = "#{obj_values["substrate_type"]["substrate_name"]}_kind"
+            flat_tag(obj_values, k2, v2, substrate_kind, medium_tag)
+            flat_description(obj_values, k2, v2, substrate_kind, medium_description)
           end
-          medium << v2
+
         end
-        obj_values[k]["medium"] = medium.join(" ")
+        obj_values[k]["medium_tag"] = medium_tag.join(" ")
+        obj_values[k]["medium_description"] = medium_description.join(" ")
+            #pause at media value k2/v2
+        #     if ["paint_media", "mixed_media", "ink_media", "sketch_media", "print_media"].any? { |word| k2.include?(word) }
+        #
+        #       substrate_kind = "#{obj_values["substrate_type"]["substrate_name"]}_kind"
+        #       medium_description << "#{v2} on #{obj_values["substrate_type"][substrate_kind]}"
+        #       next if v2 == "giclee" && substrate_kind == "paper_kind"
+        #       if v2 == "giclee" && substrate_kind != "paper_kind"
+        #         v2 = " on #{obj_values["substrate_type"][substrate_kind]}"
+        #       elsif v2 != "giclee" && substrate_kind != "paper_kind"
+        #         medium_description << "#{v2} on #{obj_values["substrate_type"][substrate_kind]}"
+        #       end
+        #     medium_description << "#{v2} on #{obj_values["substrate_type"][substrate_kind]}"
+        #     medium_tag = "#{v2} on #{obj_values["substrate_type"][substrate_kind]}" unless substrate_kind == "paper_kind"
+        #     next
+        #   elsif k2 == "leafing_kind"
+        #     v2 = "with #{v2}"
+        #   elsif k2 == "remarque_kind"
+        #     v2 = obj_values[k]["leafing_kind"].present? ? "and #{v2}" : "with #{v2}"
+        #   end
+        #   #no conditions: scuplture
+        #   medium_tag << v2
+        #   medium_description << v2
+        # end
+        # obj_values[k]["medium_tag"] = medium_tag.join(" ")
+        # obj_values[k]["medium_description"] = medium_description.join(" ")
       elsif k == "dimension_type"
         name_to_a = obj_values[k]["dimension_name"].split(" & ")
-        if name_to_a[-1] != "weight"
-          image_dim = "#{obj_values[k]["width"]} x #{obj_values[k]["height"]}"
-          obj_values["dimension_type"]["image_dim"] = "(#{image_dim})"
-          if name_to_a[0] == name_to_a[-1]
-            obj_values[k]["measurements"] = "Measures approx. #{image_dim} (#{name_to_a[0]})."
-          elsif name_to_a[0] != name_to_a[-1]
-            obj_values[k]["measurements"] = "Measures approx. #{obj_values[k]["outer_width"]} x #{obj_values[k]["outer_height"]} (#{name_to_a[-1]}); #{image_dim} (#{name_to_a[0]})."
-            obj_values[k]["frame_description"] = "This piece is #{obj_values[k]["frame_kind"]}." if name_to_a[-1] == "frame"
-          end
-        else
+        if name_to_a[-1] == "weight"
           measurements = []
-          name_to_a.each do |dim|
-            measurements << "#{obj_values[k][dim]} (#{dim})"
+          format_sculpture_dimensions(name_to_a, obj_values, measurements)
+          measurements = "Measures approx. #{measurements.join(" x ")}."
+        else
+          image_dim = "#{obj_values[k]["width"]} x #{obj_values[k]["height"]}"
+          if name_to_a[0] == name_to_a[-1] #image only
+            measurements = "Measures approx. #{image_dim} (#{name_to_a[0]})."
+          else
+            measurements = "Measures approx. #{obj_values[k]["outer_width"]} x #{obj_values[k]["outer_height"]} (#{name_to_a[-1]}); #{image_dim} (#{name_to_a[0]})."
+            if name_to_a[-1] == "frame"
+              obj_values[k]["frame_description"] = "This piece is #{obj_values[k]["frame_kind"]}."
+              obj_values["item_type"]["medium_tag"] = "framed #{obj_values["item_type"]["medium_tag"]}"
+            end
           end
-          obj_values[k]["measurements"] = "Measures approx. #{measurements.join(" x ")}."
         end
+        # name_to_a = obj_values[k]["dimension_name"].split(" & ")
+        # if name_to_a[-1] != "weight"
+        #
+        #   #only need these if: w or h larger than 36"; just prepend to medium + conditional substrate
+        #   image_dim = "#{obj_values[k]["width"]} x #{obj_values[k]["height"]}"
+        #   #obj_values["dimension_type"]["image_dim"] = "(#{image_dim})"
+        #
+        #   if name_to_a[0] == name_to_a[-1]
+        #     obj_values[k]["measurements"] = "Measures approx. #{image_dim} (#{name_to_a[0]})."
+        #   elsif name_to_a[0] != name_to_a[-1]
+        #     obj_values[k]["measurements"] = "Measures approx. #{obj_values[k]["outer_width"]} x #{obj_values[k]["outer_height"]} (#{name_to_a[-1]}); #{image_dim} (#{name_to_a[0]})."
+        #     obj_values[k]["frame_description"] = "This piece is #{obj_values[k]["frame_kind"]}." if name_to_a[-1] == "frame"
+        #   end
+        # else
+        #   measurements = []
+        #   name_to_a.each do |dim|
+        #     measurements << "#{obj_values[k][dim]} (#{dim})"
+        #   end
+        #   obj_values[k]["measurements"] = measurements #"Measures approx. #{measurements.join(" x ")}."
+        # end
+        obj_values[k]["measurements"] = measurements
       elsif k == "edition_type"
         if obj_values[k]["edition_name"] == "x/y"
           numbered = obj_values[k]["edition_kind"].present? ? "#{obj_values[k]["edition_kind"]} numbered" : "numbered"
@@ -125,7 +216,8 @@ class Item < ActiveRecord::Base
         else
           numbering = "numbered from a #{obj_values[k]["edition_kind"]} edition"
         end
-        obj_values[k]["numbering"] = numbering
+        obj_values["item_type"]["medium_tag"] = "#{obj_values["item_type"]["medium_tag"]}, #{numbering}"
+        obj_values["item_type"]["medium_description"] = "#{obj_values["item_type"]["medium_description"]}, #{numbering}"
       elsif k == "signature_type"
         if obj_values[k]["signature_kind"] == "hand signed" || obj_values[k]["signature_kind"] == "hand signed and thumb printed"
           signature_tag = "#{obj_values[k]["signature_kind"]}"
