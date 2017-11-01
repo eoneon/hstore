@@ -57,7 +57,7 @@ class Item < ActiveRecord::Base
 
   def artists
     artists = self.artist_ids.map { |a| Artist.find(a).full_name }
-    artists.join(" and ")
+    artists.present? ? [artists.join(" and "), "by #{artists.join(" and ")}"] : [""]
   end
 
   def description_intro(medium_description)
@@ -69,8 +69,8 @@ class Item < ActiveRecord::Base
   end
 
   def tagline_intro
-    if artists.present?
-      "#{artists} - #{item_title}"
+    if artists[0].present?
+      "#{artists[0]} - #{item_title}"
     else
       "#{item_title}"
     end
@@ -114,7 +114,7 @@ class Item < ActiveRecord::Base
 
   def format_sculpture_dimensions(name_to_a, obj_values, measurements)
     name_to_a.each do |dim|
-      measurements << "#{obj_values["dimension_type"][dim]} (#{dim})"
+      measurements << "#{obj_values["dimension_type"][dim]}\" (#{dim})"
     end
   end
 
@@ -126,7 +126,7 @@ class Item < ActiveRecord::Base
         v.each do |k2, v2|
           next if k2 == "item_name" || v2.blank?
           #building medium: flat art specific conditions
-          #assoc_keys.any? { |word| }
+          #replace with art_type method
           if obj_values["dimension_type"].present? && obj_values["dimension_type"]["dimension_name"].split(" & ").last == "weight"
             sculpture_description(v2, medium_tag, medium_description)
           elsif obj_values["substrate_type"].present?
@@ -144,6 +144,7 @@ class Item < ActiveRecord::Base
         obj_values["description_hash"]["artists"] = "by #{artists}" if artists.present?
 
       elsif k == "dimension_type"
+        #replace with art_type method
         name_to_a = obj_values[k]["dimension_name"].split(" & ")
         if name_to_a[-1] == "weight"
           measurements = []
@@ -151,6 +152,7 @@ class Item < ActiveRecord::Base
           measurements = "Measures approx. #{measurements.join(" x ")}."
         else
           image_dim = "#{obj_values[k]["width"]}\" x #{obj_values[k]["height"]}\""
+          #replace with art_type method?
           if name_to_a[0] == name_to_a[-1] #image only
             measurements = "Measures approx. #{image_dim} (#{name_to_a[0]})."
           else
@@ -211,18 +213,27 @@ class Item < ActiveRecord::Base
     end
   end
 
+  def reserved_list
+    ValueItem.where(kind: "edition_kind").pluck(:name) + ["a", "of", "and", "or", "on", "with", "from", ","]
+  end
+
+  def handle_hyphens(hyphen_words)
+    hyphen_arr = []
+    hyphen_words.split("-").each do |hyphen_w|
+      hyphen_w = hyphen_w.downcase.capitalize! unless reserved_list.any? { |word| hyphen_w == word }
+      hyphen_arr << hyphen_w
+    end
+    hyphen_arr.join("-")
+  end
+
   def conditional_capitalize(words)
     tagline = []
     words.split.each do |w|
-      #unless w matches element in reserved list => build reserved list to account for numbering type
-      reserved_list = ValueItem.where(kind: "edition_kind").pluck(:name) + ["of", "and", "or", "on", "with", "from"]
-      w = w.downcase.capitalize! unless reserved_list.any? { |word| w == word } #|| first word** use counter?
-      if w == "One-of-a-kind"
-        w = "One-of-a-Kind"
-      end
+      w = w.downcase.capitalize! unless reserved_list.any? { |word| w == word || /[0-9]/.match(w) || /-/.match(w).present?}
+      w = handle_hyphens(w) if /-/.match(w).present?
       tagline << w
     end
-    tagline.join(" ")
+    tagline.join(" ").gsub(/ ,/, ",")
   end
 
   def format_description(obj_values)
@@ -276,10 +287,161 @@ class Item < ActiveRecord::Base
     #certificate
     if obj_values["tagline_hash"]["certificate"].present?
       obj_values["tagline_hash"]["tagline"] = "#{obj_values["tagline_hash"]["tagline"]} #{obj_values["tagline_hash"]["certificate"]}."
+    else
+      obj_values["tagline_hash"]["tagline"] = "#{obj_values["tagline_hash"]["tagline"]}."
     end
     obj_values["tagline_hash"]["tagline"] = conditional_capitalize(obj_values["tagline_hash"]["tagline"])
     #artists
     obj_values["tagline_hash"]["tagline"] = "#{obj_values["tagline_hash"]["intro"]} #{obj_values["tagline_hash"]["tagline"]}"
+  end
+
+  #this works
+  def build_medium(obj_values)
+    [[ obj_values["item_type"].try(:[], "embellish_kind"), obj_values["item_type"].try(:[], "limited_kind"), obj_values["item_type"].try(:[], "medium"), obj_values["item_type"].try(:[], "sculpture_kind")].join(" ")]
+  end
+
+  def build_medium2(obj_values)
+    medium2 = [ obj_values["item_type"].try(:[], "leafing_kind"), obj_values["item_type"].try(:[], "remarque_kind") ].reject {|kind| kind.nil?}
+    if medium2.count > 0
+      medium2.count == 1 ? ["with #{medium2.join(" ")}"] : ["with #{medium2.join(" and ")}"]
+    else
+      [""]
+    end
+  end
+
+  #this works
+  def build_substrate(obj_values)
+    if obj_values["substrate_type"].present? && obj_values["substrate_type"]["#{obj_values["substrate_type"]["substrate_name"]}_kind"].present?
+      substrate = obj_values["substrate_type"]["substrate_name"] + "_kind"
+      substrate != "paper_kind" ? [ "on #{obj_values["substrate_type"][substrate]}",  "on #{obj_values["substrate_type"][substrate]}"] : ["","on #{obj_values["substrate_type"][substrate]}"  ]
+    else
+      [""]
+    end
+  end
+
+  #dimensions dependency
+  def build_sculpture_dim(dim_arr, dims, obj_values)
+    dim_arr.each do |dim|
+      dims << "#{obj_values["dimension_type"][dim]}\" (#{dim})"
+    end
+    "Measures approx. #{dims.join(" x ")}."
+  end
+
+  #dimensions-->add framing method
+  def build_dims(obj_values)
+    dimension_name = obj_values["dimension_type"]["dimension_name"] if obj_values["dimension_type"].try(:[], "dimension_name")
+    if dimension_name.present?
+      dims = []
+      dim_arr = dimension_name.split(" & ")
+      if dim_arr[-1] == "weight"
+        [build_sculpture_dim(dim_arr, dims, obj_values)]
+      elsif dim_arr[-1] != "weight"
+        image_dim = "Measures approx. #{obj_values["dimension_type"]["width"]}\" x #{obj_values["dimension_type"]["height"]}\""
+        if dim_arr.count == 1
+          ["Measures approx. #{image_dim} (#{dim_arr[0]})"]
+        elsif dim_arr.count == 2
+          ["Measures approx. #{obj_values["dimension_type"]["outer_width"]}\" x #{obj_values["dimension_type"]["outer_height"]}\" (#{dim_arr[-1]}); #{image_dim} (#{dim_arr[0]})"]
+        end
+      end
+    else
+      [""]
+    end
+  end
+
+  def build_framing(obj_values)
+    if obj_values["dimension_type"].try(:[], "frame_kind").nil?
+      [""]
+    else
+      ["Framed", "This piece is #{obj_values["dimension_type"]["frame_kind"]}."]
+      #obj_values["dimension_type"].try(:[], "frame_kind").present? ? ["Framed", "This piece is #{obj_values["dimension_type"]["frame_kind"]}."] : [""]
+    end
+  end
+
+  def build_edition(obj_values)
+    if obj_values["edition_type"].present?
+      if obj_values["edition_type"]["edition_name"] == "x/y"
+        numbered = [ obj_values["edition_type"].try(:[], "edition_kind"), "numbered"].join(" ") #reject {|kind| kind.nil?}
+        if obj_values["edition_type"]["number"].present? && obj_values["edition_type"]["edition_size"].present?
+          numbering = ["#{numbered} #{obj_values["edition_type"]["number"]}/#{obj_values["edition_type"]["edition_size"]}"]
+        elsif obj_values["edition_type"]["number"].blank? && obj_values["edition_type"]["edition_size"].present?
+          numbering = ["#{numbered} out of #{obj_values["edition_type"]["edition_size"]}"]
+        elsif obj_values["edition_type"]["number"].blank? && obj_values["edition_type"]["edition_size"].blank?
+          numbering = [numbered]
+        end
+      else
+        numbering = ["numbered from a #{obj_values["edition_type"]["edition_kind"]} edition"]
+      end
+    elsif obj_values["edition_type"].nil?
+      [""]
+    end
+  end
+
+  def build_signature(obj_values)
+    if obj_values["signature_type"].present? && obj_values["signature_type"]["signature_kind"].present?
+      signature_kind = obj_values["signature_type"]["signature_kind"]
+      if signature_kind == "unsigned"
+        [ "", "This piece is not signed." ]
+      elsif signature_kind == "hand signed" || signature_kind == "hand signed and thumb printed"
+        [ signature_kind, "#{signature_kind} by the artist" ]
+      elsif signature_kind == ("plate signature" || "authorized signature")
+        [ "signed", "bearing the #{signature_kind} of the artist" ]
+      elsif signature_kind == "autographed"
+        [ "#{signature_kind} by #{artists[-1]}", "#{signature_kind} by #{artists[-1]}" ]
+      end
+    else  obj_values["signature_type"].nil? || obj_values["signature_type"]["signature_kind"].nil?
+      [""]
+    end
+  end
+
+  def build_certificate(obj_values)
+    if obj_values["certificate_type"].present? && (obj_values["certificate_type"]["certificate_kind"].present? || obj_values["certificate_type"]["issuer"].present?)
+      certificate = obj_values["certificate_type"]["certificate_name"] == "general certificate" ? [ "general certificate", obj_values["certificate_type"]["certificate_kind"] ]  : [ "issuer", obj_values["certificate_type"]["issuer"] ]
+      if certificate[0] == "general certificate"
+        ["with #{certificate[1]}", "Includes #{conditional_capitalize(certificate[1])}."]
+      else
+        ["with Certificate of Authenticity from #{certificate[1]}", "Includes Certificate of Authenticity from #{certificate[1]}"]
+      end
+    elsif obj_values["certificate_type"].nil? || (obj_values["certificate_type"]["certificate_kind"].nil? && obj_values["certificate_type"]["issuer"].nil?)
+      [""]
+    end
+  end
+
+  def medium_ed_sign_cert(medium, obj_values)
+    certificate = obj_values["build"]["certificate"][0] if obj_values["build"]["certificate"][0].present?
+    edition_signature_arr = [obj_values["build"]["edition"][0], obj_values["build"]["signature"][0]] if obj_values["build"]["edition"][0].present? || obj_values["build"]["signature"][0].present? #.reject {|kind| kind.blank?}
+    if edition_signature_arr.blank?
+      medium = certificate.present? ? "#{medium}, #{certificate}" : "#{medium}"
+    else
+      #"medium, <x> and <y>"
+      if edition_signature_arr.count == 2
+        edition_signature_arr = edition_signature_arr.join(" and ")
+      elsif edition_signature_arr.count == 1 && certificate.blank?
+        edition_signature_arr = edition_signature_arr[-1].blank? ? edition_signature_arr.reverse.join(" and ") : edition_signature_arr.join(" and ")
+      elsif edition_signature_arr.count == 1 && certificate.present?
+        edition_signature_arr = edition_signature_arr.join("")
+      end
+      medium = "#{medium}, #{edition_signature_arr} #{certificate}"
+    end
+  end
+
+  def medium_ed_sign(medium, obj_values)
+    edition_signature_arr = [obj_values["build"]["edition"][0], obj_values["build"]["signature"][-1]] if obj_values["build"]["edition"][0].present? || obj_values["build"]["signature"][-1].present?
+    "#{medium}" if edition_signature_arr.reject {|v| v.blank?}.blank?
+    if edition_signature_arr.reject {|v| v.blank?}.count == 2
+      "#{medium}, #{edition_signature_arr.join(" and ")}"
+    elsif edition_signature_arr.reject {|v| v.blank?}.count == 1
+      edition_signature_arr[-1].present? ? "#{medium}, #{edition_signature_arr[-1]}." : "#{medium}, and #{edition_signature_arr[0]}"
+    end
+  end
+
+  def build(obj_values)
+    medium = [obj_values["build"]["framing"][0], obj_values["build"]["medium"][0], obj_values["build"]["substrate"][0], obj_values["build"]["medium2"][0]].join(" ")
+    "#{tagline_intro} #{conditional_capitalize(medium_ed_sign_cert(medium, obj_values))}."
+  end
+
+  def build_description(obj_values)
+    medium = [obj_values["build"]["medium"][0], obj_values["build"]["substrate"][-1], "#{artists[-1]}", obj_values["build"]["medium2"][-1]].join(" ")
+    [description_intro(medium.strip), "#{medium_ed_sign(medium, obj_values)}.", obj_values["build"]["framing"][-1], obj_values["build"]["certificate"][-1], obj_values["build"]["dimensions"][-1]].join(" ") #, obj_values["build"]["certificate"][-1], obj_values["build"]["dimensions"][-1], obj_values["build"]["framing"][0],
   end
 
   #PRIMARY METHOD
@@ -296,17 +458,18 @@ class Item < ActiveRecord::Base
     }
 
     #3 k: "item_type", v: ItemType.find(n) #=> remove k/v pairs with nil values
-    assoc_hash2 = assoc_hash.keep_if { |k,v| v.present? }
-    assoc_keys = assoc_hash2.keys
+    assoc_hash = assoc_hash.keep_if { |k,v| v.present? }
+    #assoc_keys = assoc_hash2.keys
 
-    if assoc_hash2.present? && self.properties.present?
+    if assoc_hash.present? && self.properties.present?
 
-      #top key set before assoc_hash2 loop
+      #top key set before assoc_hash loop
       obj_values = Hash.new
       obj_values["description_hash"] = {"medium_description" => nil}
       obj_values["tagline_hash"] = {"medium_description" => nil}
+      #obj_values["test_hash"] = {"test" => nil}
       #assoc_hash2 loop
-      assoc_hash2.each do |k, v|
+      assoc_hash.each do |k, v|
         #e.g. item_type -> item_hash #=> this value is set for each k/v, string at this point
         obj_values[k] = {k.gsub(/type/, "name") => v.name}
         #obj_values[k] = {k.gsub(/_type/, "") => "name"}
@@ -314,6 +477,7 @@ class Item < ActiveRecord::Base
         if v.fields.present?
           #e.g., item_type.fields.each
           v.fields.each do |f|
+            obj_values[k]["medium"] = self.properties[f.name] if ["media"].any? { |word| f.name.include?(word) }
             obj_values[k][f.name] = self.properties[f.name]
           end
         end
@@ -323,10 +487,18 @@ class Item < ActiveRecord::Base
       format_values(obj_values)
       format_tagline(obj_values)
       format_description(obj_values)
-      #obj_values["tagline_hash"]["tagline"] = "#{artists} - \"#{item_title}\" #{conditional_capitalize(format_tagline(obj_values))}"
+      build_medium(obj_values)
+      obj_values["build"] = {
+        "framing" => build_framing(obj_values),
+        "medium" => build_medium(obj_values),
+        "substrate" => build_substrate(obj_values),
+        "medium2" => build_medium2(obj_values),
+        "edition" => build_edition(obj_values),
+        "signature" => build_signature(obj_values),
+        "certificate" => build_certificate(obj_values),
+        "dimensions" => build_dims(obj_values)
+      }
     end
-
-    # {"item_values" => {"obj_hash" => obj_hash, "assoc_hash" => assoc_hash, "prop_hash" => prop_hash, "attr_hash" => attr_hash, "medium_hash" => medium_hash}}
-    [ obj_values["tagline_hash"]["tagline"], obj_values["description_hash"]["description"] ]
+    [ build(obj_values), build_description(obj_values) ] #obj_values["build"], build_description(obj_values),
   end
 end
