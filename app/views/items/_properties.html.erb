@@ -1,5 +1,5 @@
 <%= f.fields_for :properties, OpenStruct.new(parent.properties) do |builder| %>
-<% obj_type_list.each do |type| %>
+<% obj_type_list(parent).each do |type| %>
   <div class="row">
     <div class="col-xs-3">
       <div class="field">

@@ -9,20 +9,24 @@ module ApplicationHelper
     link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
   end
 
-  def obj_type_list
-    type_list = [ItemType, EditionType, SubstrateType, DimensionType, SignatureType,  CertificateType] #all +EditionType,
-    if @item.item_type.name == "limited edition"
-      type_list
-    elsif @item.item_type.name == "print"
-      type_list - [EditionType]
-    elsif @item.item_type.name == "limited edition sculpture" || @item.item_type.name == "limited edition sericel"
-      type_list - [SubstrateType]
-    elsif @item.item_type.name == "sculpture"
+  def obj_type_list(parent)
+    type_list = [ItemType, EditionType, SubstrateType, DimensionType, SignatureType,  CertificateType]
+    if parent.item_type_id.nil?
       type_list - [EditionType, SubstrateType]
-    elsif @item.item_type.name == "one-of-a-kind"
-      type_list
-    elsif @item.item_type.name == "original painting" || @item.item_type.name == "sketch"
-      type_list - [EditionType] #- [EditionType]
+    else
+      if parent.item_type.name == "limited edition"
+        type_list
+      elsif parent.item_type.name == "print"
+        type_list - [EditionType]
+      elsif parent.item_type.name == "limited edition sculpture" || parent.item_type.name == "limited edition sericel"
+        type_list - [SubstrateType]
+      elsif parent.item_type.name == "sculpture"
+        type_list - [EditionType, SubstrateType]
+      elsif parent.item_type.name == "one-of-a-kind"
+        type_list
+      elsif parent.item_type.name == "original painting" || parent.item_type.name == "sketch"
+        type_list - [EditionType]
+      end
     end
   end
 

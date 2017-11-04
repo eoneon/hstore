@@ -1,6 +1,7 @@
 class Search < ActiveRecord::Base
   belongs_to :item_type
-  belongs_to :mounting_type
+  belongs_to :dimension_type
+  belongs_to :edition_type
   belongs_to :substrate_type
   belongs_to :signature_type
   belongs_to :certificate_type
@@ -16,7 +17,7 @@ class Search < ActiveRecord::Base
   def find_items
     items = Item.order(:sku)
     items = items.where(item_type_id: item_type_id) if item_type_id.present?
-    items = items.where(mounting_type_id: mounting_type_id) if mounting_type_id.present?
+    items = items.where(dimension_type_id: dimension_type_id) if dimension_type_id.present?
     items = items.where(substrate_type_id: substrate_type_id) if substrate_type_id.present?
     items = items.where(certificate_type_id: certificate_type_id) if certificate_type_id.present?
     self.properties.each do |k, v|

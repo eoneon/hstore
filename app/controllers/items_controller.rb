@@ -18,8 +18,6 @@ class ItemsController < ApplicationController
       item_type_id: params[:item_type_id],
       dimension_type_id: params[:dimension_type_id],
       edition_type_id: params[:edition_type_id],
-      leafing_type_id: params[:leafing_type_id],
-      remarque_type_id: params[:remarque_type_id],
       certificate_type_id: params[:certificate_type_id],
       signature_type_id: params[:signature_type_id],
       substrate_type_id: params[:substrate_type_id])
@@ -84,7 +82,7 @@ class ItemsController < ApplicationController
     #https://stackoverflow.com/questions/19172893/rails-hashes-with-unknown-keys-and-strong-parameters
     properties = params[:item].delete(:properties)
     artists = params[:item].delete(:artist_ids)
-    params.require(:item).permit(:name, :title, :retail, :sku, :image_width, :image_height, :invoice_id, :item_type_id, :dimension_type_id, :edition_type_id, :leafing_type_id, :remarque_type_id, :certificate_type_id, :signature_type_id, :substrate_type_id, { :titles_attributes => [:id, :title] } ).tap do |whitelisted| #{ :artist_items_attributes => [:id, :artist_id, :item_id] }
+    params.require(:item).permit(:name, :title, :retail, :sku, :image_width, :image_height, :invoice_id, :item_type_id, :dimension_type_id, :edition_type_id, :certificate_type_id, :signature_type_id, :substrate_type_id, { :titles_attributes => [:id, :title] } ).tap do |whitelisted| #{ :artist_items_attributes => [:id, :artist_id, :item_id] }
        whitelisted[:properties] = properties
        whitelisted[:artist_ids] = artists
      end

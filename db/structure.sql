@@ -574,7 +574,9 @@ CREATE TABLE searches (
     signature_type_id integer,
     certificate_type_id integer,
     image_width integer,
-    image_height integer
+    image_height integer,
+    edition_type_id integer,
+    dimension_type_id integer
 );
 
 
@@ -1240,6 +1242,20 @@ CREATE INDEX index_searches_on_certificate_type_id ON searches USING btree (cert
 
 
 --
+-- Name: index_searches_on_dimension_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searches_on_dimension_type_id ON searches USING btree (dimension_type_id);
+
+
+--
+-- Name: index_searches_on_edition_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searches_on_edition_type_id ON searches USING btree (edition_type_id);
+
+
+--
 -- Name: index_searches_on_item_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1352,6 +1368,14 @@ ALTER TABLE ONLY searches
 
 
 --
+-- Name: searches fk_rails_1c204d5c87; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY searches
+    ADD CONSTRAINT fk_rails_1c204d5c87 FOREIGN KEY (dimension_type_id) REFERENCES dimension_types(id);
+
+
+--
 -- Name: item_fields fk_rails_37b0924afc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1405,6 +1429,14 @@ ALTER TABLE ONLY item_fields
 
 ALTER TABLE ONLY searches
     ADD CONSTRAINT fk_rails_5e7a92d8a0 FOREIGN KEY (signature_type_id) REFERENCES signature_types(id);
+
+
+--
+-- Name: searches fk_rails_676e169dba; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY searches
+    ADD CONSTRAINT fk_rails_676e169dba FOREIGN KEY (edition_type_id) REFERENCES edition_types(id);
 
 
 --
@@ -1648,4 +1680,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171017012937');
 INSERT INTO schema_migrations (version) VALUES ('20171017013933');
 
 INSERT INTO schema_migrations (version) VALUES ('20171017014115');
+
+INSERT INTO schema_migrations (version) VALUES ('20171103212425');
 
