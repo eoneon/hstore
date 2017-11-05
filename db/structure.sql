@@ -576,7 +576,8 @@ CREATE TABLE searches (
     image_width integer,
     image_height integer,
     edition_type_id integer,
-    dimension_type_id integer
+    dimension_type_id integer,
+    artist_id integer
 );
 
 
@@ -1682,4 +1683,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171017013933');
 INSERT INTO schema_migrations (version) VALUES ('20171017014115');
 
 INSERT INTO schema_migrations (version) VALUES ('20171103212425');
+
+INSERT INTO schema_migrations (version) VALUES ('20171104205917');
 

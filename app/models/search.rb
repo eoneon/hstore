@@ -16,6 +16,7 @@ class Search < ActiveRecord::Base
 
   def find_items
     items = Item.order(:sku)
+    items = items.joins(:artists).where('artists.id' => artist_id) if artist_id.present?
     items = items.where(item_type_id: item_type_id) if item_type_id.present?
     items = items.where(dimension_type_id: dimension_type_id) if dimension_type_id.present?
     items = items.where(substrate_type_id: substrate_type_id) if substrate_type_id.present?
