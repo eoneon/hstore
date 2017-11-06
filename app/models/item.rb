@@ -100,13 +100,13 @@ class Item < ActiveRecord::Base
   end
 
   #medium
-  def build_medium(obj_values)
+  def build_medium
     medium = []
     media = self.properties.map { |k,v| medium << v if ["media"].any? { |m| k.include?(m)}}
     [[ self.properties["embellish_kind"], self.properties["limited_kind"], media, self.properties["sculpture_kind"]].join(" ").strip]
   end
 
-  def build_medium2(obj_values)
+  def build_medium2
     medium2 = [ self.properties["leafing_kind"], self.properties["remarque_kind"] ].reject {|kind| kind.blank?}
     if medium2.count > 0
       medium2.count == 1 ? ["with #{medium2.join(" ")}"] : ["with #{medium2.join(" and ")}"]
@@ -115,9 +115,9 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def medium_ed_sign_cert(medium, obj_values)
-    certificate = build_certificate(obj_values)[0] if build_certificate(obj_values)[0].present?
-    edition_signature_arr = [build_edition(obj_values)[0], build_signature(obj_values)[0]]
+  def medium_ed_sign_cert(medium)
+    certificate = build_certificate[0] if build_certificate[0].present?
+    edition_signature_arr = [build_edition[0], build_signature[0]]
     arr_count = edition_signature_arr.reject {|v| v.blank?}.count
     if arr_count == 0
       medium = certificate.present? ? "#{medium} #{certificate}" : "#{medium}"
@@ -134,8 +134,8 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def medium_ed_sign(medium, obj_values)
-    edition_signature_arr = [build_edition(obj_values)[0], build_signature(obj_values)[-1]]
+  def medium_ed_sign(medium)
+    edition_signature_arr = [build_edition[0], build_signature[-1]]
     arr_count = edition_signature_arr.reject {|v| v.blank?}.count
     if arr_count == 0
       "#{medium}"
@@ -147,7 +147,7 @@ class Item < ActiveRecord::Base
   end
 
   #this works
-  def build_substrate(obj_values)
+  def build_substrate
     substrate_kind = nil
     self.properties.keys.map {|k| substrate_kind = k if k == "canvas_kind" || k == "paper_kind" || k == "other_kind"}
     if substrate_kind.present?
@@ -168,19 +168,19 @@ class Item < ActiveRecord::Base
     self.dimension_type.name if self.dimension_type.present?
   end
 
-  def build_sculpture_dim(dim_arr, dims, obj_values)
+  def build_sculpture_dim(dim_arr, dims)
     dim_arr.each do |dim|
       dims << "#{self.properties[dim]}\" (#{dim})"
     end
     "Measures approx. #{dims.join(" x ")}."
   end
 
-  def build_dims(obj_values)
+  def build_dims
     if dimension_name.present?
       dims = []
       dim_arr = dimension_name.split(" & ")
       if dim_arr[-1] == "weight"
-        [build_sculpture_dim(dim_arr, dims, obj_values)]
+        [build_sculpture_dim(dim_arr, dims)]
       elsif dim_arr[-1] != "weight"
         image_dim = "Measures approx. #{self.properties["width"]}\" x #{self.properties["height"]}\""
         if dim_arr.count == 1
@@ -194,7 +194,7 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def build_framing(obj_values)
+  def build_framing
     if self.dimension_type.present? && self.properties["frame_kind"].present?
       ["Framed", "This piece is #{self.properties["frame_kind"]}."]
     else
@@ -202,7 +202,7 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def build_edition(obj_values)
+  def build_edition
     if self.properties["limited_kind"].present? && self.edition_type.present?
       if self.edition_type.name == "x/y"
         numbered = [self.properties["edition_kind"], "numbered"].join(" ").strip
@@ -221,7 +221,7 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def build_signature(obj_values)
+  def build_signature
     if self.properties["signature_kind"].present?
       signature_kind = self.properties["signature_kind"]
       if signature_kind == "unsigned"
@@ -238,7 +238,7 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def build_certificate(obj_values)
+  def build_certificate
     if self.properties["certificate_kind"].present?
       ["with #{self.properties["certificate_kind"]}", "Includes #{conditional_capitalize(self.properties["certificate_kind"])}."]
     elsif self.properties["issuer"].present?
@@ -248,66 +248,22 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def build_tagline(obj_values)
+  def build_tagline
     if self.properties.present?
-      medium = [ build_framing(obj_values)[0], build_medium(obj_values)[0], build_substrate(obj_values)[0], build_medium2(obj_values)[0] ].join(" ").strip
-      "#{tagline_intro} #{conditional_capitalize(medium_ed_sign_cert(medium, obj_values))}."
+      medium = [ build_framing[0], build_medium[0], build_substrate[0], build_medium2[0] ].join(" ").strip
+      "#{tagline_intro} #{conditional_capitalize(medium_ed_sign_cert(medium))}."
     end
   end
 
-  def build_description(obj_values)
+  def build_description
     if self.properties.present?
-      medium = [build_medium(obj_values)[0], build_substrate(obj_values)[-1], "#{artists[-1]}", build_medium2(obj_values)[-1]].join(" ").strip
-      [description_intro(medium), "#{medium_ed_sign(medium, obj_values)}.", build_framing(obj_values)[-1], build_certificate(obj_values)[-1], build_dims(obj_values)[-1]].join(" ")
+      medium = [build_medium[0], build_substrate[-1], "#{artists[-1]}", build_medium2[-1]].join(" ").strip
+      [description_intro(medium), "#{medium_ed_sign(medium)}.", build_framing[-1], build_certificate[-1], build_dims[-1]].join(" ")
     end
   end
 
   #PRIMARY METHOD
   def hashed_item_values
-    #1 retrieve <type> objects
-    assoc_hash = {
-      #k => v, if v.present?
-      "item_type" => self.try(:item_type),
-      "edition_type" => self.try(:edition_type),
-      "dimension_type" => self.try(:dimension_type),
-      "substrate_type" => self.try(:substrate_type),
-      "signature_type" => self.try(:signature_type),
-      "certificate_type" => self.try(:certificate_type)
-    }
-
-    #3 k: "item_type", v: ItemType.find(n) #=> remove k/v pairs with nil values
-    assoc_hash = assoc_hash.keep_if { |k,v| v.present? }
-    if assoc_hash.present? && self.properties.present?
-
-      obj_values = Hash.new
-      assoc_hash.each do |k, v|
-        #e.g. item_type -> item_hash #=> this value is set for each k/v, string at this point
-        obj_values[k] = {k.gsub(/type/, "name") => v.name}
-        #obj_values[k] = {k.gsub(/_type/, "") => "name"}
-
-        if v.fields.present?
-          #e.g., item_type.fields.each
-          v.fields.each do |f|
-            obj_values[k]["medium"] = self.properties[f.name] if ["media"].any? { |word| f.name.include?(word) }
-            obj_values[k][f.name] = self.properties[f.name]
-          end
-        end
-        #^end: v.present condition
-      end
-      #^end: assoc_hash2.present?
-
-      #build_medium(obj_values)
-      obj_values["build"] = {
-        "framing" => build_framing(obj_values),
-        "medium" => build_medium(obj_values),
-        "substrate" => build_substrate(obj_values),
-        "medium2" => build_medium2(obj_values),
-        "edition" => build_edition(obj_values),
-        "signature" => build_signature(obj_values),
-        "certificate" => build_certificate(obj_values),
-        "dimensions" => build_dims(obj_values)
-      }
-    end
-    [ build_description(obj_values) ]#build_tagline(obj_values), build_description(obj_values), , build_edition(obj_values)[0] build_tagline(obj_values), build_description(obj_values)
+    [ build_tagline, build_description ]#build_tagline(obj_values), build_description(obj_values), , build_edition(obj_values)[0] build_tagline(obj_values), build_description(obj_values)
   end
 end
