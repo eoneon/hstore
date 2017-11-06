@@ -13,7 +13,11 @@ class Item < ActiveRecord::Base
   has_many :artists, through: :artist_items, dependent: :destroy
   delegate :first_name, :last_name, :to => :artist
 
-  before_save :set_title #:set_art_type, :set_category
+  before_save :set_title
+
+  # def set_floats
+  #   self.properties["width"].to_f
+  # end
 
   def set_title
     self.title = "Untitled" if self.title.blank?
@@ -95,9 +99,15 @@ class Item < ActiveRecord::Base
     tagline.join(" ").gsub(/ ,/, ",")
   end
 
+  def image_size
+    if self.properties?
+      self.properties["width"].to_f * self.properties["height"].to_f
+    end
+  end
+
   #this works
   def build_medium(obj_values)
-    [[ obj_values["item_type"].try(:[], "embellish_kind"), obj_values["item_type"].try(:[], "limited_kind"), obj_values["item_type"].try(:[], "medium"), obj_values["item_type"].try(:[], "sculpture_kind")].join(" ").strip]
+    [[ self.properties["embellish_kind"], obj_values["item_type"].try(:[], "limited_kind"), obj_values["item_type"].try(:[], "medium"), obj_values["item_type"].try(:[], "sculpture_kind")].join(" ").strip] #obj_values["item_type"].try(:[], "embellish_kind")
   end
 
   def build_medium2(obj_values)
@@ -153,7 +163,6 @@ class Item < ActiveRecord::Base
       [""]
     else
       ["Framed", "This piece is #{obj_values["dimension_type"]["frame_kind"]}."]
-      #obj_values["dimension_type"].try(:[], "frame_kind").present? ? ["Framed", "This piece is #{obj_values["dimension_type"]["frame_kind"]}."] : [""]
     end
   end
 
@@ -199,7 +208,7 @@ class Item < ActiveRecord::Base
       if certificate[0] == "general certificate"
         ["with #{certificate[1]}", "Includes #{conditional_capitalize(certificate[1])}."]
       else
-        ["with Certificate of Authenticity from #{certificate[1]}", "Includes Certificate of Authenticity from #{certificate[1]}"]
+        ["with Certificate of Authenticity from #{certificate[1]}", "Includes Certificate of Authenticity from #{certificate[1]}."]
       end
     else
       [""]
@@ -210,8 +219,8 @@ class Item < ActiveRecord::Base
     certificate = obj_values["build"]["certificate"][0] if obj_values["build"]["certificate"].present?
     edition_signature_arr = [obj_values["build"]["edition"][0], obj_values["build"]["signature"][0]]
     arr_count = edition_signature_arr.reject {|v| v.blank?}.count
-    if edition_signature_arr.join("").blank?
-      medium = certificate.present? ? "#{medium}, #{certificate}" : "#{medium}"
+    if arr_count == 0
+      medium = certificate.present? ? "#{medium} #{certificate}" : "#{medium}"
     else
       #"medium, <x> and <y>"
       if arr_count == 2
@@ -221,15 +230,14 @@ class Item < ActiveRecord::Base
       elsif arr_count == 1 && certificate.present?
         edition_signature_arr = edition_signature_arr.join("")
       end
-
+      medium = "#{medium}, #{edition_signature_arr} #{certificate}"
     end
-    medium = "#{medium}, #{edition_signature_arr} #{certificate}"
   end
 
   def medium_ed_sign(medium, obj_values)
     edition_signature_arr = [obj_values["build"]["edition"][0], obj_values["build"]["signature"][-1]]
     arr_count = edition_signature_arr.reject {|v| v.blank?}.count
-    if edition_signature_arr.join("").blank? #[obj_values["build"]["edition"][0], obj_values["build"]["signature"][-1]].join("").blank?
+    if arr_count == 0 #edition_signature_arr.join("").blank? #[obj_values["build"]["edition"][0], obj_values["build"]["signature"][-1]].join("").blank?
       "#{medium}"
     elsif arr_count == 2
       "#{medium}, #{edition_signature_arr.join(" and ")}"
@@ -239,13 +247,17 @@ class Item < ActiveRecord::Base
   end
 
   def build_tagline(obj_values)
-    medium = [obj_values["build"]["framing"][0], obj_values["build"]["medium"][0], obj_values["build"]["substrate"][0], obj_values["build"]["medium2"][0]].join(" ")
-    "#{tagline_intro} #{conditional_capitalize(medium_ed_sign_cert(medium, obj_values))}."
+    if self.properties.present?
+      medium = [obj_values["build"]["framing"][0], obj_values["build"]["medium"][0], obj_values["build"]["substrate"][0], obj_values["build"]["medium2"][0]].join(" ").strip
+      "#{tagline_intro} #{conditional_capitalize(medium_ed_sign_cert(medium, obj_values))}."
+    end
   end
 
   def build_description(obj_values)
-    medium = [obj_values["build"]["medium"][0], obj_values["build"]["substrate"][-1], "#{artists[-1]}", obj_values["build"]["medium2"][-1]].join(" ").strip
-    [description_intro(medium), "#{medium_ed_sign(medium, obj_values)}.", obj_values["build"]["framing"][-1], obj_values["build"]["certificate"][-1], obj_values["build"]["dimensions"][-1]].join(" ") #, obj_values["build"]["certificate"][-1], obj_values["build"]["dimensions"][-1], obj_values["build"]["framing"][0],
+    if self.properties.present?
+      medium = [obj_values["build"]["medium"][0], obj_values["build"]["substrate"][-1], "#{artists[-1]}", obj_values["build"]["medium2"][-1]].join(" ").strip
+      [description_intro(medium), "#{medium_ed_sign(medium, obj_values)}.", obj_values["build"]["framing"][-1], obj_values["build"]["certificate"][-1], obj_values["build"]["dimensions"][-1]].join(" ")
+    end
   end
 
   #PRIMARY METHOD
@@ -294,6 +306,6 @@ class Item < ActiveRecord::Base
         "dimensions" => build_dims(obj_values)
       }
     end
-    [ build_tagline(obj_values), build_description(obj_values) ]
+    [ build_tagline(obj_values), build_description(obj_values), self.properties]#build_tagline(obj_values), build_description(obj_values),
   end
 end
