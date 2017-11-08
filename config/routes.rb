@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   resources :item_types
   resources :dimension_types
-  resources :mounting_types
   resources :edition_types
   resources :leafing_types
   resources :remarque_types

@@ -104,12 +104,12 @@ class Item < ActiveRecord::Base
   #medium
   def build_medium
     medium = []
-    media = self.properties.map { |k,v| medium << v if ["media"].any? { |m| k.include?(m)}}
-    [[ self.properties["embellish_kind"], self.properties["limited_kind"], media, self.properties["sculpture_kind"]].join(" ").strip]
+    media = properties.map { |k,v| medium << v if ["media"].any? { |m| k.include?(m)}}
+    [[ properties["embellish_kind"], properties["limited_kind"], media, properties["sculpture_kind"]].join(" ").strip]
   end
 
   def build_medium2
-    medium2 = [ self.properties["leafing_kind"], self.properties["remarque_kind"] ].reject {|kind| kind.blank?}
+    medium2 = [ properties["leafing_kind"], properties["remarque_kind"] ].reject {|kind| kind.blank?}
     if medium2.count > 0
       medium2.count == 1 ? ["with #{medium2.join(" ")}"] : ["with #{medium2.join(" and ")}"]
     else
@@ -151,9 +151,9 @@ class Item < ActiveRecord::Base
   #this works
   def build_substrate
     substrate_kind = nil
-    self.properties.keys.map {|k| substrate_kind = k if k == "canvas_kind" || k == "paper_kind" || k == "other_kind"}
+    properties.keys.map {|k| substrate_kind = k if k == "canvas_kind" || k == "paper_kind" || k == "other_kind"}
     if substrate_kind.present?
-      substrate_kind != "paper_kind" ? [ "on #{self.properties[substrate_kind]}",  "on #{self.properties[substrate_kind]}"] : ["","on #{self.properties[substrate_kind]}" ]
+      substrate_kind != "paper_kind" ? [ "on #{properties[substrate_kind]}",  "on #{properties[substrate_kind]}"] : ["","on #{properties[substrate_kind]}" ]
     else
       [""]
     end
@@ -161,18 +161,18 @@ class Item < ActiveRecord::Base
 
   #dimensions dependency
   def image_size
-    if self.properties?
-      self.properties["width"].to_f * self.properties["height"].to_f
+    if properties?
+      properties["width"].to_f * properties["height"].to_f
     end
   end
 
   def dimension_name
-    self.dimension_type.name if self.dimension_type.present?
+    dimension_type.name if dimension_type.present?
   end
 
   def build_sculpture_dim(dim_arr, dims)
     dim_arr.each do |dim|
-      dims << "#{self.properties[dim]}\" (#{dim})"
+      dims << "#{properties[dim]}\" (#{dim})"
     end
     "Measures approx. #{dims.join(" x ")}."
   end
@@ -184,11 +184,11 @@ class Item < ActiveRecord::Base
       if dim_arr[-1] == "weight"
         [build_sculpture_dim(dim_arr, dims)]
       elsif dim_arr[-1] != "weight"
-        image_dim = "Measures approx. #{self.properties["width"]}\" x #{self.properties["height"]}\""
+        image_dim = "Measures approx. #{properties["width"]}\" x #{properties["height"]}\""
         if dim_arr.count == 1
           ["Measures approx. #{image_dim} (#{dim_arr[0]})."]
         elsif dim_arr.count == 2
-          ["Measures approx. #{self.properties["outer_width"]}\" x #{self.properties["outer_height"]}\" (#{dim_arr[-1]}); #{image_dim} (#{dim_arr[0]})."]
+          ["Measures approx. #{properties["outer_width"]}\" x #{properties["outer_height"]}\" (#{dim_arr[-1]}); #{image_dim} (#{dim_arr[0]})."]
         end
       end
     else
@@ -197,26 +197,26 @@ class Item < ActiveRecord::Base
   end
 
   def build_framing
-    if self.dimension_type.present? && self.properties["frame_kind"].present?
-      ["Framed", "This piece is #{self.properties["frame_kind"]}."]
+    if dimension_type.present? && properties["frame_kind"].present?
+      ["Framed", "This piece is #{properties["frame_kind"]}."]
     else
       [""]
     end
   end
 
   def build_edition
-    if self.properties["limited_kind"].present? && self.edition_type.present?
-      if self.edition_type.name == "x/y"
-        numbered = [self.properties["edition_kind"], "numbered"].join(" ").strip
-        if self.properties["number"].present? && self.properties["edition_size"].present?
-          numbering = ["#{numbered} #{self.properties["number"]}/#{self.properties["edition_size"]}"]
-        elsif self.properties["number"].blank? && self.properties["edition_size"].present?
-          numbering = ["#{numbered} out of #{self.properties["edition_size"]}"]
-        elsif self.properties["number"].blank? && self.properties["edition_size"].blank?
+    if properties["limited_kind"].present? && edition_type.present?
+      if edition_type.name == "x/y"
+        numbered = [properties["edition_kind"], "numbered"].join(" ").strip
+        if properties["number"].present? && properties["edition_size"].present?
+          numbering = ["#{numbered} #{properties["number"]}/#{properties["edition_size"]}"]
+        elsif properties["number"].blank? && properties["edition_size"].present?
+          numbering = ["#{numbered} out of #{properties["edition_size"]}"]
+        elsif properties["number"].blank? && properties["edition_size"].blank?
           numbering = [numbered]
         end
       else
-        numbering = ["numbered from a #{self.properties["edition_kind"]} edition"]
+        numbering = ["numbered from a #{properties["edition_kind"]} edition"]
       end
     else
       [""]
@@ -224,8 +224,8 @@ class Item < ActiveRecord::Base
   end
 
   def build_signature
-    if self.properties["signature_kind"].present?
-      signature_kind = self.properties["signature_kind"]
+    if properties["signature_kind"].present?
+      signature_kind = properties["signature_kind"]
       if signature_kind == "unsigned"
         [ "", "This piece is not signed." ]
       elsif signature_kind == "hand signed" || signature_kind == "hand signed and thumb printed"
@@ -241,24 +241,24 @@ class Item < ActiveRecord::Base
   end
 
   def build_certificate
-    if self.properties["certificate_kind"].present?
-      ["with #{self.properties["certificate_kind"]}", "Includes #{conditional_capitalize(self.properties["certificate_kind"])}."]
-    elsif self.properties["issuer"].present?
-      ["with Certificate of Authenticity from #{self.properties["issuer"]}", "Includes Certificate of Authenticity from #{self.properties["issuer"]}."]
+    if properties["certificate_kind"].present?
+      ["with #{properties["certificate_kind"]}", "Includes #{conditional_capitalize(properties["certificate_kind"])}."]
+    elsif properties["issuer"].present?
+      ["with Certificate of Authenticity from #{properties["issuer"]}", "Includes Certificate of Authenticity from #{properties["issuer"]}."]
     else
       [""]
     end
   end
 
   def build_tagline
-    if self.properties.present?
+    if properties.present?
       medium = [ build_framing[0], build_medium[0], build_substrate[0], build_medium2[0] ].join(" ").strip
       "#{tagline_intro} #{conditional_capitalize(medium_ed_sign_cert(medium))}."
     end
   end
 
   def build_description
-    if self.properties.present?
+    if properties.present?
       medium = [build_medium[0], build_substrate[-1], "#{artists[-1]}", build_medium2[-1]].join(" ").strip
       [description_intro(medium), "#{medium_ed_sign(medium)}.", build_framing[-1], build_certificate[-1], build_dims[-1]].join(" ")
     end
@@ -266,6 +266,6 @@ class Item < ActiveRecord::Base
 
   #PRIMARY METHOD
   def hashed_item_values
-    [ build_tagline, build_description ]#build_description build_tagline(obj_values), build_description(obj_values), , build_edition(obj_values)[0] build_tagline(obj_values), build_description(obj_values)
+    [ build_tagline, build_description ] 
   end
 end
