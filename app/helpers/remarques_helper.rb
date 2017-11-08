@@ -1,2 +1,0 @@
-module RemarquesHelper
-end

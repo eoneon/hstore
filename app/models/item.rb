@@ -2,8 +2,6 @@ class Item < ActiveRecord::Base
   belongs_to :item_type
   belongs_to :dimension_type
   belongs_to :edition_type
-  belongs_to :leafing_type
-  belongs_to :remarque_type
   belongs_to :certificate_type
   belongs_to :signature_type
   belongs_to :substrate_type
@@ -266,6 +264,6 @@ class Item < ActiveRecord::Base
 
   #PRIMARY METHOD
   def hashed_item_values
-    [ build_tagline, build_description ] 
+    [ build_tagline, build_description ]
   end
 end

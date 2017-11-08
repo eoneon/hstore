@@ -349,8 +349,6 @@ CREATE TABLE item_fields (
     signature_type_id integer,
     substrate_type_id integer,
     dimension_type_id integer,
-    leafing_type_id integer,
-    remarque_type_id integer,
     edition_type_id integer
 );
 
@@ -429,8 +427,6 @@ CREATE TABLE items (
     category character varying,
     dimension_type_id integer,
     embellish_type_id integer,
-    leafing_type_id integer,
-    remarque_type_id integer,
     edition_type_id integer,
     image_size double precision
 );
@@ -453,68 +449,6 @@ CREATE SEQUENCE items_id_seq
 --
 
 ALTER SEQUENCE items_id_seq OWNED BY items.id;
-
-
---
--- Name: leafing_types; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE leafing_types (
-    id integer NOT NULL,
-    name character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: leafing_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE leafing_types_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: leafing_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE leafing_types_id_seq OWNED BY leafing_types.id;
-
-
---
--- Name: remarque_types; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE remarque_types (
-    id integer NOT NULL,
-    name character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: remarque_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE remarque_types_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: remarque_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE remarque_types_id_seq OWNED BY remarque_types.id;
 
 
 --
@@ -813,20 +747,6 @@ ALTER TABLE ONLY items ALTER COLUMN id SET DEFAULT nextval('items_id_seq'::regcl
 
 
 --
--- Name: leafing_types id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY leafing_types ALTER COLUMN id SET DEFAULT nextval('leafing_types_id_seq'::regclass);
-
-
---
--- Name: remarque_types id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY remarque_types ALTER COLUMN id SET DEFAULT nextval('remarque_types_id_seq'::regclass);
-
-
---
 -- Name: searches id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -965,22 +885,6 @@ ALTER TABLE ONLY items
 
 
 --
--- Name: leafing_types leafing_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY leafing_types
-    ADD CONSTRAINT leafing_types_pkey PRIMARY KEY (id);
-
-
---
--- Name: remarque_types remarque_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY remarque_types
-    ADD CONSTRAINT remarque_types_pkey PRIMARY KEY (id);
-
-
---
 -- Name: searches searches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1078,20 +982,6 @@ CREATE INDEX index_item_fields_on_item_type_id ON item_fields USING btree (item_
 
 
 --
--- Name: index_item_fields_on_leafing_type_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_item_fields_on_leafing_type_id ON item_fields USING btree (leafing_type_id);
-
-
---
--- Name: index_item_fields_on_remarque_type_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_item_fields_on_remarque_type_id ON item_fields USING btree (remarque_type_id);
-
-
---
 -- Name: index_item_fields_on_signature_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1148,24 +1038,10 @@ CREATE INDEX index_items_on_item_type_id ON items USING btree (item_type_id);
 
 
 --
--- Name: index_items_on_leafing_type_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_items_on_leafing_type_id ON items USING btree (leafing_type_id);
-
-
---
 -- Name: index_items_on_mounting_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_items_on_mounting_type_id ON items USING btree (mounting_type_id);
-
-
---
--- Name: index_items_on_remarque_type_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_items_on_remarque_type_id ON items USING btree (remarque_type_id);
 
 
 --
@@ -1261,14 +1137,6 @@ ALTER TABLE ONLY item_fields
 
 
 --
--- Name: items fk_rails_079304ee1d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY items
-    ADD CONSTRAINT fk_rails_079304ee1d FOREIGN KEY (remarque_type_id) REFERENCES remarque_types(id);
-
-
---
 -- Name: searches fk_rails_0a13cb5f64; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1306,14 +1174,6 @@ ALTER TABLE ONLY items
 
 ALTER TABLE ONLY searches
     ADD CONSTRAINT fk_rails_1c204d5c87 FOREIGN KEY (dimension_type_id) REFERENCES dimension_types(id);
-
-
---
--- Name: item_fields fk_rails_37b0924afc; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY item_fields
-    ADD CONSTRAINT fk_rails_37b0924afc FOREIGN KEY (remarque_type_id) REFERENCES remarque_types(id);
 
 
 --
@@ -1381,14 +1241,6 @@ ALTER TABLE ONLY items
 
 
 --
--- Name: item_fields fk_rails_7ac6da6f8e; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY item_fields
-    ADD CONSTRAINT fk_rails_7ac6da6f8e FOREIGN KEY (leafing_type_id) REFERENCES leafing_types(id);
-
-
---
 -- Name: searches fk_rails_8008e11d5a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1450,14 +1302,6 @@ ALTER TABLE ONLY item_fields
 
 ALTER TABLE ONLY displays
     ADD CONSTRAINT fk_rails_c725fa2dec FOREIGN KEY (artist_id) REFERENCES artists(id);
-
-
---
--- Name: items fk_rails_d1c24a839f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY items
-    ADD CONSTRAINT fk_rails_d1c24a839f FOREIGN KEY (leafing_type_id) REFERENCES leafing_types(id);
 
 
 --
@@ -1619,4 +1463,16 @@ INSERT INTO schema_migrations (version) VALUES ('20171108161151');
 INSERT INTO schema_migrations (version) VALUES ('20171108162249');
 
 INSERT INTO schema_migrations (version) VALUES ('20171108162955');
+
+INSERT INTO schema_migrations (version) VALUES ('20171108164415');
+
+INSERT INTO schema_migrations (version) VALUES ('20171108164905');
+
+INSERT INTO schema_migrations (version) VALUES ('20171108165240');
+
+INSERT INTO schema_migrations (version) VALUES ('20171108165813');
+
+INSERT INTO schema_migrations (version) VALUES ('20171108170352');
+
+INSERT INTO schema_migrations (version) VALUES ('20171108170618');
 

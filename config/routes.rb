@@ -2,8 +2,6 @@ Rails.application.routes.draw do
   resources :item_types
   resources :dimension_types
   resources :edition_types
-  resources :leafing_types
-  resources :remarque_types
   resources :certificate_types
   resources :signature_types
   resources :substrate_types
