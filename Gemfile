@@ -34,6 +34,7 @@ gem 'sass-rails', '~> 5.0'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 gem 'roo'
+gem 'whenever'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

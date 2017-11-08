@@ -62,9 +62,9 @@ class Item < ActiveRecord::Base
 
   def description_intro(medium_description)
     if self.title == "Untitled"
-      medium_description.first =~ /\A[^aeiou]/ ? "This is a " : "This is an "
+      medium_description.first =~ /\A[^aeiou]/ ? "This is a " : "This is an"
     else
-      medium_description.first =~ /\A[^aeiou]/ ? "#{item_title} is a " : "#{item_title} is an "
+      medium_description.first =~ /\A[^aeiou]/ ? "#{item_title} is a " : "#{item_title} is an"
     end
   end
 
@@ -251,7 +251,8 @@ class Item < ActiveRecord::Base
   def build_tagline
     if properties.present?
       medium = [ build_framing[0], build_medium[0], build_substrate[0], build_medium2[0] ].join(" ").strip
-      "#{tagline_intro} #{conditional_capitalize(medium_ed_sign_cert(medium))}."
+      period = "." if medium.length > 0
+      "#{tagline_intro} #{conditional_capitalize(medium_ed_sign_cert(medium))}#{period}"
     end
   end
 
