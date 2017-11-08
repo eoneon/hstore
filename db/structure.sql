@@ -433,7 +433,8 @@ CREATE TABLE items (
     embellish_type_id integer,
     leafing_type_id integer,
     remarque_type_id integer,
-    edition_type_id integer
+    edition_type_id integer,
+    image_size double precision
 );
 
 
@@ -577,7 +578,9 @@ CREATE TABLE searches (
     image_height integer,
     edition_type_id integer,
     dimension_type_id integer,
-    artist_id integer
+    artist_id integer,
+    width double precision,
+    height double precision
 );
 
 
@@ -1685,4 +1688,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171017014115');
 INSERT INTO schema_migrations (version) VALUES ('20171103212425');
 
 INSERT INTO schema_migrations (version) VALUES ('20171104205917');
+
+INSERT INTO schema_migrations (version) VALUES ('20171106231637');
+
+INSERT INTO schema_migrations (version) VALUES ('20171107001352');
 

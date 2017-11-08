@@ -14,10 +14,12 @@ class Item < ActiveRecord::Base
   delegate :first_name, :last_name, :to => :artist
 
   before_save :set_title
+  before_save :set_image_size
 
-  # def set_floats
-  #   self.properties["width"].to_f
-  # end
+  #need to assign attribute
+  def set_image_size
+    self.image_size = image_size
+  end
 
   def set_title
     self.title = "Untitled" if self.title.blank?
@@ -264,6 +266,6 @@ class Item < ActiveRecord::Base
 
   #PRIMARY METHOD
   def hashed_item_values
-    [ build_tagline, build_description ]#build_tagline(obj_values), build_description(obj_values), , build_edition(obj_values)[0] build_tagline(obj_values), build_description(obj_values)
+    [ build_tagline, build_description ]#build_description build_tagline(obj_values), build_description(obj_values), , build_edition(obj_values)[0] build_tagline(obj_values), build_description(obj_values)
   end
 end

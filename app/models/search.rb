@@ -12,17 +12,45 @@ class Search < ActiveRecord::Base
     @items ||= find_items
   end
 
+  def fk_values
+    [artist_id, item_type_id, dimension_type_id, substrate_type_id, certificate_type_id].reject {|fk| fk.nil?}.count
+  end
+
+  def image_size
+    width * height if width > 0 && height > 0
+  end
+
   private
 
+  def width
+    self.properties["width"].to_f
+  end
+
+  def height
+    self.properties["height"].to_f
+  end
+
+  # def image_size
+  #   width * height if width > 0 && height > 0
+  # end
+
+  # def properties
+  #   self.properties.except(:width, :height)
+  # end
+  #image_size.present?
+
+
   def find_items
-    items = Item.order(:sku)
+    items = fk_values > 0 ? Item.order(:sku) : []
     items = items.joins(:artists).where('artists.id' => artist_id) if artist_id.present?
     items = items.where(item_type_id: item_type_id) if item_type_id.present?
     items = items.where(dimension_type_id: dimension_type_id) if dimension_type_id.present?
     items = items.where(substrate_type_id: substrate_type_id) if substrate_type_id.present?
     items = items.where(certificate_type_id: certificate_type_id) if certificate_type_id.present?
-    self.properties.each do |k, v|
-      items = items.where("properties @> hstore(:key,:value)", key: k, value: v) if properties[k].present? #&& properties[k] != 0
+    # items = items.where('image_size BETWEEN ? AND ?', image_size + 2, image_size - 2 ) if image_size.present?
+    items = items.where('image_size > ? AND image_size < ?', image_size - 1, image_size + 1) if image_size.present?
+    properties.except("width", "height").each do |k, v|
+      items = items.where("properties @> hstore(:key,:value)", key: k, value: v) if properties[k].present?
     end
     # items = items.where("name like ?", "%#{keywords}%") if keywords.present?
     # items = items.where(item_type_id: item_type_id) if item_type_id.present?
