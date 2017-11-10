@@ -46,6 +46,10 @@ module ApplicationHelper
     parent.public_send(obj.to_s.underscore)
   end
 
+  def dim_name(parent)
+    parent.dimension_type.name.split(" & ") if parent.dimension_type.present?
+  end
+
   # def value_list(property)
   #   send(property)
   # end

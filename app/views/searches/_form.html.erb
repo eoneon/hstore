@@ -13,6 +13,11 @@
     <%= f.collection_select( :artist_id, Artist.all, :id, :last_name_first, prompt: "- Artist -", include_blank: true) %>
   </div>
 
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </div>
+
   <%= render "items/properties", parent: @search, f: f %>
   <%= f.submit "Search" %>
     <%# if params[:action] == 'edit' %>

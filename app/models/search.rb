@@ -7,13 +7,14 @@ class Search < ActiveRecord::Base
   belongs_to :certificate_type
 
   serialize :properties, Hash
+  #before_save { self.title = title.downcase if title.present? }
 
   def items
     @items ||= find_items
   end
 
   def fk_values
-    [artist_id, item_type_id, dimension_type_id, substrate_type_id, certificate_type_id].reject {|fk| fk.nil?}.count
+    [artist_id, title, item_type_id, dimension_type_id, substrate_type_id, certificate_type_id].reject {|fk| fk.nil?}.count
   end
 
   def image_size
@@ -47,7 +48,7 @@ class Search < ActiveRecord::Base
     items = items.where(dimension_type_id: dimension_type_id) if dimension_type_id.present?
     items = items.where(substrate_type_id: substrate_type_id) if substrate_type_id.present?
     items = items.where(certificate_type_id: certificate_type_id) if certificate_type_id.present?
-    # items = items.where('image_size BETWEEN ? AND ?', image_size + 2, image_size - 2 ) if image_size.present?
+    items = items.where('title ILIKE ?', "%#{title}%") if title.present?
     items = items.where('image_size > ? AND image_size < ?', image_size - 1, image_size + 1) if image_size.present?
     properties.except("width", "height").each do |k, v|
       items = items.where("properties @> hstore(:key,:value)", key: k, value: v) if properties[k].present?

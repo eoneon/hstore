@@ -168,6 +168,10 @@ class Item < ActiveRecord::Base
     dimension_type.name if dimension_type.present?
   end
 
+  def dim_arr
+    dimension_name.split(" & ") if dimension_name.present?
+  end
+
   def build_sculpture_dim(dim_arr, dims)
     dim_arr.each do |dim|
       dims << "#{properties[dim]}\" (#{dim})"
@@ -176,9 +180,11 @@ class Item < ActiveRecord::Base
   end
 
   def build_dims
+    #if dim_name(dimension_type).present?
     if dimension_name.present?
       dims = []
       dim_arr = dimension_name.split(" & ")
+      #dim_arr = dim_name(dimension_type).split(" & ")
       if dim_arr[-1] == "weight"
         [build_sculpture_dim(dim_arr, dims)]
       elsif dim_arr[-1] != "weight"

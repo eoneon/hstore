@@ -1,4 +1,6 @@
-<div class="field">
-  <%= f.label field.name %><br/>
-  <%= f.number_field field.name, :step => 0.5 %>
-</div>
+<% unless (parent == @search && field.name == "outer_width") || (parent == @search && field.name == "outer_height") || dim_name(parent) == "weight" %>
+  <div class="field">
+    <%= f.label field.name %><br/>
+    <%= f.number_field field.name, :step => 0.5 %>
+  </div>
+<% end %>
