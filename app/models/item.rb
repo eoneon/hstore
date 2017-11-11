@@ -271,6 +271,6 @@ class Item < ActiveRecord::Base
 
   #PRIMARY METHOD
   def hashed_item_values
-    [ build_tagline, build_description, retail ] #number_to_currency(self.retail)
+    [ build_tagline, build_description ] #number_to_currency(self.retail)
   end
 end
