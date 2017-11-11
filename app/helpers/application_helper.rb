@@ -50,6 +50,10 @@ module ApplicationHelper
     parent.dimension_type.name.split(" & ") if parent.dimension_type.present?
   end
 
+  def retail(parent)
+    parent.retail
+  end
+
   # def value_list(property)
   #   send(property)
   # end

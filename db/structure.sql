@@ -419,7 +419,7 @@ CREATE TABLE items (
     image_width integer,
     image_height integer,
     substrate_type_id integer,
-    retail numeric,
+    retail integer,
     title text,
     sku integer,
     invoice_id integer,
@@ -1478,4 +1478,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171108170352');
 INSERT INTO schema_migrations (version) VALUES ('20171108170618');
 
 INSERT INTO schema_migrations (version) VALUES ('20171109211339');
+
+INSERT INTO schema_migrations (version) VALUES ('20171110055042');
 

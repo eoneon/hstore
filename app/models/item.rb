@@ -52,11 +52,11 @@ class Item < ActiveRecord::Base
   end
 
   def item_title
-    "\"#{conditional_capitalize(self.title)}\"" if self.title != "Untitled" && self.title.present?
+    "\"#{conditional_capitalize(title)}\"" if title != "Untitled" && title.present?
   end
 
   def artists
-    artists = self.artist_ids.map { |a| Artist.find(a).full_name }
+    artists = artist_ids.map { |a| Artist.find(a).full_name }
     artists.present? ? [artists.join(" and "), "by #{artists.join(" and ")}"] : [""]
   end
 
@@ -271,6 +271,6 @@ class Item < ActiveRecord::Base
 
   #PRIMARY METHOD
   def hashed_item_values
-    [ build_tagline, build_description ]
+    [ build_tagline, build_description, retail ] #number_to_currency(self.retail)
   end
 end

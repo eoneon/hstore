@@ -1,0 +1,18 @@
+<%= form_for parent do |f| %>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.select :name, options_for_select(ValueItem.where(kind: obj_to_str(parent)).pluck(:name), parent.name), {:include_blank => true} %>
+    <%#= f.select :name, options_for_select(ValueItem.where(kind: obj_to_str(parent)).pluck(:name)), {:include_blank => true} %>
+    <%#= f.select :name, options_for_select(Category.where(kind: obj_to_s(parent)).pluck(:name), parent.name), {:include_blank => true} %>
+  </div>
+
+  <!-- loop through each field { :selected => }-->
+  <%= f.fields_for :fields do |builder| %>
+    <!-- for each field, render field partial-->
+    <%= render 'item_types/field_fields', f: builder %>
+  <% end %>
+
+  <!-- update in app/helper to change partial rendered  -->
+  <%= link_to_add_fields "Add Field", f, :fields %>
+  <%= f.submit "Save" %>
+<% end %>
