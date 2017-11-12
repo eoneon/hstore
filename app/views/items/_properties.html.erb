@@ -4,7 +4,7 @@
     <div class="col-xs-3">
       <div class="field">
         <%= f.label obj_to_s(type) %><br>
-        <%= f.collection_select obj_to_fk(type), type.all, :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
+        <%= f.collection_select obj_to_fk(type), type_list(parent, type), :id, :name, {:include_blank => true}, onchange: 'submitform()' %><br>
       </div>
     </div>
     <div class="col-xs-3">

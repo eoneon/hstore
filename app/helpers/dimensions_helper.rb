@@ -1,10 +1,10 @@
 module DimensionsHelper
   #these should be scopes inside the DimensionType model
-  def flat_dim_list
+  def flat_dimtype_list
     DimensionType.all.map {|dim| dim unless dim.name.split(" & ")[-1] == "weight"}.reject {|dim| dim.nil?}
   end
 
-  def sculpture_dim_list
+  def sculpture_dimtype_list
     DimensionType.all.map {|dim| dim if dim.name.split(" & ")[-1] == "weight"}.reject {|dim| dim.nil?}
   end
 
