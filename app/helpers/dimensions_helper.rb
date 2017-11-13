@@ -10,11 +10,49 @@ module DimensionsHelper
 
   #we can get rid of these at some point since they're inside item and here
   #also, the above methods should cover those below.
-  def dim_name(parent)
-    parent.dimension_type.name.split(" & ") if parent.dimension_type.present?
+  def dim_name(item)
+    item.dimension_type.name.split(" & ") if item.dimension_type.present?
   end
 
-  def dim_arr(parent)
-    dim_name(parent)[-1] if parent.dimension_type.present?
+  def dim_arr(item)
+    dim_name(item)[-1] if item.dimension_type.present?
+  end
+
+  def image_size(item)
+    if item.properties?
+      item.properties["width"].to_f * item.properties["height"].to_f
+    end
+  end
+
+  def build_sculpture_dim(item, dims)
+    dim_name(item).each do |dim|
+      dims << "#{item.properties[dim]}\" (#{dim})"
+    end
+    "Measures approx. #{dims.join(" x ")}."
+  end
+
+  def build_dims(item)
+    if item.dimension_name.present?
+      if dim_name(item)[-1] == "weight"
+        [build_sculpture_dim(item, dims = [])]
+      elsif dim_name(item)[-1] != "weight"
+        image_dim = "Measures approx. #{item.properties["width"]}\" x #{item.properties["height"]}\""
+        if dim_name(item).count == 1
+          ["Measures approx. #{image_dim} (#{dim_name(item)[0]})."]
+        elsif dim_name(item).count == 2
+          ["Measures approx. #{properties["outer_width"]}\" x #{properties["outer_height"]}\" (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
+        end
+      end
+    else
+      [""]
+    end
+  end
+
+  def build_framing(item)
+    if item.dimension_type.present? && item.properties["frame_kind"].present?
+      ["Framed", "This piece is #{item.properties["frame_kind"]}."]
+    else
+      [""]
+    end
   end
 end

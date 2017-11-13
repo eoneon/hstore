@@ -30,34 +30,6 @@ module ApplicationHelper
     end
   end
 
-  # def obj_type_list(parent)
-  #   type_list = type_list(parent)
-  #   if parent.item_type.name == "limited edition"
-  #     type_list
-  #   elsif parent.item_type.name == "print"
-  #     type_list - [EditionType]
-  #   elsif parent.item_type.name == "limited edition sculpture" || parent.item_type.name == "limited edition sericel"
-  #     type_list - [SubstrateType]
-  #   elsif parent.item_type.name == "sculpture"
-  #     type_list - [EditionType, SubstrateType]
-  #   elsif parent.item_type.name == "one-of-a-kind"
-  #     type_list
-  #   elsif parent.item_type.name == "original painting" || parent.item_type.name == "sketch"
-  #     type_list - [EditionType]
-  #   end
-  # end
-
-  # def type_list(parent)
-  #   if parent.item_type_id.present?
-  #     #if flat art -> exclude sculpture dimensions
-  #     if flat_item_list.include? parent.item_type_id
-  #     list.map {|type| type == DimensionType ? flat_item_list : type}
-  #   #sculpture -> exclude flat art dimensions
-  #   elsif sculpture_item_list.include? parent.item_type_id
-  #     list.map {|type| type == DimensionType ? sculpture_item_list : type}
-  #   end
-  # end
-
   def type_list(parent, type)
     if type == DimensionType && parent.dimension_type_id.present?
       #if flat art and loop type is dimension type -> exclude sculpture dimensions
@@ -88,15 +60,34 @@ module ApplicationHelper
     parent.public_send(obj.to_s.underscore)
   end
 
-  def retail(parent)
-    parent.retail
-  end
-
   def set_value(value)
     if value != nil
       @item.properties["#{value}"]
     else
       nil
     end
+  end
+
+  def conditional_capitalize(words)
+    tagline = []
+    words.split.each do |w|
+      w = w.downcase.capitalize! unless reserved_list.any? { |word| w == word || /[0-9]/.match(w) || /-/.match(w).present?}
+      w = handle_hyphens(w) if /-/.match(w).present?
+      tagline << w
+    end
+    tagline.join(" ").gsub(/ ,/, ",")
+  end
+
+  def handle_hyphens(hyphen_words)
+    hyphen_arr = []
+    hyphen_words.split("-").each do |hyphen_w|
+      hyphen_w = hyphen_w.downcase.capitalize! unless reserved_list.any? { |word| hyphen_w == word }
+      hyphen_arr << hyphen_w
+    end
+    hyphen_arr.join("-")
+  end
+
+  def reserved_list
+    ValueItem.where(kind: "edition_kind").pluck(:name) + ["a", "of", "and", "or", "on", "with", "from", ","]
   end
 end

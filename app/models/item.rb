@@ -51,10 +51,12 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def item_title
     "\"#{conditional_capitalize(title)}\"" if title != "Untitled" && title.present?
   end
 
+  #moved
   def artists
     artists = artist_ids.map { |a| Artist.find(a).full_name }
     artists.present? ? [artists.join(" and "), "by #{artists.join(" and ")}"] : [""]
@@ -68,6 +70,7 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def tagline_intro
     if artists[0].present?
       "#{artists[0]} - #{item_title}"
@@ -76,10 +79,12 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def reserved_list
     ValueItem.where(kind: "edition_kind").pluck(:name) + ["a", "of", "and", "or", "on", "with", "from", ","]
   end
 
+  #moved
   def handle_hyphens(hyphen_words)
     hyphen_arr = []
     hyphen_words.split("-").each do |hyphen_w|
@@ -89,6 +94,7 @@ class Item < ActiveRecord::Base
     hyphen_arr.join("-")
   end
 
+  #moved
   def conditional_capitalize(words)
     tagline = []
     words.split.each do |w|
@@ -99,13 +105,14 @@ class Item < ActiveRecord::Base
     tagline.join(" ").gsub(/ ,/, ",")
   end
 
-  #medium
+  #moved
   def build_medium
     medium = []
     media = properties.map { |k,v| medium << v if ["media"].any? { |m| k.include?(m)}}
     [[ properties["embellish_kind"], properties["limited_kind"], media, properties["sculpture_kind"]].join(" ").strip]
   end
 
+  #moved
   def build_medium2
     medium2 = [ properties["leafing_kind"], properties["remarque_kind"] ].reject {|kind| kind.blank?}
     if medium2.count > 0
@@ -115,6 +122,7 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def medium_ed_sign_cert(medium)
     certificate = build_certificate[0] if build_certificate[0].present?
     edition_signature_arr = [build_edition[0], build_signature[0]]
@@ -134,6 +142,7 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def medium_ed_sign(medium)
     edition_signature_arr = [build_edition[0], build_signature[-1]]
     arr_count = edition_signature_arr.reject {|v| v.blank?}.count
@@ -146,7 +155,7 @@ class Item < ActiveRecord::Base
     end
   end
 
-  #this works
+  #moved
   def build_substrate
     substrate_kind = nil
     properties.keys.map {|k| substrate_kind = k if k == "canvas_kind" || k == "paper_kind" || k == "other_kind"}
@@ -157,21 +166,24 @@ class Item < ActiveRecord::Base
     end
   end
 
-  #dimensions dependency
+  #moved
   def image_size
     if properties?
       properties["width"].to_f * properties["height"].to_f
     end
   end
 
+  #moved
   def dimension_name
     dimension_type.name if dimension_type.present?
   end
 
+  #moved
   def dim_arr
     dimension_name.split(" & ") if dimension_name.present?
   end
 
+  #moved
   def build_sculpture_dim(dim_arr, dims)
     dim_arr.each do |dim|
       dims << "#{properties[dim]}\" (#{dim})"
@@ -179,6 +191,7 @@ class Item < ActiveRecord::Base
     "Measures approx. #{dims.join(" x ")}."
   end
 
+  #moved
   def build_dims
     #if dim_name(dimension_type).present?
     if dimension_name.present?
@@ -200,6 +213,7 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def build_framing
     if dimension_type.present? && properties["frame_kind"].present?
       ["Framed", "This piece is #{properties["frame_kind"]}."]
@@ -208,6 +222,7 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def build_edition
     if properties["limited_kind"].present? && edition_type.present?
       if edition_type.name == "x/y"
@@ -227,6 +242,7 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def build_signature
     if properties["signature_kind"].present?
       signature_kind = properties["signature_kind"]
@@ -244,6 +260,7 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def build_certificate
     if properties["certificate_kind"].present?
       ["with #{properties["certificate_kind"]}", "Includes #{conditional_capitalize(properties["certificate_kind"])}."]
@@ -254,6 +271,7 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #moved
   def build_tagline
     if properties.present?
       medium = [ build_framing[0], build_medium[0], build_substrate[0], build_medium2[0] ].join(" ").strip

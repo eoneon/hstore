@@ -1,8 +1,6 @@
 <%= content_tag :div, class: 'media', id: "item-#{item.id}" do %>
   <div>
-    <p><%= item.hashed_item_values[0] %></p>
-    <p><%= item.hashed_item_values[1] %></p>
-    <p><%= item.hashed_item_values[2] %></p>
-    <p><%#= type_list(item) %></p>
+    <p><%= build_tagline(item) %></p>
+    <p><%= build_description(item) %></p>
    </div>
 <% end %>
