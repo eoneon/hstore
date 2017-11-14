@@ -32,7 +32,7 @@ module DimensionsHelper
   end
 
   def build_dims(item)
-    if item.dimension_name.present?
+    if dim_name(item).present?
       if dim_name(item)[-1] == "weight"
         [build_sculpture_dim(item, dims = [])]
       elsif dim_name(item)[-1] != "weight"
@@ -40,7 +40,7 @@ module DimensionsHelper
         if dim_name(item).count == 1
           ["Measures approx. #{image_dim} (#{dim_name(item)[0]})."]
         elsif dim_name(item).count == 2
-          ["Measures approx. #{properties["outer_width"]}\" x #{properties["outer_height"]}\" (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
+          ["Measures approx. #{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\" (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
         end
       end
     else

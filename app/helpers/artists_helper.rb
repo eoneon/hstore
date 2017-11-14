@@ -1,6 +1,5 @@
 module ArtistsHelper
   def artists(item)
-    artists = item.artist_ids.map { |a| Artist.find(a).full_name }
-    artists.present? ? [artists.join(" and "), "by #{artists.join(" and ")}"] : [""]
+    item.artists_by_item.present? ? [item.artists_by_item.join(" and "), "by #{item.artists_by_item.join(" and ")}"] : [""]
   end
 end

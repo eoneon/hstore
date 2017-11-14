@@ -1,7 +1,7 @@
 <%= content_tag :div, class: 'media', id: "item-#{item.id}" do %>
   <tr>
      <td><%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %></td>
-     <td><%= item.hashed_item_values[0] %></td>
+     <td><%= build_tagline(item) %></td>
      <td><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true %></td>
    </tr>
 <% end %>

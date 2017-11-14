@@ -9,7 +9,7 @@ module SignatureTypesHelper
       elsif signature_kind == "plate signature" || signature_kind == "authorized signature"
         [ "signed", "bearing the #{signature_kind} of the artist" ]
       elsif signature_kind == "autographed"
-        [ "#{signature_kind} by #{artists[-1]}", "#{signature_kind} by #{artists[-1]}" ]
+        [ "#{signature_kind} by #{artists(item)[-1]}", "#{signature_kind} by #{artists(item)[-1]}" ]
       end
     else
       [""]
