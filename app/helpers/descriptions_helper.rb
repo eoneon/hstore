@@ -26,34 +26,19 @@ module DescriptionsHelper
   def sub_list(item)
     [
       [" List ", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" Numbered ", " No. "],
-      ["Certificate", "Cert"], [" with ", " w/"], [xy_numbering(item), ""], [out_of_numbering(item), ""], [" and ", " & "]
+      ["Certificate", "Cert"], ["Gold Leaf", "GoldLeaf"], ["Silver Leaf", "SilverLeaf"], [" with ", " w/"],
+      [xy_numbering(item), ""], [out_of_numbering(item), ""], [" and ", " & "], ["Hand Drawn Remarque", "Remarque"],
+      ["Hand Embellished", "Embellished"], ["Artist Embellished", "Embellished"]
     ].reject { |sub_arr| sub_arr.join("").empty?}
   end
 
-  # def descripton_pr(item)
-  #   d = [build_tagline(item), retail(item)].join(" ")
-  #   if d.size <= 128
-  #     d
-  #   else
-  #     i = 0
-  #     while d.size >= 128 || i <= sub_list(item).count - 1 do
-  #       #would need to convert sub_list(item)[i][0] to a regexp if possible
-  #       d.gsub(/"#{sub_list(item)[i][0]}"/"#{sub_list(item)[i][-1]}")
-  #       i + 1
-  #     end
-  #   end
-  # end
-  #this works BUT it will pick up
   def descripton_pr(item)
     d = [build_tagline(item), retail(item)].join(" ")
-    if d.size <= 128
-      d
-    else
-      sub_list(item).each do |sub_arr|
-        d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
-        return d if d.size <= 128
-      end
+    sub_list(item).each do |sub_arr|
+      return d if d.size <= 128
+      d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
     end
+    #"#{d} (#{d.size})"
     d
   end
 end

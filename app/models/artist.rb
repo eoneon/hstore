@@ -16,7 +16,15 @@ class Artist < ActiveRecord::Base
     ([first_name, last_name] - ['']).compact.join(' ')
   end
 
+  def full_name_display
+    [full_name, artist_display].join(" ")
+  end
+
   def last_name_first
     ([last_name, first_name] - ['']).compact.join(', ')
+  end
+
+  def artist_display
+    displays.first.name if displays.present?
   end
 end

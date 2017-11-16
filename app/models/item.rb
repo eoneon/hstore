@@ -52,7 +52,7 @@ class Item < ActiveRecord::Base
   end
 
   def artists_by_item
-    artist_ids.map { |a| Artist.find(a).full_name }
+    artist_ids.map { |a| Artist.find(a).full_name_display }
   end
 
   def reserved_list
