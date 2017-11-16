@@ -4,6 +4,8 @@ module ItemsHelper
   end
 
   def retail(item)
-    number_to_currency(item.retail)
+    if item.retail.present?
+      " List #{number_to_currency(item.retail, precision: 0)}"
+    end
   end
 end

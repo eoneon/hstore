@@ -22,4 +22,38 @@ module DescriptionsHelper
       [description_intro(item, medium), "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1]].join(" ")
     end
   end
+
+  def sub_list(item)
+    [
+      [" List ", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" Numbered ", " No. "],
+      ["Certificate", "Cert"], [" with ", " w/"], [xy_numbering(item), ""], [out_of_numbering(item), ""], [" and ", " & "]
+    ].reject { |sub_arr| sub_arr.join("").empty?}
+  end
+
+  # def descripton_pr(item)
+  #   d = [build_tagline(item), retail(item)].join(" ")
+  #   if d.size <= 128
+  #     d
+  #   else
+  #     i = 0
+  #     while d.size >= 128 || i <= sub_list(item).count - 1 do
+  #       #would need to convert sub_list(item)[i][0] to a regexp if possible
+  #       d.gsub(/"#{sub_list(item)[i][0]}"/"#{sub_list(item)[i][-1]}")
+  #       i + 1
+  #     end
+  #   end
+  # end
+  #this works BUT it will pick up
+  def descripton_pr(item)
+    d = [build_tagline(item), retail(item)].join(" ")
+    if d.size <= 128
+      d
+    else
+      sub_list(item).each do |sub_arr|
+        d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
+        return d if d.size <= 128
+      end
+    end
+    d
+  end
 end
