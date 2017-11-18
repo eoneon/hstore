@@ -31,16 +31,6 @@ class Search < ActiveRecord::Base
     self.properties["height"].to_f
   end
 
-  # def image_size
-  #   width * height if width > 0 && height > 0
-  # end
-
-  # def properties
-  #   self.properties.except(:width, :height)
-  # end
-  #image_size.present?
-
-
   def find_items
     items = fk_values > 0 ? Item.order(:sku) : []
     items = items.joins(:artists).where('artists.id' => artist_id) if artist_id.present?

@@ -51,8 +51,21 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def artists_by_item
-    artist_ids.map { |a| Artist.find(a).full_name_display }
+  def full_display_names
+    artist_ids.map { |a| Artist.find(a).full_display_name }
+  end
+
+  #remove
+  def artists_full_names
+    artist_ids.map { |a| Artist.find(a).full_name }
+  end
+
+  def artists_last
+    artist_ids.map { |a| Artist.find(a).last_name } #if a.full_name.join(" ").count >= 2
+  end
+
+  def artists_dob
+    artist_ids.map { |a| Artist.find(a).dob } #=> [[2000, 2015], [2003, 2007]]
   end
 
   def reserved_list

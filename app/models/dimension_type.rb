@@ -9,8 +9,4 @@ class DimensionType < ActiveRecord::Base
   def sculpture_dimension_types
     DimensionType.all.map {|dim| dim if dimension_type.name.split(" & ")[-1] == "weight"}.reject {|dim| dim.nil?}
   end
-
-  # def dim_name(item)
-  #   item.dimension_type.name.split(" & ") if item.dimension_type.present?
-  # end
 end

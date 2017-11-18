@@ -16,8 +16,13 @@ class Artist < ActiveRecord::Base
     ([first_name, last_name] - ['']).compact.join(' ')
   end
 
-  def full_name_display
+  def full_display_name
     [full_name, artist_display].join(" ")
+  end
+
+  #remove
+  def last_name_display
+    [last_name, artist_display].join(" ")
   end
 
   def last_name_first
@@ -26,5 +31,15 @@ class Artist < ActiveRecord::Base
 
   def artist_display
     displays.first.name if displays.present?
+  end
+
+  #target
+  def dob
+    if displays.present?
+      dob = displays.first.name.split(" ").last #=> (2000 - 2015)
+      if dob.first == "(" && dob.last == ")"
+        [dob.strip.split("-").first[1..4], dob.strip.split("-").last[1..4]] #[2000, 2015]
+      end
+    end
   end
 end

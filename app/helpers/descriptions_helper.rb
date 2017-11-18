@@ -25,10 +25,12 @@ module DescriptionsHelper
 
   def sub_list(item)
     [
-      [" List ", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" Numbered ", " No. "],
-      ["Certificate", "Cert"], ["Gold Leaf", "GoldLeaf"], ["Silver Leaf", "SilverLeaf"], [" with ", " w/"],
-      [xy_numbering(item), ""], [out_of_numbering(item), ""], [" and ", " & "], ["Hand Drawn Remarque", "Remarque"],
-      ["Hand Embellished", "Embellished"], ["Artist Embellished", "Embellished"]
+      [" List ", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" - ", "-"],
+      [" Numbered ", " No. "], ["Certificate", "Cert"], ["Gold Leaf", "GoldLeaf"], ["Silver Leaf", "SilverLeaf"],
+      [" with ", " w/"], [xy_numbering(item), ""], [out_of_numbering(item), ""], [artists_target(item)[0], artists_abrv(item)[-1]],
+      [" and ", " & "],
+      ["Hand Drawn Remarque", "Remarque"], ["Hand Embellished", "Embellished"], ["Artist Embellished", "Embellished"]
+
     ].reject { |sub_arr| sub_arr.join("").empty?}
   end
 
@@ -38,7 +40,6 @@ module DescriptionsHelper
       return d if d.size <= 128
       d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
     end
-    #"#{d} (#{d.size})"
     d
   end
 end
