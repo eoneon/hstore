@@ -6,5 +6,6 @@
     <%= f.check_box :required %><%= f.label :required %>
     <!-- link to destroy picked up by js -->
     <%= f.hidden_field :_destroy %>
+    <!-- passing in "f" var to make this dynamic -->
     <%= link_to "remove", '#', class: "remove_fields" %>
 </fieldset>
