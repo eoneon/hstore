@@ -22,7 +22,7 @@ module DescriptionsHelper
       [description_intro(item, medium), "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1]].join(" ")
     end
   end
-
+  #
   def sub_list(item)
     [
       [" List ", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" - ", "-"],

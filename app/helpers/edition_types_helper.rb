@@ -13,13 +13,13 @@ module EditionTypesHelper
   end
 
   def xy_numbering(item)
-    if num_count(item) == 2
+    if item.properties && num_count(item) == 2
       num_arr(item).join("/")
     end
   end
 
   def out_of_numbering(item)
-    if num_count(item) == 1 && num_arr(item)[-1].present?
+    if item.properties && num_count(item) == 1 && num_arr(item)[-1].present?
       "out of #{num_arr(item)[-1]}"
     end
   end

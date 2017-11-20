@@ -1,23 +1,29 @@
 module CertificateTypesHelper
-  def certificate(item)
-    item.properties["certificate_kind"]
-  end
-
   def issuer(item)
-    item.properties["issuer"]
-  end
-
-  def coa(item)
-    if certificate(item).present?
-      certificate(item)
-    elsif issuer(item).present?
-      "Certificate of Authenticity from #{item.properties["issuer"]}"
-    end
+    item.properties["issuer"] if item.properties && item.properties["issuer"].present?
   end
 
   def authentication(item)
-    authentication = coa(item).split(" ").first
-    authentication == "Letter" ? "LOA" : "#{authentication.capitalize}"
+    if item.properties && coa(item).present?
+      authentication = coa(item).split(" ").first
+      authentication == "Letter" ? "LOA" : "#{authentication.capitalize}"
+    # else
+    #   ""
+    end
+  end
+
+  def certificate(item)
+    item.properties["certificate_kind"].present? ? item.properties["certificate_kind"] : ""
+  end
+
+  def coa(item)
+    if item.properties && certificate(item).present?
+      certificate(item)
+    elsif issuer(item).present?
+      "Certificate of Authenticity from #{item.properties["issuer"]}"
+    # else
+    #   ""
+    end
   end
 
   def build_certificate(item)

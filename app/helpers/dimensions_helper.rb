@@ -36,7 +36,7 @@ module DimensionsHelper
       if dim_name(item)[-1] == "weight"
         [build_sculpture_dim(item, dims = [])]
       elsif dim_name(item)[-1] != "weight"
-        image_dim = "Measures approx. #{item.properties["width"]}\" x #{item.properties["height"]}\""
+        image_dim = "#{item.properties["width"]}\" x #{item.properties["height"]}\""
         if dim_name(item).count == 1
           ["Measures approx. #{image_dim} (#{dim_name(item)[0]})."]
         elsif dim_name(item).count == 2
