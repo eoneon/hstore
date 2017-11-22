@@ -11,6 +11,8 @@ class Item < ActiveRecord::Base
   has_many :artists, through: :artist_items, dependent: :destroy
   delegate :first_name, :last_name, :to => :artist
 
+  attr_accessor :sku_range
+
   before_save :set_title
   before_save :set_image_size
 
@@ -23,8 +25,9 @@ class Item < ActiveRecord::Base
     self.title = "Untitled" if self.title.blank?
   end
 
-  def sku_range
-    #@sku_range = self.sku_range.split("-")
+  def skus
+    skus = self.sku_range.split("-") if sku_range.present?
+    skus[0].to_i...skus[-1].to_i
   end
 
   def self.create_skus(sku1, sku2, item)

@@ -1,9 +1,9 @@
-<%#= form_tag controller: "item", action: "batch_create" do |f|%>
+<%= form_for [@item.invoice, @item], action: "create_skus" do |f| %>
   <div class="field">
-    <%#= label_tag (:sku_range) %><br>
-    <%#= text_field_tag (:sku_range) %>
+    <%= f.label :sku_range %><br>
+    <%= f.text_field :sku_range %>
   </div>
-  <%#= submit_tag "Save" %>
-<%# end %>
+  <%= f.submit "Save" %>
+<% end %>
 
 <!-- , url: {action: "create_batch"} -->

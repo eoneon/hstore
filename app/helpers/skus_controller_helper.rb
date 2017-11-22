@@ -1,0 +1,2 @@
+module SkusControllerHelper
+end

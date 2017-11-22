@@ -10,7 +10,7 @@
 <p>Description:</p>
 <p><%= build_description(@item) %></p>
 
-<p><%= render 'items/sku_form', item: @item, invoice: @invoice %></p>
+<p><%= render 'items/sku_form', invoice: @invoice, item: @item %></p>
 <p>
   <%= link_to "Edit sku", edit_item_path(@item) %> |
   <%= link_to "Back to invoice", invoice_path(@item.invoice) %>
