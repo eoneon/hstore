@@ -1,7 +1,7 @@
 module MediumsHelper
   def build_medium(item)
     medium = []
-    media = item.properties.map { |k,v| medium << v if ["media"].any? { |m| k.include?(m)}}
+    media = item.properties.map { |k,v| medium << v if v.present? && ["media"].any? { |m| k.include?(m)}}
     [[ item.properties["embellish_kind"], item.properties["limited_kind"], media, item.properties["sculpture_kind"]].join(" ").strip]
   end
 
