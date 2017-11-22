@@ -1,0 +1,12 @@
+<%= content_tag :div, class: 'media', id: "item-#{item.id}" do %>
+  <tr>
+     <td><%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %></td>
+     <td>
+       <p><%= build_tagline(item) %></p>
+       <p><%= descripton_pr(item) %></p>
+       <p><%= build_description(item) %></p>
+     </td>
+     <td><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true %></td>
+     <td><%= link_to "Show", invoice_item_path(item.invoice, item) %></td>
+   </tr>
+<% end %>
