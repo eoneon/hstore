@@ -5,7 +5,9 @@ module DescriptionsHelper
 
   def description_intro(item, medium)
     title = item_title(item).present? ? item_title(item) : "This"
-    medium.split(" ")[0] == "one-of-a-kind" || medium.split(" ")[0].first =~ /\A[^aeiou]/ ? ["#{title}", "is a"].join(" ") : ["#{title}", "is an"].join(" ")
+    if medium.present?
+      medium.split(" ")[0] == "one-of-a-kind" || medium.split(" ")[0].first =~ /\A[^aeiou]/ ? ["#{title}", "is a"].join(" ") : ["#{title}", "is an"].join(" ")
+    end
   end
 
   def build_tagline(item)

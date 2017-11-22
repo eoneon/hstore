@@ -76,6 +76,10 @@ class ItemsController < ApplicationController
     flash[:notice] = "Items successfully imported."
   end
 
+  # def batch_create
+  #   @item = Item.find(params[:id])
+  # end
+
   private
 
   def item_params

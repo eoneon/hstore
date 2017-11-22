@@ -23,6 +23,18 @@ class Item < ActiveRecord::Base
     self.title = "Untitled" if self.title.blank?
   end
 
+  def sku_range
+    #@sku_range = self.sku_range.split("-")
+  end
+
+  def self.create_skus(sku1, sku2, item)
+    (sku1..sku2).each do |sku|
+      new_item = item.dup
+      new_item.update(sku: sku, title: "", artist_ids: item.artist_ids)
+      new_item.save
+    end
+  end
+
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << column_names

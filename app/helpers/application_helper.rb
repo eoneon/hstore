@@ -10,7 +10,7 @@ module ApplicationHelper
   end
 
   def obj_type_list(parent)
-    type_list = [ItemType, DimensionType, SubstrateType, EditionType, SignatureType, CertificateType]
+    type_list = [ItemType, SubstrateType, DimensionType, EditionType, SignatureType, CertificateType]
     if parent.item_type_id.nil?
       type_list - [EditionType, SubstrateType]
     else

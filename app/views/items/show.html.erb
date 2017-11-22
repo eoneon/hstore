@@ -1,14 +1,16 @@
 <h1>Items#show</h1>
-<p><%= @item.name %></p>
-<p>Art Type: <%= @item.item_type.name %></p>
+<h2><%= @item.sku %></h2>
+<br>
 <%= link_to "Back to Inv: #{@item.invoice.invoice}", invoice_path(@item.invoice) %>
-<% @item.properties.each do |name, value| %>
-<p>
-  <b><%= name.humanize %>:</b>
-  <%= value %>
-</p>
-<% end%>
+<br>
+<p>Tagline:</p>
+<p><%= build_tagline(@item) %></p>
+<p>Property Room:</p>
+<p><%= descripton_pr(@item) %></p>
+<p>Description:</p>
+<p><%= build_description(@item) %></p>
 
+<p><%= render 'items/sku_form', item: @item, invoice: @invoice %></p>
 <p>
   <%= link_to "Edit sku", edit_item_path(@item) %> |
   <%= link_to "Back to invoice", invoice_path(@item.invoice) %>
