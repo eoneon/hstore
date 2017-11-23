@@ -1,10 +1,10 @@
-<% if parent.properties.present? %>
-  <div class="field">
-    <%= f.label field.name %><br>
-    <% if parent.properties[field.name].present? %>
-      <%= f.select field.name, options_for_select(value_list(parent, field.name), parent.properties[field.name] ), {:include_blank => true}  %>
-    <% else %>
-      <%= f.select field.name, options_for_select(value_list(parent, field.name)), {:include_blank => true}  %>
-    <% end %>
-  </div>
-<% end %>
+<div class="field">
+  <%= f.label field.name %><br>
+  <!-- 2nd: to avoid no method error: check if properties.present?; this avoids error on parent.properties[field.name].present? -->
+  <!-- because we want to display the fields regardless of whether a property[value] is selected or not -->
+  <% if parent.properties.present? && parent.properties[field.name].present? %>
+    <%= f.select field.name, options_for_select(value_list(parent, field.name), parent.properties[field.name] ), {:include_blank => true}  %>
+  <% else %>
+    <%= f.select field.name, options_for_select(value_list(parent, field.name)), {:include_blank => true}  %>
+  <% end %>
+</div>

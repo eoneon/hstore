@@ -13,7 +13,7 @@ module ApplicationHelper
     type_list = [ItemType, DimensionType, SubstrateType, EditionType, SignatureType, CertificateType]
     if parent.item_type_id.nil?
       type_list - [EditionType, SubstrateType]
-    else
+    elsif parent.item_type_id.present?
       if parent.item_type.name == "limited edition"
         type_list
       elsif parent.item_type.name == "print"
@@ -42,20 +42,39 @@ module ApplicationHelper
     end
   end
 
-  def obj_to_s(obj)
-    obj.to_s.underscore
+  # def type_list(parent, type)
+  #   unless type == DimensionType
+  #     type.all
+  #   else
+  #     if parent.item_type_id.present?
+  #     if flat_art_list.include? parent.item_type_id
+  #       flat_dimension_types
+  #     elsif sculpture_list.include? parent.item_type_id
+  #       sculpture_dimension_types
+  #     end
+  #   else
+  #     type.all
+  #   end
+  # end
+
+  def obj_to_s(type)
+    type.to_s.underscore
   end
 
-  def obj_to_str(obj)
-    obj.class.name.underscore
+  def obj_to_str(type)
+    type.class.name.underscore
   end
 
-  def obj_to_fk(obj)
-    obj.to_s.underscore + "_id"
+  def obj_to_fk(type)
+    type.to_s.underscore + "_id"
   end
 
-  def obj_to_type(parent, obj)
-    parent.public_send(obj.to_s.underscore)
+  def obj_to_type(parent, type)
+    parent.public_send(type.to_s.underscore)
+  end
+
+  def obj_to_type_id(parent, type)
+    parent.public_send(type.to_s.underscore + "_id")
   end
 
   def set_value(value)

@@ -9,10 +9,10 @@
     </div>
     <div class="col-xs-3">
       <div class="field">
-        <%# unless parent.item_type_id == nil %>
-        <% unless obj_to_type(parent, type) == nil %>
+        <!-- 1st: check if a type is present; if not, we don't know what fields to render  -->
+        <% if obj_to_type_id(parent, type).present? %>
           <% obj_to_type(parent, type).fields.each do |field| %>
-            <%= render "items/fields/#{field.field_type}", parent: parent, field: field, f: builder %>
+            <%= render "items/fields/#{field.field_type}", parent: parent, type: type, field: field, f: builder %>
           <% end %>
         <% end %>
       </div>
