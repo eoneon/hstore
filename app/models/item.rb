@@ -11,10 +11,9 @@ class Item < ActiveRecord::Base
   has_many :artists, through: :artist_items, dependent: :destroy
   delegate :first_name, :last_name, :to => :artist
 
-  attr_accessor :sku_range
+  attr_accessor :sku_range, :first_name, :last_name
 
-  before_save :set_title
-  before_save :set_image_size
+  before_save :set_title, :set_image_size, :create_artist
 
   #need to assign attribute
   def set_image_size
@@ -23,6 +22,12 @@ class Item < ActiveRecord::Base
 
   def set_title
     self.title = "Untitled" if self.title.blank?
+  end
+
+  def create_artist
+    Artist.create!(first_name: first_name, last_name: last_name) if first_name.present? || last_name.present?
+    new_artist = Artist.last
+    self.artist_ids = new_artist.id
   end
 
   def skus
