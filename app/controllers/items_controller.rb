@@ -1,4 +1,5 @@
 class ItemsController < ApplicationController
+  #after_find :new_skus, only: :create_skus
   def index
     @items = Item.all
     respond_to do |format|
@@ -78,11 +79,7 @@ class ItemsController < ApplicationController
 
   def create_skus
     @item = Item.find(params[:id])
-    (@item.skus).each do |sku|
-      new_item = item.dup
-      new_item.update(sku: sku, title: "", artist_ids: item.artist_ids)
-      new_item.save
-    end
+    Item.new_skus(params[:sku_range], @item)
     redirect_to @item.invoice
   end
 
@@ -100,4 +97,8 @@ class ItemsController < ApplicationController
     #   whitelisted[:properties] = params[:item][:properties]
     # end
   end
+
+  # def sku_params
+  #   params.require(:item).permit(:sku_range)
+  # end
 end

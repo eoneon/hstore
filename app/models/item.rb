@@ -14,6 +14,7 @@ class Item < ActiveRecord::Base
   attr_accessor :sku_range, :first_name, :last_name
 
   before_save :set_title, :set_image_size, :create_artist
+  #after_find :new_skus, if: :create_skus?
 
   #need to assign attribute
   def set_image_size
@@ -30,18 +31,24 @@ class Item < ActiveRecord::Base
     self.artist_ids = new_artist.id
   end
 
-  def skus
-    skus = self.sku_range.split("-") if sku_range.present?
-    skus[0].to_i...skus[-1].to_i
-  end
-
-  def self.create_skus(sku1, sku2, item)
+  def self.new_skus(sku_range, item)
+    #skus = sku_range.split("-") if sku_range.present?
+    sku1 = sku_range.split("-")[0] if sku_range.present?
+    sku2 = sku_range.split("-")[-1] if sku_range.present?
     (sku1..sku2).each do |sku|
       new_item = item.dup
       new_item.update(sku: sku, title: "", artist_ids: item.artist_ids)
       new_item.save
     end
   end
+
+  # def self.create_skus(sku1, sku2, item)
+  #   (sku1..sku2).each do |sku|
+  #     new_item = item.dup
+  #     new_item.update(sku: sku, title: "", artist_ids: item.artist_ids)
+  #     new_item.save
+  #   end
+  # end
 
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|

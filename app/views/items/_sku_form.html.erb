@@ -1,7 +1,16 @@
-<%= form_for [@item.invoice, @item], action: "create_skus" do |f| %>
+<!-- <%#= form_for [@item.invoice, @item], :url => create_skus_invoice_item_path do |f| %>
   <div class="field">
-    <%= f.label :sku_range %><br>
-    <%= f.text_field :sku_range %>
+    <%#= f.label :sku_range %><br>
+    <%#= f.text_field :sku_range %>
   </div>
-  <%= f.submit "Save" %>
+  <%#= f.submit "Save" %>
+<%# end %> -->
+
+<%= form_tag(create_skus_invoice_item_path(item.invoice, item), method: "get") do |f| %>
+  <div class="field">
+    <%#= hidden_field_tag :invoice_id, invoice.id  %>
+    <%= label_tag :sku_range %><br>
+    <%= text_field_tag :sku_range %>
+  </div>
+  <%= submit_tag "Save" %>
 <% end %>

@@ -24,11 +24,11 @@ Rails.application.routes.draw do
 
   resources :invoices do
     resources :items, except: [:index] do
-      collection do
-        post :create_skus
+      member do
+        get :create_skus
       end
     end
-    resources :skus, only: [:create]
+    #resources :skus, only: [:create]
   end
 
   root to: 'invoices#index'
