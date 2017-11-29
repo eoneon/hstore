@@ -43,7 +43,7 @@
     <%= f.collection_select( :artist_ids, Artist.all.order(:last_name), :id, :full_name, prompt: "- Artist -", include_blank: true) %>
     <%#= link_to_add_fields "Add Field", f, :artists, "artists" %>
     Or create artist:
-    <%= f.text_field :first_name %> <%= f.text_field :last_name %>
+    <%#= f.text_field :first_name %> <%#= f.text_field :last_name %>
   </div>
 
   <%= render "items/properties", parent: @item, f: f %>

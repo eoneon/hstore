@@ -79,8 +79,19 @@ class ItemsController < ApplicationController
 
   def create_skus
     @item = Item.find(params[:id])
-    Item.new_skus(params[:sku_range], @item)
-    redirect_to @item.invoice
+    if params[:sku_range].blank?
+      redirect_to invoice_item_path(@item.invoice, @item)
+      flash[:alert] = "Sku range can't be blank."
+    else
+      if invalid_sku_range_msg.present?
+        redirect_to invoice_item_path(@item.invoice, @item)
+        flash[:alert] = "#{invalid_sku_range_msg}"
+      else
+        new_skus
+        flash[:notice] = "Skus successfully created."
+        redirect_to @item.invoice
+      end
+    end
   end
 
   private
@@ -93,12 +104,29 @@ class ItemsController < ApplicationController
        whitelisted[:properties] = properties
        whitelisted[:artist_ids] = artists
      end
-    # params.require(:item).permit(:name, :item_type_id, :artist_id).tap do |whitelisted|
-    #   whitelisted[:properties] = params[:item][:properties]
-    # end
   end
 
-  # def sku_params
-  #   params.require(:item).permit(:sku_range)
-  # end
+  def invalid_sku_range_msg
+    if formatted_sku_range.length != 12 || sku_arr[0] >= sku_arr[-1]
+      "Invalid sku range."
+    elsif sku_arr[-1] - sku_arr[0] > 10
+      "You may only create 10 skus at a time."
+    end
+  end
+
+  def formatted_sku_range
+    params[:sku_range].gsub(/\D/,"")
+  end
+
+  def sku_arr
+    [formatted_sku_range[0..5].to_i, formatted_sku_range[6..11].to_i]
+  end
+
+  def new_skus
+    (sku_arr[0]..sku_arr[-1]).each do |sku|
+      new_item = @item.dup
+      new_item.update(sku: sku, title: "", artist_ids: @item.artist_ids)
+      new_item.save
+    end
+  end
 end

@@ -13,7 +13,7 @@ class Item < ActiveRecord::Base
 
   attr_accessor :sku_range, :first_name, :last_name
 
-  before_save :set_title, :set_image_size, :create_artist
+  before_save :set_title, :set_image_size #, :create_artist
   #after_find :new_skus, if: :create_skus?
 
   #need to assign attribute
@@ -25,16 +25,18 @@ class Item < ActiveRecord::Base
     self.title = "Untitled" if self.title.blank?
   end
 
-  def create_artist
-    Artist.create!(first_name: first_name, last_name: last_name) if first_name.present? || last_name.present?
-    new_artist = Artist.last
-    self.artist_ids = new_artist.id
-  end
+  # def create_artist
+  #   Artist.create!(first_name: first_name, last_name: last_name) unless first_name.blank? && last_name.blank?
+  #   new_artist = Artist.last
+  #   self.artist_ids = new_artist.id
+  # end
 
   def self.new_skus(sku_range, item)
-    #skus = sku_range.split("-") if sku_range.present?
+    skus = sku_range.split("-") if sku_range.present?
     sku1 = sku_range.split("-")[0] if sku_range.present?
     sku2 = sku_range.split("-")[-1] if sku_range.present?
+
+    #(formatted_sku_range(sku_range)(0..5)..formatted_sku_range(sku_range)(6..11)).each do |sku|
     (sku1..sku2).each do |sku|
       new_item = item.dup
       new_item.update(sku: sku, title: "", artist_ids: item.artist_ids)
@@ -42,12 +44,20 @@ class Item < ActiveRecord::Base
     end
   end
 
-  # def self.create_skus(sku1, sku2, item)
-  #   (sku1..sku2).each do |sku|
-  #     new_item = item.dup
-  #     new_item.update(sku: sku, title: "", artist_ids: item.artist_ids)
-  #     new_item.save
+  # def invalid_sku_range_msg(skus)
+  #   if skus.blank?
+  #     "Sku range can't be blank."
+  #   elsif formatted_sku_range(skus).length != 12
+  #     "Invalid sku range."
+  #   elsif formatted_sku_range(skus)(0..5) >= formatted_sku_range(skus)(6..11)
+  #     "Starting sku must be less than end sku"
+  #   elsif formatted_sku_range(skus)(6..11) - formatted_sku_range(skus)(0..5)
+  #     "You may only create 10 skus at a time."
   #   end
+  # end
+
+  # def formatted_sku_range(sku_range)
+  #   sku_range.gsub(/\D/,"")
   # end
 
   def self.to_csv(options = {})
