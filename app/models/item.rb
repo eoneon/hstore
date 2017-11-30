@@ -31,35 +31,6 @@ class Item < ActiveRecord::Base
   #   self.artist_ids = new_artist.id
   # end
 
-  def self.new_skus(sku_range, item)
-    skus = sku_range.split("-") if sku_range.present?
-    sku1 = sku_range.split("-")[0] if sku_range.present?
-    sku2 = sku_range.split("-")[-1] if sku_range.present?
-
-    #(formatted_sku_range(sku_range)(0..5)..formatted_sku_range(sku_range)(6..11)).each do |sku|
-    (sku1..sku2).each do |sku|
-      new_item = item.dup
-      new_item.update(sku: sku, title: "", artist_ids: item.artist_ids)
-      new_item.save
-    end
-  end
-
-  # def invalid_sku_range_msg(skus)
-  #   if skus.blank?
-  #     "Sku range can't be blank."
-  #   elsif formatted_sku_range(skus).length != 12
-  #     "Invalid sku range."
-  #   elsif formatted_sku_range(skus)(0..5) >= formatted_sku_range(skus)(6..11)
-  #     "Starting sku must be less than end sku"
-  #   elsif formatted_sku_range(skus)(6..11) - formatted_sku_range(skus)(0..5)
-  #     "You may only create 10 skus at a time."
-  #   end
-  # end
-
-  # def formatted_sku_range(sku_range)
-  #   sku_range.gsub(/\D/,"")
-  # end
-
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << column_names
