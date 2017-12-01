@@ -1,6 +1,6 @@
 class InvoicesController < ApplicationController
   def index
-    @invoices = Invoice.all.order(:invoice)
+    @invoices = Invoice.all.order(invoice: 'desc')
   end
 
   def show

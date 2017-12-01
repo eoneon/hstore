@@ -1,4 +1,5 @@
 <%= form_for [@invoice, @item], :html => {:id => 'item_form'} do |f| %>
+
   <%= render "items/hidden", f: f %>
 
   <script type="text/javascript">
@@ -16,36 +17,27 @@
   </script>
 
   <div class="row">
-    <div class="col-xs-3">
-      <div class="field">
-        <%= f.label :sku %><br>
-        <%= f.text_field :sku %>
-      </div>
+    <div class="col-md-2">
+      <%= f.label :sku %><br>
+      <%= f.text_field :sku %>
     </div>
-
-    <div class="col-xs-3">
-      <div class="field">
-        <%= f.label :title %><br>
-        <%= f.text_field :title %>
-      </div>
+    <div class="col-md-2">
+      <%= f.label :title %><br>
+      <%= f.text_field :title %>
     </div>
-
-    <div class="col-xs-3">
-      <div class="field">
-        <%= f.label :retail %><br>
-        <%= f.text_field :retail %>
-      </div>
+    <div class="col-md-2">
+      <%= f.label :retail %><br>
+      <%= f.text_field :retail %>
     </div>
-  </div>
-
-  <div class="field">
-    <%= f.label :artist_name %><br>
-    <%= f.collection_select( :artist_ids, Artist.all.order(:last_name), :id, :last_name_first, prompt: "- Artist -", include_blank: true) %>
-    <%#= link_to_add_fields "Add Field", f, :artists, "artists" %>
-    Or create artist:
+    <div class="col-md-2">
+      <%= f.label :artist_name %><br>
+      <%= f.collection_select( :artist_ids, Artist.all.order(:last_name), :id, :last_name_first, prompt: "- Artist -", include_blank: true) %>
+    </div>
+    <!-- Or create artist: -->
     <%#= f.text_field :first_name %> <%#= f.text_field :last_name %>
   </div>
 
   <%= render "items/properties", parent: @item, f: f %>
   <%= f.submit "Save" %>
+
 <% end %>

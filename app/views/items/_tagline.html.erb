@@ -1,7 +1,14 @@
 <%= content_tag :div, class: 'media', id: "item-#{item.id}" do %>
-  <div>
-    <p><%= build_tagline(item) %></p>
-    <p><%= descripton_pr(item) %></p>
-    <p><%= build_description(item) %></p>
+  <div class="media">
+    <div class="media-body">
+      <h4 class="media-heading">
+        <%= item_title(item) %>
+      </h4>
+      <div>
+        <%= build_tagline(item) %><br>
+        <%= descripton_pr(item) %><br>
+        <%= build_description(item) %>
+      </div>
    </div>
+ </div>
 <% end %>

@@ -1,8 +1,32 @@
 <%= content_tag :div, class: 'media', id: "item-#{item.id}" do %>
   <tr>
-     <td><%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %></td>
-     <td><%= build_tagline(item) %></td>
-     <td><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true %></td>
-     <td><%= link_to "Show", invoice_item_path(item.invoice, item) %></td>
-   </tr>
+    <div class="media">
+      <div class="media-body">
+        <td><%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %></td>
+        <td>
+          <div class="row justify-content-center">
+            <div class="col-1">
+              <%= item_title(item) %>
+            </div>
+            <div class="col-1">
+              <%= retail(item) %>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="row">
+            <%= build_tagline(item) %>
+          </div>
+          <div class="row">
+            <%= descripton_pr(item) %>
+          </div>
+          <div class="row">
+            <%= build_description(item) %>
+          </div>
+        </td>
+        <td><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true %></td>
+        <td><%= link_to "Show", invoice_item_path(item.invoice, item) %></td>
+      </div>
+    </div>
+  </tr>
 <% end %>
