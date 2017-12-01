@@ -26,9 +26,15 @@ module DimensionsHelper
 
   def build_sculpture_dim(item, dims)
     dim_name(item).each do |dim|
-      dims << "#{item.properties[dim]}\" (#{dim})"
+      if item.properties[dim].present?
+        #dim_sym = dim != "weight" ? "\"" : "lbs."
+        #dims << "#{item.properties[dim]}#{dim_sym} (#{dim})"
+        dims << "#{item.properties[dim]} (#{dim})" unless dim == "weight"
+      end
     end
-    "Measures approx. #{dims.join(" x ")}."
+    dims = item.properties["weight"].present? ? "#{dims.join(" x ")}; #{item.properties["weight"]}lbs. (weight)" : "#{dims.join(" x ")}"
+    "Measures approx. #{dims}."
+    #{}"Measures approx. #{dims.join(" x ")}."
   end
 
   def build_dims(item)
@@ -36,11 +42,13 @@ module DimensionsHelper
       if dim_name(item)[-1] == "weight"
         [build_sculpture_dim(item, dims = [])]
       elsif dim_name(item)[-1] != "weight"
-        image_dim = "#{item.properties["width"]}\" x #{item.properties["height"]}\""
+        image_dim = "#{item.properties["width"]}\" x #{item.properties["height"]}\"" #if item.properties["width"].present? && item.properties["height"].present?
+        outer_dim = "#{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\""
         if dim_name(item).count == 1
           ["Measures approx. #{image_dim} (#{dim_name(item)[0]})."]
         elsif dim_name(item).count == 2
-          ["Measures approx. #{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\" (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
+          #["Measures approx. #{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\" (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
+          ["Measures approx. #{outer_dim} (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
         end
       end
     else

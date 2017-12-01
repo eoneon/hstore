@@ -10,7 +10,7 @@
     <th>Invoice Name</th>
   </thead>
   <tbody>
-    <% @invoices.each do |invoice| %>
+    <% @invoices.order(:invoice).each do |invoice| %>
     <tr>
         <td><%= link_to invoice.invoice, invoice_path(invoice) %></td>
         <td><%= invoice.name %></td>
