@@ -1,8 +1,4 @@
 <h1>Edit Item</h1>
 <%= link_to "Back to Inv: #{@item.invoice.invoice}", invoice_path(@item.invoice) %>
 <%= render 'items/form' %>
-<div class="row">
-  <div class="col-md-12">
-    <%= render 'items/tagline', item: @item %>
-  </div>
-</div>
+<%= render 'items/tagline', item: @item %>

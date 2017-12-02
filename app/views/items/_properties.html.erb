@@ -2,21 +2,15 @@
 <% obj_type_list(parent).each do |type| %>
   <div class="row">
     <div class="col-md-2">
-      <!-- <div class="field"> -->
-        <%= f.label obj_to_s(type) %><br>
-        <%= f.collection_select obj_to_fk(type), type_list(parent, type), :id, :name, {:include_blank => true}, onchange: 'submitform()' %>
-      <!-- </div> -->
+      <%= f.label obj_to_s(type) %><br>
+      <%= f.collection_select obj_to_fk(type), type_list(parent, type), :id, :name, {:include_blank => true}, onchange: 'submitform()' %>
     </div>
-    <!-- <div class="col-md-2"> -->
-      <!-- <div class="field"> -->
-        <!-- 1st: check if a type is present; if not, we don't know what fields to render  -->
-        <% if obj_to_type_id(parent, type).present? %>
-          <% obj_to_type(parent, type).fields.each do |field| %>
-            <%= render "items/fields/#{field.field_type}", parent: parent, type: type, field: field, f: builder %>
-          <% end %>
+      <!-- 1st: check if a type is present; if not, we don't know what fields to render  -->
+      <% if obj_to_type_id(parent, type).present? %>
+        <% obj_to_type(parent, type).fields.each do |field| %>
+          <%= render "items/fields/#{field.field_type}", parent: parent, type: type, field: field, f: builder %>
         <% end %>
-      <!-- </div> -->
-    <!-- </div> -->
-  </div>
+      <% end %>
+    </div><br>
   <% end %>
 <% end %>
