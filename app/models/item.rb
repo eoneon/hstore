@@ -13,7 +13,7 @@ class Item < ActiveRecord::Base
 
   attr_accessor :sku_range, :first_name, :last_name
 
-  before_save :set_title, :set_image_size #, :create_artist
+  before_save :set_title, :set_image_size, :set_retail #, :create_artist
   #after_find :new_skus, if: :create_skus?
 
   #need to assign attribute
@@ -23,6 +23,10 @@ class Item < ActiveRecord::Base
 
   def set_title
     self.title = "Untitled" if self.title.blank?
+  end
+
+  def set_retail
+    self.retail = 0 if self.retail.blank?
   end
 
   # def create_artist

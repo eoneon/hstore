@@ -18,6 +18,14 @@ module DescriptionsHelper
     end
   end
 
+  def build_description_inv(item)
+    if item.properties.present?
+      medium = [ build_framing(item)[0], build_medium(item)[0], build_substrate_inv(item), build_medium2(item)[0] ].join(" ").strip
+      period = "." if medium.length > 0
+      "#{artists_inv(item)} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}"
+    end
+  end
+
   def build_description(item)
     if item.properties.present?
       medium = [build_medium(item)[0], build_substrate(item)[-1], "#{artists(item)[-1]}", build_medium2(item)[-1]].join(" ").strip

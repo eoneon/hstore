@@ -24,6 +24,20 @@ module DimensionsHelper
     end
   end
 
+  def width_height(item)
+    if dim_name(item).present?
+      if dim_name(item)[-1] == "weight"
+        #this only works for sculpture dimensions
+        [item.properties[dim_name(item)[0]], item.properties[dim_name(item)[-1]]]
+      else
+        #this works for flat art
+        [item.properties["width"], item.properties["height"]]
+      end
+    else
+      [""]
+    end
+  end
+
   def build_sculpture_dim(item, dims)
     dim_name(item).each do |dim|
       if item.properties[dim].present?

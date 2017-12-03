@@ -3,6 +3,10 @@ module ArtistsHelper
     item.full_display_names.present? ? [item.full_display_names.join(" and "), "by #{item.full_display_names.join(" and ")}"] : [""]
   end
 
+  def artists_inv(item)
+    "#{artists(item)[0]} -" if artists(item).present?
+  end
+
   def artists_target(item)
     item.artists_full_names
   end

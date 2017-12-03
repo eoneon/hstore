@@ -21,8 +21,5 @@ New Item:
   </thead>
   <tbody class="js-items">
     <%= render @invoice.items %>
-    <%# @invoice.items.order(:sku).each do |item| %>
-      <%#= render 'items/descriptions', item: item %>
-    <%# end %>
   </tbody>
 </table>

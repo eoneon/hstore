@@ -1,23 +1,66 @@
 <br>
 <div class="row">
-  <!-- <div class="col-md-12"> -->
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-      <div class="btn-group mr-2" role="group" aria-label="First group">
-        <button type="button" class="btn btn-info"><%= item.sku %></button>
-        <button type="button" class="btn btn-info"><%= item_title(item) %></button>
-        <button type="button" class="btn btn-info"><%= retail(item) %></button>
-      </div>
-      <div class="btn-group mr-2" role="group" aria-label="Second group">
-        <button type="button" class="btn btn-info">width</button>
-        <button type="button" class="btn btn-info">height</button>
-      </div>
-      <div class="btn-group" role="group" aria-label="Third group">
-        <button type="button" class="btn btn-info">Tagline</button>
-        <button type="button" class="btn btn-info">Property room</button>
-        <button type="button" class="btn btn-info">Description</button>
-      </div>
-    <!-- </div> -->
+  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+
+      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#sku">
+        sku: <%= item.sku %>
+      </button>
+      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#title">
+        <%= title(item) %>
+      </button>
+      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#retail">
+        retail: <%= raw_retail(item) %>
+      </button>
+    </div>
+
+    <div class="btn-group" role="group" aria-label="Second group">
+      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#tagline">
+        Tagline
+      </button>
+      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#pr">
+        Property room
+      </button>
+      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#description">
+        Description
+      </button>
+    </div>
+
+    <div class="btn-group mr-2" role="group" aria-label="Third group">
+      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#width">
+        width
+      </button>
+      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#height">
+        height
+      </button>
+    </div>
   </div>
+</div>
+
+<div class="row">
+  <div class="col-md-1" id="sku">
+    <%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %>
+  </div>
+  <div class="col-md-1" id="title">
+    <%= title(item) %>
+  </div>
+  <div class="col-md-1" id="retail">
+    <%= raw_retail(item) %>
+  </div>
+  <div class="col-md-1" id="width">
+    <%= width_height(item)[0] %>
+  </div>
+  <div class="col-md-1" id="height">
+    <%= width_height(item)[-1] %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <%= build_description_inv(item) %>
+  </div>
+</div>
+
+<!-- width_height(item) -->
 <div class="row">
   <div class="col-md-1">
     <%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %>
