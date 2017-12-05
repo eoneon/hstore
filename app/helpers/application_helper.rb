@@ -88,8 +88,9 @@ module ApplicationHelper
   def conditional_capitalize(words)
     tagline = []
     words.split.each do |w|
-      w = w.downcase.capitalize! unless reserved_list.any? { |word| w == word || /[0-9]/.match(w) || /-/.match(w).present?}
+      w = w.downcase.capitalize! unless reserved_list.any? { |word| w == word || /[0-9]/.match(w) || /-/.match(w).present? || w[0] == "("}
       w = handle_hyphens(w) if /-/.match(w).present?
+      w = handle_parenths(w) if w[0] == "("
       tagline << w
     end
     tagline.join(" ").gsub(/ ,/, ",")
@@ -102,6 +103,10 @@ module ApplicationHelper
       hyphen_arr << hyphen_w
     end
     hyphen_arr.join("-")
+  end
+
+  def handle_parenths(parenth_words)
+    "(#{parenth_words[1..-1].downcase.capitalize!}"
   end
 
   def reserved_list

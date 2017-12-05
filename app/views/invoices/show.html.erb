@@ -18,6 +18,6 @@ New Item:
     <th>Item</th>
   </thead>
   <tbody class="js-items">
-    <%= render @invoice.items %>
+    <%= render @invoice.items.all.order(:sku) %>
   </tbody>
 </table>

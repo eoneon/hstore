@@ -12,12 +12,12 @@ module DescriptionsHelper
 
   #change name to description_title; include substrate values: "on stretched canvas" "on paper" using a gsub loop? then remove for case specific reasons
   #not sure about this one but it seems like I could also use this for :medium in :description_body
-  #I could also include :conditional_capitalize and a method to remove "  " using gsub or strip. 
+  #I could also include :conditional_capitalize and a method to remove "  " using gsub or strip.
   def build_tagline(item)
     if item.properties.present?
       medium = [ build_framing(item)[0], build_medium(item)[0], build_substrate(item)[0], build_medium2(item)[0] ].join(" ").strip
       period = "." if medium.length > 0
-      "#{tagline_intro(item)} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}"
+      "#{tagline_intro(item)} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish
     end
   end
 
@@ -32,13 +32,13 @@ module DescriptionsHelper
   def build_description(item)
     if item.properties.present?
       medium = [build_medium(item)[0], build_substrate(item)[-1], "#{artists(item)[-1]}", build_medium2(item)[-1]].join(" ").strip
-      [description_intro(item, medium), "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1]].join(" ")
+      [description_intro(item, medium), "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1]].join(" ").squish
     end
   end
 
   def sub_list(item)
     [
-      ["  ", " "], [" List ", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" - ", "-"],
+      ["  ", " "], [" List", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" - ", "-"],
       [" Numbered ", " No. "], ["Certificate", "Cert"], ["Gold Leaf", "GoldLeaf"], ["Silver Leaf", "SilverLeaf"],
       [" with ", " w/"], [xy_numbering(item), ""], [out_of_numbering(item), ""], [artists_target(item)[0], artists_abrv(item)[-1]],
       [" and ", " & "],
