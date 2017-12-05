@@ -11,7 +11,7 @@
   <tbody>
     <% @artists.each do |artist| %>
     <tr>
-        <td><%= link_to artist.full_name, artist_path(artist) %></td>
+        <td><%= link_to artist.last_name_first, artist_path(artist) %></td>
         <td><%= link_to 'Edit', edit_artist_path(artist) %></td>
     </tr>
     <% end %>

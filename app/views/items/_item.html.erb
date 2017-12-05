@@ -4,6 +4,10 @@
       <%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %>
     </td>
     <td>
+      <h4>
+        <%= link_to artists(item)[0], "#", role: "button", class: "clipboard-btn", data: {clipboard_action: "copy", clipboard_text: "#{artists(item)[0]}"} %> |
+        <%= link_to title(item), "#", role: "button", class: "clipboard-btn", data: {clipboard_action: "copy", clipboard_text: "#{title(item)}"} %>
+      </h4>
       <ul class="list-inline">
         <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= item.sku %>">Sku</button></li>
         <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= title(item) %>">Title</button></li>
