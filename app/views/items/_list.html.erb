@@ -1,0 +1,14 @@
+<ul class="list-unstyled">
+  <li>
+    <ul class="list-inline">
+      <li></li>
+      <li><%= link_to "Show", invoice_item_path(item.invoice, item), class: "badge badge-secondary" %></li>
+      <li><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true, class: "badge badge-danger" %></li>
+    </ul>
+  </li>
+  <ul class="list-inline">
+    <li><%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %></li>
+    <li><strong><%= title(item) %></strong></li>
+    <li><%= abbr_description(item) %></li>
+  </ul>
+</ul>

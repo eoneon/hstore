@@ -1,32 +1,27 @@
-<%= content_tag :div, class: 'media', id: "item-#{item.id}" do %>
+<%= content_tag :div, id: "item-#{item.id}" do %>
   <tr>
-    <div class="media">
-      <div class="media-body">
-        <td><%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %></td>
-        <td>
-          <div class="row justify-content-center">
-            <div class="col-1">
-              <%= item_title(item) %>
-            </div>
-            <div class="col-1">
-              <%= retail(item) %>
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="row">
-            <%= build_tagline(item) %>
-          </div>
-          <div class="row">
-            <%= descripton_pr(item) %>
-          </div>
-          <div class="row">
-            <%= build_description(item) %>
-          </div>
-        </td>
-        <td><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true %></td>
-        <td><%= link_to "Show", invoice_item_path(item.invoice, item) %></td>
-      </div>
-    </div>
+    <td class="align-middle">
+      <%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %>
+    </td>
+    <td>
+      <ul class="list-inline">
+        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= item.sku %>">Sku</button></li>
+        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= title(item) %>">Title</button></li>
+        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= raw_retail(item) %>">$ <%= raw_retail(item) %></li>
+        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= build_tagline(item) %>">Tagline</li>
+        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= descripton_pr(item) %>">Prop Room</li>
+        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= build_description(item) %>">Description</li>
+        <!-- <li>
+          <%#= link_to "Tagline", "#", role: "button", class: "badge badge-primary clipboard-btn", data: {clipboard_action: "copy", clipboard_text: "#{abbr_description(item)}" } %>
+        </li> -->
+
+        <li><%= link_to "Show", invoice_item_path(item.invoice, item), class: "btn btn-info btn-sm clipboard-btn"%></li>
+        <li><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true, class: "btn btn-danger btn-sm clipboard-btn"%></li>
+      </ul>
+      <ul class="list-inline">
+        <li><strong><%= artists(item)[0]%> | <%= title(item) %></strong></li>
+        <li><%= abbr_description(item) %></li>
+      </ul>
+    </td>
   </tr>
 <% end %>

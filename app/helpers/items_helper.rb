@@ -13,7 +13,7 @@ module ItemsHelper
 
   #pr_retails
   def retail(item)
-    if item.retail.present? && item.retail > 0 &&
+    if item.retail.present? && item.retail > 0
       " List #{number_to_currency(item.retail, precision: 0)}"
     end
   end
