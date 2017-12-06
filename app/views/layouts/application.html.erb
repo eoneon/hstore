@@ -23,6 +23,7 @@
           <a class="dropdown-item" href="#"><%= link_to "New edition type", new_edition_type_path %></a><br>
           <a class="dropdown-item" href="#"><%= link_to "New signature type", new_signature_type_path %></a><br>
           <a class="dropdown-item" href="#"><%= link_to "New certificate type", new_certificate_type_path %></a>
+          <a class="dropdown-item" href="#"><%= link_to "New reserve type", new_reserve_type_path %></a>
         </div>
       </div>
 
@@ -31,12 +32,13 @@
           View Types
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-          <a class="dropdown-item" href="#"><%= link_to "View item type", item_types_path %></a><br>
-          <a class="dropdown-item" href="#"><%= link_to "View dimension type", dimension_types_path %></a><br>
-          <a class="dropdown-item" href="#"><%= link_to "View substrate type", substrate_types_path %></a><br>
-          <a class="dropdown-item" href="#"><%= link_to "View edition type", edition_types_path %></a><br>
-          <a class="dropdown-item" href="#"><%= link_to "View signature type", signature_types_path %></a><br>
-          <a class="dropdown-item" href="#"><%= link_to "View certificate type", certificate_types_path %></a>
+          <a class="dropdown-item" href="#"><%= link_to "View item types", item_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View dimension types", dimension_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View substrate types", substrate_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View edition types", edition_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View signature types", signature_types_path %></a><br>
+          <a class="dropdown-item" href="#"><%= link_to "View certificate types", certificate_types_path %></a>
+          <a class="dropdown-item" href="#"><%= link_to "View reserve types", reserve_types_path %></a>
         </div>
       </div>
 
@@ -79,7 +81,7 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
           <a class="dropdown-item" href="#"><%= link_to "Value Items", value_items_path %></a><br>
-          <a class="dropdown-item" href="#"><%= link_to "Categories", categories_path %></a><br>
+          <!-- <a class="dropdown-item" href="#"><%#= link_to "Categories", categories_path %></a><br> -->
         </div>
       </div>
     </div>

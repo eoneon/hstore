@@ -5,6 +5,7 @@ class Item < ActiveRecord::Base
   belongs_to :certificate_type
   belongs_to :signature_type
   belongs_to :substrate_type
+  belongs_to :reserve_type
   belongs_to :invoice
 
   has_many :artist_items, dependent: :destroy
@@ -13,7 +14,7 @@ class Item < ActiveRecord::Base
 
   attr_accessor :sku_range, :first_name, :last_name
 
-  before_save :set_title, :set_image_size, :set_retail #, :create_artist
+  before_save :set_title, :set_image_size, :set_retail, :set_reserve #, :create_artist
   #after_find :new_skus, if: :create_skus?
 
   #need to assign attribute
@@ -27,6 +28,10 @@ class Item < ActiveRecord::Base
 
   def set_retail
     self.retail = 0 if self.retail.blank?
+  end
+
+  def set_reserve
+    self.properties["reserve"] = 0 if self.properties["reserve"].blank? #&& self.invoice.name = "RR3"
   end
 
   # def create_artist

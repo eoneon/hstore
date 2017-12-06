@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :certificate_types
   resources :signature_types
   resources :substrate_types
+  resources :reserve_types
   resources :categories
   resources :artists
   resources :searches

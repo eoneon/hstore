@@ -349,7 +349,8 @@ CREATE TABLE item_fields (
     signature_type_id integer,
     substrate_type_id integer,
     dimension_type_id integer,
-    edition_type_id integer
+    edition_type_id integer,
+    reserve_type_id integer
 );
 
 
@@ -428,7 +429,8 @@ CREATE TABLE items (
     dimension_type_id integer,
     embellish_type_id integer,
     edition_type_id integer,
-    image_size double precision
+    image_size double precision,
+    reserve_type_id integer
 );
 
 
@@ -449,6 +451,37 @@ CREATE SEQUENCE items_id_seq
 --
 
 ALTER SEQUENCE items_id_seq OWNED BY items.id;
+
+
+--
+-- Name: reserve_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE reserve_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: reserve_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE reserve_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reserve_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE reserve_types_id_seq OWNED BY reserve_types.id;
 
 
 --
@@ -748,6 +781,13 @@ ALTER TABLE ONLY items ALTER COLUMN id SET DEFAULT nextval('items_id_seq'::regcl
 
 
 --
+-- Name: reserve_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reserve_types ALTER COLUMN id SET DEFAULT nextval('reserve_types_id_seq'::regclass);
+
+
+--
 -- Name: searches id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -886,6 +926,14 @@ ALTER TABLE ONLY items
 
 
 --
+-- Name: reserve_types reserve_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reserve_types
+    ADD CONSTRAINT reserve_types_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: searches searches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -983,6 +1031,13 @@ CREATE INDEX index_item_fields_on_item_type_id ON item_fields USING btree (item_
 
 
 --
+-- Name: index_item_fields_on_reserve_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_reserve_type_id ON item_fields USING btree (reserve_type_id);
+
+
+--
 -- Name: index_item_fields_on_signature_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1043,6 +1098,13 @@ CREATE INDEX index_items_on_item_type_id ON items USING btree (item_type_id);
 --
 
 CREATE INDEX index_items_on_mounting_type_id ON items USING btree (mounting_type_id);
+
+
+--
+-- Name: index_items_on_reserve_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_reserve_type_id ON items USING btree (reserve_type_id);
 
 
 --
@@ -1175,6 +1237,14 @@ ALTER TABLE ONLY items
 
 ALTER TABLE ONLY searches
     ADD CONSTRAINT fk_rails_1c204d5c87 FOREIGN KEY (dimension_type_id) REFERENCES dimension_types(id);
+
+
+--
+-- Name: item_fields fk_rails_374eed167f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_374eed167f FOREIGN KEY (reserve_type_id) REFERENCES reserve_types(id);
 
 
 --
@@ -1311,6 +1381,14 @@ ALTER TABLE ONLY displays
 
 ALTER TABLE ONLY artist_items
     ADD CONSTRAINT fk_rails_d905fc3a1a FOREIGN KEY (artist_id) REFERENCES artists(id);
+
+
+--
+-- Name: items fk_rails_dc9cece0bc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_dc9cece0bc FOREIGN KEY (reserve_type_id) REFERENCES reserve_types(id);
 
 
 --
@@ -1480,4 +1558,10 @@ INSERT INTO schema_migrations (version) VALUES ('20171108170618');
 INSERT INTO schema_migrations (version) VALUES ('20171109211339');
 
 INSERT INTO schema_migrations (version) VALUES ('20171110055042');
+
+INSERT INTO schema_migrations (version) VALUES ('20171205233506');
+
+INSERT INTO schema_migrations (version) VALUES ('20171205234118');
+
+INSERT INTO schema_migrations (version) VALUES ('20171205234338');
 

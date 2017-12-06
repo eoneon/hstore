@@ -10,7 +10,7 @@ module ApplicationHelper
   end
 
   def obj_type_list(parent)
-    type_list = [ItemType, DimensionType, SubstrateType, EditionType, SignatureType, CertificateType]
+    type_list = [ItemType, DimensionType, SubstrateType, EditionType, SignatureType, CertificateType, ReserveType]
     if parent.item_type_id.nil?
       type_list - [EditionType, SubstrateType]
     elsif parent.item_type_id.present?
@@ -41,21 +41,6 @@ module ApplicationHelper
       type.all
     end
   end
-
-  # def type_list(parent, type)
-  #   unless type == DimensionType
-  #     type.all
-  #   else
-  #     if parent.item_type_id.present?
-  #     if flat_art_list.include? parent.item_type_id
-  #       flat_dimension_types
-  #     elsif sculpture_list.include? parent.item_type_id
-  #       sculpture_dimension_types
-  #     end
-  #   else
-  #     type.all
-  #   end
-  # end
 
   def obj_to_s(type)
     type.to_s.underscore

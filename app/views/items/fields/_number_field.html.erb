@@ -1,6 +1,7 @@
-<% unless (parent == @search && field.name == "outer_width") || (parent == @search && field.name == "outer_height") || dim_name(parent) == "weight" %>
+<% unless (parent == @search && field.name == "outer_width") || (parent == @search && field.name == "outer_height") || dim_name(parent) == "weight" || parent == @reserve_type %>
   <div class="col-md-2">
     <%= f.label field.name %><br/>
+    <!-- need to make step dynamic; 2? -->
     <%= f.number_field field.name, :step => 0.5 %>
   </div>
 <% end %>
