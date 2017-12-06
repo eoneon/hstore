@@ -31,7 +31,7 @@ class Item < ActiveRecord::Base
   end
 
   def set_reserve
-    self.properties["reserve"] = 0 if self.properties["reserve"].blank? #&& self.invoice.name = "RR3"
+    self.properties["reserve"] = 0 if self.invoice.name == "RR3" && self.properties["reserve"].blank?
   end
 
   # def create_artist
