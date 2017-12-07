@@ -16,6 +16,7 @@ module MediumsHelper
 
   #medium comes from tagline/description
   def medium_ed_sign_cert(item, medium)
+    medium = medium.gsub(/giclee/, "")
     certificate = build_certificate(item)[0] if build_certificate(item)[0].present?
     edition_signature_arr = [build_edition(item)[0], build_signature(item)[0]]
     arr_count = edition_signature_arr.reject {|v| v.blank?}.count

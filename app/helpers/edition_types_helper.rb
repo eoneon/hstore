@@ -25,7 +25,8 @@ module EditionTypesHelper
   end
 
   def from_an_edition(item)
-    "from a #{item.properties["edition_kind"]} edition"
+    conj = item.properties["edition_kind"][0].downcase =~ /\A[^aeiou]/ ? "a" : "an"
+    "from #{conj} #{item.properties["edition_kind"]} edition"
   end
 
   def build_edition(item)

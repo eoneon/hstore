@@ -17,7 +17,8 @@ module DescriptionsHelper
     if item.properties.present?
       medium = [ build_framing(item)[0], build_medium(item)[0], build_substrate(item)[0], build_medium2(item)[0] ].join(" ").strip
       period = "." if medium.length > 0
-      "#{tagline_intro(item)} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish
+      #reserve = reserve_clause(item)[0]
+      "#{tagline_intro(item)} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period} #{reserve_clause(item)[0]}".squish
     end
   end
 
@@ -32,13 +33,13 @@ module DescriptionsHelper
   def build_description(item)
     if item.properties.present?
       medium = [build_medium(item)[0], build_substrate(item)[-1], "#{artists(item)[-1]}", build_medium2(item)[-1]].join(" ").strip
-      [description_intro(item, medium), "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1]].join(" ").squish
+      [reserve_clause(item)[-1], description_intro(item, medium), "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1]].join(" ").squish
     end
   end
 
   def sub_list(item)
     [
-      ["  ", " "], [" List", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" - ", "-"],
+      [" List", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" - ", "-"],
       [" Numbered ", " No. "], ["Certificate", "Cert"], ["Gold Leaf", "GoldLeaf"], ["Silver Leaf", "SilverLeaf"],
       [" with ", " w/"], [xy_numbering(item), ""], [out_of_numbering(item), ""], [artists_target(item)[0], artists_abrv(item)[-1]],
       [" and ", " & "],
@@ -48,12 +49,12 @@ module DescriptionsHelper
   end
 
   def descripton_pr(item)
-    d = [build_tagline(item), retail(item)].join(" ")
+    d = [build_tagline(item), retail(item)].join(" ").squish
     sub_list(item).each do |sub_arr|
       return d if d.size <= 128
       d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
     end
-    d
+    d.squish
   end
 
   def abbr_description(item)

@@ -10,7 +10,8 @@ module ApplicationHelper
   end
 
   def obj_type_list(parent)
-    type_list = [ItemType, DimensionType, SubstrateType, EditionType, SignatureType, CertificateType, ReserveType]
+    type_list = [ItemType, DimensionType, SubstrateType, EditionType, SignatureType, CertificateType]
+    type_list << ReserveType if parent.invoice.present? && parent.invoice.name == "RR3"
     if parent.item_type_id.nil?
       type_list - [EditionType, SubstrateType]
     elsif parent.item_type_id.present?
@@ -95,6 +96,6 @@ module ApplicationHelper
   end
 
   def reserved_list
-    ValueItem.where(kind: "edition_kind").pluck(:name) + ["a", "of", "and", "or", "on", "with", "from", ","]
+    ValueItem.where(kind: "edition_kind").pluck(:name) + ["a", "an", "of", "and", "or", "on", "with", "from", ",", "the"]
   end
 end

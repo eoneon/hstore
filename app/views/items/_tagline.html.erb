@@ -48,11 +48,9 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-1">
-    <%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %>
-  </div>
-
-  <div class="col-xs-9">
-    <%= reserve_clause(item) %>
+  <div class="col-xs-12">
+    <p><%= build_tagline(item) %></p>
+    <p><%= descripton_pr(item) %></p>
+    <p><%= build_description(item) %></p>
   </div>
 </div>
