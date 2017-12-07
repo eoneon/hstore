@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Disclaimer Types</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @disclaimer_types.each do |disclaimer_type| %>
+      <tr>
+        <td><%= disclaimer_type.name %></td>
+        <td><%= link_to 'Show', disclaimer_type %></td>
+        <td><%= link_to 'Edit', edit_disclaimer_type_path(disclaimer_type) %></td>
+        <td><%= link_to 'Destroy', disclaimer_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Disclaimer type', new_disclaimer_type_path %>

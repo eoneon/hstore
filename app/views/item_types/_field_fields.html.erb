@@ -1,6 +1,6 @@
 <fieldset>
     <!-- #196 nested model -->
-    <%= f.select :field_type, %w[text_field check_box number_field] %>
+    <%= f.select :field_type, %w[text_field check_box number_field text_area] %>
     <%#= f.select :name, options_for_select(ValueItem.where(kind: "paint_media").pluck(:name)) %>
     <%= f.text_field :name, placeholder: "field_name" %>
     <%= f.check_box :required %><%= f.label :required %>

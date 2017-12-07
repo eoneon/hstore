@@ -49,6 +49,36 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: add_disclaimer_type_reference_to_item_fields; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE add_disclaimer_type_reference_to_item_fields (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: add_disclaimer_type_reference_to_item_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE add_disclaimer_type_reference_to_item_fields_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: add_disclaimer_type_reference_to_item_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE add_disclaimer_type_reference_to_item_fields_id_seq OWNED BY add_disclaimer_type_reference_to_item_fields.id;
+
+
+--
 -- Name: artist_items; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -208,6 +238,37 @@ ALTER SEQUENCE dimension_types_id_seq OWNED BY dimension_types.id;
 
 
 --
+-- Name: disclaimer_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE disclaimer_types (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: disclaimer_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE disclaimer_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: disclaimer_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE disclaimer_types_id_seq OWNED BY disclaimer_types.id;
+
+
+--
 -- Name: displays; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -350,7 +411,8 @@ CREATE TABLE item_fields (
     substrate_type_id integer,
     dimension_type_id integer,
     edition_type_id integer,
-    reserve_type_id integer
+    reserve_type_id integer,
+    disclaimer_type_id integer
 );
 
 
@@ -430,7 +492,8 @@ CREATE TABLE items (
     embellish_type_id integer,
     edition_type_id integer,
     image_size double precision,
-    reserve_type_id integer
+    reserve_type_id integer,
+    disclaimer_type_id integer
 );
 
 
@@ -697,6 +760,13 @@ ALTER SEQUENCE value_items_id_seq OWNED BY value_items.id;
 
 
 --
+-- Name: add_disclaimer_type_reference_to_item_fields id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY add_disclaimer_type_reference_to_item_fields ALTER COLUMN id SET DEFAULT nextval('add_disclaimer_type_reference_to_item_fields_id_seq'::regclass);
+
+
+--
 -- Name: artist_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -729,6 +799,13 @@ ALTER TABLE ONLY certificate_types ALTER COLUMN id SET DEFAULT nextval('certific
 --
 
 ALTER TABLE ONLY dimension_types ALTER COLUMN id SET DEFAULT nextval('dimension_types_id_seq'::regclass);
+
+
+--
+-- Name: disclaimer_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY disclaimer_types ALTER COLUMN id SET DEFAULT nextval('disclaimer_types_id_seq'::regclass);
 
 
 --
@@ -830,6 +907,14 @@ ALTER TABLE ONLY value_items ALTER COLUMN id SET DEFAULT nextval('value_items_id
 
 
 --
+-- Name: add_disclaimer_type_reference_to_item_fields add_disclaimer_type_reference_to_item_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY add_disclaimer_type_reference_to_item_fields
+    ADD CONSTRAINT add_disclaimer_type_reference_to_item_fields_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: artist_items artist_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -867,6 +952,14 @@ ALTER TABLE ONLY certificate_types
 
 ALTER TABLE ONLY dimension_types
     ADD CONSTRAINT dimension_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: disclaimer_types disclaimer_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY disclaimer_types
+    ADD CONSTRAINT disclaimer_types_pkey PRIMARY KEY (id);
 
 
 --
@@ -1017,6 +1110,13 @@ CREATE INDEX index_item_fields_on_dimension_type_id ON item_fields USING btree (
 
 
 --
+-- Name: index_item_fields_on_disclaimer_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_item_fields_on_disclaimer_type_id ON item_fields USING btree (disclaimer_type_id);
+
+
+--
 -- Name: index_item_fields_on_edition_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1063,6 +1163,13 @@ CREATE INDEX index_items_on_certificate_type_id ON items USING btree (certificat
 --
 
 CREATE INDEX index_items_on_dimension_type_id ON items USING btree (dimension_type_id);
+
+
+--
+-- Name: index_items_on_disclaimer_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_items_on_disclaimer_type_id ON items USING btree (disclaimer_type_id);
 
 
 --
@@ -1248,6 +1355,14 @@ ALTER TABLE ONLY item_fields
 
 
 --
+-- Name: item_fields fk_rails_45b5719c1d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item_fields
+    ADD CONSTRAINT fk_rails_45b5719c1d FOREIGN KEY (disclaimer_type_id) REFERENCES disclaimer_types(id);
+
+
+--
 -- Name: searches fk_rails_48c976852a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1317,6 +1432,14 @@ ALTER TABLE ONLY items
 
 ALTER TABLE ONLY searches
     ADD CONSTRAINT fk_rails_8008e11d5a FOREIGN KEY (item_type_id) REFERENCES item_types(id);
+
+
+--
+-- Name: items fk_rails_8346602730; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT fk_rails_8346602730 FOREIGN KEY (disclaimer_type_id) REFERENCES disclaimer_types(id);
 
 
 --
@@ -1564,4 +1687,12 @@ INSERT INTO schema_migrations (version) VALUES ('20171205233506');
 INSERT INTO schema_migrations (version) VALUES ('20171205234118');
 
 INSERT INTO schema_migrations (version) VALUES ('20171205234338');
+
+INSERT INTO schema_migrations (version) VALUES ('20171207211130');
+
+INSERT INTO schema_migrations (version) VALUES ('20171207211327');
+
+INSERT INTO schema_migrations (version) VALUES ('20171207211557');
+
+INSERT INTO schema_migrations (version) VALUES ('20171207213343');
 

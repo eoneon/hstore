@@ -6,6 +6,7 @@ class Item < ActiveRecord::Base
   belongs_to :signature_type
   belongs_to :substrate_type
   belongs_to :reserve_type
+  belongs_to :disclaimer_type
   belongs_to :invoice
 
   has_many :artist_items, dependent: :destroy
