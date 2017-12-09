@@ -1,6 +1,10 @@
 module DescriptionsHelper
+  # def tagline_intro(item)
+  #   artists(item)[0].present? ? "#{artists(item)[0]} - #{item_title(item)}" : "#{item_title(item)}"
+  # end
+
   def tagline_intro(item)
-    artists(item)[0].present? ? "#{artists(item)[0]} - #{item_title(item)}" : "#{item_title(item)}"
+    [artists(item)[0], item_title(item)].reject {|item| item.blank?}.join(" - ")
   end
 
   def description_intro(item, medium)

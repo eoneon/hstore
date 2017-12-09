@@ -3,6 +3,14 @@ module ItemsHelper
     conditional_capitalize(item.title)
   end
 
+  # def title_title(item)
+  #   conditional_capitalize(item.title)
+  # end
+  #
+  # def body_title(item)
+  #   conditional_capitalize(item.title)
+  # end
+
   def item_title(item)
     "\"#{title(item)}\"" if item.title != "Untitled"
   end

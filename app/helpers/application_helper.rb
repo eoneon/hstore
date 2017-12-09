@@ -72,14 +72,16 @@ module ApplicationHelper
   end
 
   def conditional_capitalize(words)
-    tagline = []
-    words.split.each do |w|
-      w = w.downcase.capitalize! unless reserved_list.any? { |word| w == word || /[0-9]/.match(w) || /-/.match(w).present? || w[0] == "("}
+    words = words.split(" ")
+    clause = [words[0].downcase.capitalize!]
+    words.shift
+    words.each do |w|
+      w = w.downcase.capitalize! unless reserved_list.any? { |word| w.downcase == word || /[0-9]/.match(w) || /-/.match(w).present? || w[0] == "("}
       w = handle_hyphens(w) if /-/.match(w).present?
       w = handle_parenths(w) if w[0] == "("
-      tagline << w
+      clause << w
     end
-    tagline.join(" ").gsub(/ ,/, ",")
+    clause.join(" ").gsub(/ ,/, ",")
   end
 
   def handle_hyphens(hyphen_words)
@@ -96,6 +98,6 @@ module ApplicationHelper
   end
 
   def reserved_list
-    ValueItem.where(kind: "edition_kind").pluck(:name) + ["a", "an", "of", "and", "or", "on", "with", "from", ",", "the"]
+    ValueItem.where(kind: "edition_kind").pluck(:name) + ["a", "an", "of", "and", "or", "on", "with", "from", ",", "the", "i", "ii", "iii", "iv", "v", "vi"]
   end
 end
