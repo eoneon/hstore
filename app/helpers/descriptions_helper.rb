@@ -26,33 +26,34 @@ module DescriptionsHelper
   #change name to description_title; include substrate values: "on stretched canvas" "on paper" using a gsub loop? then remove for case specific reasons
   #not sure about this one but it seems like I could also use this for :medium in :description_body
   #I could also include :conditional_capitalize and a method to remove "  " using gsub or strip.
+
+  #medium
   def build_title(item)
     if item.properties.present?
-      medium = [ build_medium(item)[0], build_substrate(item)[0], build_medium2(item)[0] ].join(" ")
+      medium = [ build_medium(item)[0], build_substrate(item)[0], build_medium2(item)[0] ].join(" ").squish!
       period = "." if medium.length > 0
-      "#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}"
+      #"#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}"
+      "#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish!
     end
   end
 
   def tagline(item)
     if item.properties.present?
-      [build_title(item), reserve_clause(item)[0]].join(" ").squish!
+      [build_title(item), reserve_clause(item)[0]].join(" ").split(" ").reject {|word| word.downcase == "giclee" || word.downcase == "stretched"}.join(" ") #.delete(" giclee ", " stretched ")
     end
   end
 
   def prop_room(item)
     if item.properties.present?
       d = [build_title(item), retail(item)].join(" ").squish
-      #d = build_tagline(item)
-      abbr_descrip(d, item)
+      abbrv_description(d, item, 128)
     end
   end
 
-  def build_description_inv(item)
+  def inv_tagline(item)
     if item.properties.present?
-      medium = [ build_medium(item)[0], build_substrate_inv(item), build_medium2(item)[0] ].join(" ").strip
-      period = "." if medium.length > 0
-      "#{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}"
+      d = build_title(item)
+      abbrv_description(d, item, 100)
     end
   end
 
@@ -64,6 +65,14 @@ module DescriptionsHelper
     end
   end
 
+  def abbrv_description(d, item, limit)
+    sub_list(item).each do |sub_arr|
+      return d if d.size <= limit
+      d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
+    end
+    d
+  end
+
   def sub_list(item)
     [
       [" List", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" - ", "-"],
@@ -73,31 +82,5 @@ module DescriptionsHelper
       ["Hand Drawn Remarque", "Remarque"], ["Hand Embellished", "Embellished"], ["Artist Embellished", "Embellished"]
 
     ].reject { |sub_arr| sub_arr.join("").empty?}
-  end
-
-  def descripton_pr(item)
-    d = [build_title(item), retail(item)].join(" ").squish
-    sub_list(item).each do |sub_arr|
-      return d if d.size <= 128
-      d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
-    end
-    d.squish
-  end
-
-  def abbr_description(item)
-    d = build_description_inv(item)
-    sub_list(item).each do |sub_arr|
-      return d if d.size <= 100
-      d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
-    end
-    d
-  end
-
-  def abbr_descrip(d, item)
-    sub_list(item).each do |sub_arr|
-      return d if d.size <= 128
-      d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
-    end
-    d
   end
 end

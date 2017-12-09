@@ -72,16 +72,18 @@ module ApplicationHelper
   end
 
   def conditional_capitalize(words)
-    words = words.split(" ")
-    clause = [words[0].downcase.capitalize!]
-    words.shift
-    words.each do |w|
-      w = w.downcase.capitalize! unless reserved_list.any? { |word| w.downcase == word || /[0-9]/.match(w) || /-/.match(w).present? || w[0] == "("}
-      w = handle_hyphens(w) if /-/.match(w).present?
-      w = handle_parenths(w) if w[0] == "("
-      clause << w
+    words = words.split(" ").reject {|word| word.blank?}
+    if words.present?
+      clause = [words[0].downcase.capitalize!]
+      words.shift
+      words.each do |w|
+        w = w.downcase.capitalize! unless reserved_list.any? { |word| w.downcase == word || /[0-9]/.match(w) || /-/.match(w).present? || w[0] == "("}
+        w = handle_hyphens(w) if /-/.match(w).present?
+        w = handle_parenths(w) if w[0] == "("
+        clause << w
+      end
+      clause.join(" ").gsub(/ ,/, ",")
     end
-    clause.join(" ").gsub(/ ,/, ",")
   end
 
   def handle_hyphens(hyphen_words)

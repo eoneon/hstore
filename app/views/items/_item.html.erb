@@ -12,8 +12,8 @@
         <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= item.sku %>">Sku</button></li>
         <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= title(item) %>">Title</button></li>
         <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= raw_retail(item) %>">$ <%= raw_retail(item) %></li>
-        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= build_tagline(item) %>">Tagline</li>
-        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= descripton_pr(item) %>">Prop Room</li>
+        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= tagline(item) %>">Tagline</li>
+        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= prop_room(item) %>">Prop Room</li>
         <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= build_description(item) %>">Description</li>
         <!-- <li>
           <%#= link_to "Tagline", "#", role: "button", class: "badge badge-primary clipboard-btn", data: {clipboard_action: "copy", clipboard_text: "#{abbr_description(item)}" } %>
@@ -24,7 +24,7 @@
       </ul>
       <ul class="list-inline">
         <li><strong><%= artists(item)[0]%> | <%= title(item) %></strong></li>
-        <li><%= abbr_description(item) %></li>
+        <li><%= inv_tagline(item) %></li>
       </ul>
     </td>
   </tr>
