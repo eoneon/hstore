@@ -39,13 +39,13 @@ module DescriptionsHelper
 
   def tagline(item)
     if item.properties.present?
-      [build_title(item), reserve_clause(item)[0]].join(" ").split(" ").reject {|word| word.downcase == "giclee" || word.downcase == "stretched"}.join(" ") #.delete(" giclee ", " stretched ")
+      [build_title(item), reserve_clause(item)[0], build_disclaimer(item)[0]].join(" ").split(" ").reject {|word| word.downcase == "giclee" || word.downcase == "stretched"}.join(" ") #.delete(" giclee ", " stretched ")
     end
   end
 
   def prop_room(item)
     if item.properties.present?
-      d = [build_title(item), retail(item)].join(" ").squish
+      d = [build_title(item), retail(item), build_disclaimer(item)[0]].join(" ").squish
       abbrv_description(d, item, 128)
     end
   end
@@ -61,7 +61,7 @@ module DescriptionsHelper
     if item.properties.present?
       medium = [build_medium(item)[0], build_substrate(item)[-1], "#{artists(item)[-1]}", build_medium2(item)[-1]].join(" ").strip
       # [reserve_clause(item)[-1], description_intro(item, medium), "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1]].join(" ").squish
-      [intro(item, medium)[-1], "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1]].join(" ").squish
+      [intro(item, medium)[-1], "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1], build_disclaimer(item)[-1]].join(" ").squish
     end
   end
 
