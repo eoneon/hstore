@@ -2,7 +2,7 @@ module MediumsHelper
   def build_medium(item)
     medium = []
     media = item.properties.map { |k,v| medium << v if v.present? && ["media"].any? { |m| k.include?(m)}}
-    [[ item.properties["embellish_kind"], item.properties["limited_kind"], media, item.properties["sculpture_kind"]].join(" ").strip]
+    [[ build_framing(item)[0], item.properties["embellish_kind"], item.properties["limited_kind"], media, item.properties["sculpture_kind"]].join(" ").strip]
   end
 
   def build_medium2(item)
@@ -16,7 +16,7 @@ module MediumsHelper
 
   #medium comes from tagline/description
   def medium_ed_sign_cert(item, medium)
-    medium = medium.gsub(/giclee/, "")
+    medium = [build_framing(item)[0], medium.gsub(/giclee/, "")].join(" ")
     certificate = build_certificate(item)[0] if build_certificate(item)[0].present?
     edition_signature_arr = [build_edition(item)[0], build_signature(item)[0]]
     arr_count = edition_signature_arr.reject {|v| v.blank?}.count

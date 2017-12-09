@@ -15,7 +15,7 @@
     </div>
 
     <div class="btn-group" role="group" aria-label="Second group">
-      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= build_tagline(item) %>">
+      <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= build_title(item) %>">
         Tagline
       </button>
       <button type="button" class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= descripton_pr(item) %>">
@@ -49,8 +49,8 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <p><%= build_tagline(item) %></p>
-    <p><%= descripton_pr(item) %></p>
+    <p><%= tagline(item) %></p>
+    <p><%= prop_room(item) %></p>
     <p><%= build_description(item) %></p>
   </div>
 </div>
