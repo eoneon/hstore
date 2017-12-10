@@ -3,6 +3,10 @@ module ItemsHelper
     conditional_capitalize(item.title)
   end
 
+  def title_header(item)
+    "\"#{title(item)}\""
+  end
+
   def title_inv(item)
     title(item)[0..12]
   end

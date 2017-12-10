@@ -30,16 +30,16 @@
       <small>W: <%= width_height(item)[0] %></small>
     </button>
     <button type="button" class="btn dims btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[-1] %>">
-      <small>H: <%= width_height(item)[-1] %></small>
+      <small>H: <%= width_height(item)[1] %></small>
     </button>
   </div>
 
   <div class="btn-group mr-2" role="group" aria-label="Third group">
-    <button type="button" class="btn dims btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[0] %>">
-      <small>FW:</small>
+    <button type="button" class="btn dims btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[2] %>">
+      <small>FW: <%= width_height(item)[2] %></small>
     </button>
-    <button type="button" class="btn dims btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[-1] %>">
-      <small>FH:</small>
+    <button type="button" class="btn dims btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[3] %>">
+      <small>FH: <%= width_height(item)[3] %></small>
     </button>
   </div>
 

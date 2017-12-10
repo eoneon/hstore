@@ -1,11 +1,19 @@
 <%= content_tag :div, id: "item-#{item.id}" do %>
   <tr>
-    <td class="align-middle">
-      <%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %>
-    </td>
-    <td>
-      <%= render 'items/buttons', item: item %>
-      <%= inv_tagline(item) %>
-    </td>
+    <div class="row">
+      <td class="align-middle">
+        <div class="xs-col-1">
+          <h4>
+            <%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %> |
+            <%= artists(item)[0] %> |
+            <%= title_header(item) %>
+          </h4>
+        </div>
+        <div class="xs-col-11">
+          <p><%= inv_tagline(item) %></p>
+          <p><%= render 'items/buttons', item: item %></p>
+        </div>
+      </td>
+    </div>
   </tr>
 <% end %>

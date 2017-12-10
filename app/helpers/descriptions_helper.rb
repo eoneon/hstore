@@ -28,26 +28,26 @@ module DescriptionsHelper
       medium = [ build_medium(item)[0], build_substrate(item)[0], build_medium2(item)[0] ].join(" ").squish!
       period = "." if medium.length > 0
       #"#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}"
-      "#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish!
+      ["#{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish!, "#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish!]
     end
   end
 
   def tagline(item)
     if item.properties.present?
-      [build_title(item), reserve_clause(item)[0], build_disclaimer(item)[0]].join(" ").split(" ").reject {|word| word.downcase == "giclee" || word.downcase == "stretched"}.join(" ") #.delete(" giclee ", " stretched ")
+      [build_title(item)[-1], reserve_clause(item)[0], build_disclaimer(item)[0]].join(" ").split(" ").reject {|word| word.downcase == "giclee" || word.downcase == "stretched"}.join(" ") #.delete(" giclee ", " stretched ")
     end
   end
 
   def prop_room(item)
     if item.properties.present?
-      d = [build_title(item), retail(item), build_disclaimer(item)[0]].join(" ").squish
+      d = [build_title(item)[-1], retail(item), build_disclaimer(item)[0]].join(" ").squish
       abbrv_description(d, item, 128)
     end
   end
 
   def inv_tagline(item)
     if item.properties.present?
-      d = build_title(item)
+      d = build_title(item)[0]
       abbrv_description(d, item, 100)
     end
   end

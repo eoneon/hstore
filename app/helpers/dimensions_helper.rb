@@ -30,8 +30,12 @@ module DimensionsHelper
         #this only works for sculpture dimensions
         [item.properties[dim_name(item)[0]], item.properties[dim_name(item)[-1]]]
       else
-        #this works for flat art
-        [item.properties["width"], item.properties["height"]]
+        if dim_name(item)[-1] == "frame"
+          #this works for flat art
+          [item.properties["width"], item.properties["height"], item.properties["outer_width"], item.properties["outer_height"]]
+        else
+          [item.properties["width"], item.properties["height"]]
+        end
       end
     else
       [""]
