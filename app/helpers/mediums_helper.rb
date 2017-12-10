@@ -16,7 +16,7 @@ module MediumsHelper
 
   #medium comes from tagline/description
   def medium_ed_sign_cert(item, medium)
-    medium = [build_framing(item)[0], medium.gsub(/giclee/, "")].join(" ")
+    medium = [build_framing(item)[0], medium].join(" ")
     certificate = build_certificate(item)[0] if build_certificate(item)[0].present?
     edition_signature_arr = [build_edition(item)[0], build_signature(item)[0]]
     arr_count = edition_signature_arr.reject {|v| v.blank?}.count
@@ -37,7 +37,7 @@ module MediumsHelper
 
   #medium comes from tagline/description
   def medium_ed_sign(item, medium)
-    edition_signature_arr = [build_edition(item)[0], build_signature(item)[-1]]
+    edition_signature_arr = [build_edition(item)[-1], build_signature(item)[-1]]
     arr_count = edition_signature_arr.reject {|v| v.blank?}.count
     if arr_count == 0
       "#{medium}"

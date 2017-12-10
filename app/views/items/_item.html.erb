@@ -4,28 +4,8 @@
       <%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %>
     </td>
     <td>
-      <h4>
-        <%= link_to artists(item)[0], "#", role: "button", class: "clipboard-btn", data: {clipboard_action: "copy", clipboard_text: "#{artists(item)[0]}"} %> |
-        <%= link_to title(item), "#", role: "button", class: "clipboard-btn", data: {clipboard_action: "copy", clipboard_text: "#{title(item)}"} %>
-      </h4>
-      <ul class="list-inline">
-        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= item.sku %>">Sku</button></li>
-        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= title(item) %>">Title</button></li>
-        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= raw_retail(item) %>">$ <%= raw_retail(item) %></li>
-        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= tagline(item) %>">Tagline</li>
-        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= prop_room(item) %>">Prop Room</li>
-        <li><button type="button" class="btn btn-primary btn-sm clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= build_description(item) %>">Description</li>
-        <!-- <li>
-          <%#= link_to "Tagline", "#", role: "button", class: "badge badge-primary clipboard-btn", data: {clipboard_action: "copy", clipboard_text: "#{abbr_description(item)}" } %>
-        </li> -->
-
-        <li><%= link_to "Show", invoice_item_path(item.invoice, item), class: "btn btn-info btn-sm clipboard-btn"%></li>
-        <li><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true, class: "btn btn-danger btn-sm clipboard-btn"%></li>
-      </ul>
-      <ul class="list-inline">
-        <li><strong><%= artists(item)[0]%> | <%= title(item) %></strong></li>
-        <li><%= inv_tagline(item) %></li>
-      </ul>
+      <%= render 'items/buttons', item: item %>
+      <%= inv_tagline(item) %>
     </td>
   </tr>
 <% end %>

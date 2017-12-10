@@ -1,8 +1,4 @@
 module DescriptionsHelper
-  # def tagline_intro(item)
-  #   artists(item)[0].present? ? "#{artists(item)[0]} - #{item_title(item)}" : "#{item_title(item)}"
-  # end
-
   def tagline_intro(item)
     [artists(item)[0], item_title(item)].reject {|item| item.blank?}.join(" - ")
   end
@@ -13,7 +9,6 @@ module DescriptionsHelper
   end
 
   def description_intro(item, medium)
-    #intro = item_title(item).present? ? item_title(item) : "This"
     if medium.present?
       medium.split(" ")[0] == "one-of-a-kind" || medium.split(" ")[0].first =~ /\A[^aeiou]/ ? ["#{reserve_title(item)}", "is a"].join(" ") : ["#{reserve_title(item)}", "is an"].join(" ")
     end

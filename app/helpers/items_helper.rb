@@ -3,6 +3,10 @@ module ItemsHelper
     conditional_capitalize(item.title)
   end
 
+  def title_inv(item)
+    title(item)[0..12]
+  end
+
   def item_title(item)
     "\"#{title(item)}\"" if item.title != "Untitled"
   end
@@ -15,6 +19,12 @@ module ItemsHelper
   def retail(item)
     if item.retail.present? && item.retail > 0
       "List #{number_to_currency(item.retail, precision: 0, delimiter: ',')}"
+    end
+  end
+
+  def retail_inv(item)
+    if item.retail.present?
+      number_to_currency(item.retail, precision: 0, delimiter: ',')
     end
   end
 end

@@ -1,0 +1,54 @@
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group mr-2" role="group" aria-label="First group">
+    <!-- <div class="sku"> -->
+    <button type="button" class="btn sku btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= item.sku %>">
+      <small><%= item.sku %></small>
+    </button>
+    <!-- </div> -->
+    <button type="button" class="btn title btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= title(item) %>">
+      <small class="title"><%= title_inv(item) %></small>
+    </button>
+    <button type="button" class="btn sku btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= raw_retail(item) %>">
+      <small><%= retail_inv(item) %></small>
+    </button>
+  </div>
+
+  <div class="btn-group" role="group" aria-label="Second group">
+    <button type="button" class="btn btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= tagline(item) %>">
+      <small>Tag</small>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= prop_room(item) %>">
+      <small>PR</small>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= build_description(item) %>">
+      <small>Descrip</small>
+    </button>
+  </div>
+
+  <div class="btn-group mr-2" role="group" aria-label="Third group">
+    <button type="button" class="btn dims btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[0] %>">
+      <small>W: <%= width_height(item)[0] %></small>
+    </button>
+    <button type="button" class="btn dims btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[-1] %>">
+      <small>H: <%= width_height(item)[-1] %></small>
+    </button>
+  </div>
+
+  <div class="btn-group mr-2" role="group" aria-label="Third group">
+    <button type="button" class="btn dims btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[0] %>">
+      <small>FW:</small>
+    </button>
+    <button type="button" class="btn dims btn-sm btn-outline btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[-1] %>">
+      <small>FH:</small>
+    </button>
+  </div>
+
+  <div class="btn-group mr-2" role="group" aria-label="Third group">
+    <button type="button" class="btn btn-sm btn-primary clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[0] %>">
+      <small>Dup</small>
+    </button>
+    <button type="button" class="btn btn-sm btn-danger clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[-1] %>">
+      <small>Delete</small>
+    </button>
+  </div>
+</div>
