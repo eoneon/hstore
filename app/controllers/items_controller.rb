@@ -109,7 +109,7 @@ class ItemsController < ApplicationController
   end
 
   def invalid_sku_range_msg
-    if formatted_sku_range.length != 12 || sku_arr[0] >= sku_arr[-1]
+    if formatted_sku_range.length != 6 && formatted_sku_range.length != 12 && sku_arr[-1] >= sku_arr[0]
       "Invalid sku range."
     elsif sku_arr[-1] - sku_arr[0] > 10
       "You may only create 10 skus at a time."
@@ -121,7 +121,11 @@ class ItemsController < ApplicationController
   end
 
   def sku_arr
-    [formatted_sku_range[0..5].to_i, formatted_sku_range[6..11].to_i]
+    if formatted_sku_range.length == 12
+      [formatted_sku_range[0..5].to_i, formatted_sku_range[6..11].to_i]
+    elsif formatted_sku_range.length == 6
+      [formatted_sku_range[0..5].to_i, formatted_sku_range[0..5].to_i]
+    end
   end
 
   def new_skus

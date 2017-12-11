@@ -44,11 +44,11 @@
   </div>
 
   <div class="btn-group mr-2" role="group" aria-label="Third group">
-    <button type="button" class="btn btn-sm btn-primary clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[0] %>">
-      <small>Dup</small>
+    <button type="button" class="btn btn-sm btn-info btn-outline">
+      <small><%= link_to "Dup", invoice_item_path(item.invoice, item), class: "btn-link"%></small>
     </button>
-    <button type="button" class="btn btn-sm btn-danger clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= width_height(item)[-1] %>">
-      <small>Delete</small>
+    <button type="button" class="btn btn-sm btn-danger btn-outline">
+      <small><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true, class: "btn-link" %></small>
     </button>
   </div>
 </div>

@@ -4,9 +4,9 @@
 <%= link_to "Back to Inv: #{@item.invoice.invoice}", invoice_path(@item.invoice) %>
 <br>
 <p>Tagline:</p>
-<p><%= build_tagline(@item) %></p>
+<p><%= tagline(@item) %></p>
 <p>Property Room:</p>
-<p><%= descripton_pr(@item) %></p>
+<p><%= prop_room(@item) %></p>
 <p>Description:</p>
 <p><%= build_description(@item) %></p>
 
