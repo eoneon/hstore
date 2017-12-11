@@ -2,7 +2,7 @@ module MediumsHelper
   def build_medium(item)
     medium = []
     media = item.properties.map { |k,v| medium << v if v.present? && ["media"].any? { |m| k.include?(m)}}
-    [[ build_framing(item)[0], item.properties["embellish_kind"], item.properties["limited_kind"], media, item.properties["sculpture_kind"]].join(" ").strip]
+    [[ item.properties["embellish_kind"], item.properties["limited_kind"], media, item.properties["sculpture_kind"]].join(" ").strip]
   end
 
   def build_medium2(item)
@@ -17,22 +17,26 @@ module MediumsHelper
   #medium comes from tagline/description
   def medium_ed_sign_cert(item, medium)
     medium = [build_framing(item)[0], medium].join(" ")
-    certificate = build_certificate(item)[0] if build_certificate(item)[0].present?
-    edition_signature_arr = [build_edition(item)[0], build_signature(item)[0]]
-    arr_count = edition_signature_arr.reject {|v| v.blank?}.count
-    if arr_count == 0
-      medium = certificate.present? ? "#{medium} #{certificate}" : "#{medium}"
-    else
-      #"medium, <x> and <y>"
-      if arr_count == 2
-        edition_signature_arr = edition_signature_arr.join(" and ")
-      elsif arr_count == 1 && certificate.blank?
-        edition_signature_arr = edition_signature_arr[-1].blank? ? edition_signature_arr.reverse.join(" and ") : edition_signature_arr.join(" and ")
-      elsif arr_count == 1 && certificate.present?
-        edition_signature_arr = edition_signature_arr.join("")
-      end
-      medium = "#{medium}, #{edition_signature_arr} #{certificate}"
-    end
+    edition_signature = [build_edition(item)[0], build_signature(item)[0] ].reject {|item| item.blank?}.join(" and ")
+    [ [ medium, edition_signature].reject {|item| item.blank?}.join(", "), build_certificate(item)[0] ].join(" ").squish!
+    #certificate = build_certificate(item)[0] if build_certificate(item)[0].present?
+    #edition_signature_arr = [build_edition(item)[0], build_signature(item)[0]]
+    #arr_count = edition_signature_arr.reject {|v| v.blank?}.count
+    #specific to tagline
+    #[ [ medium, [build_edition(item)[0], build_signature(item)[0] ].reject {|item| item.blank?}.join(" and ")].reject {|item| item.blank?}.join(", "), build_certificate(item)[0]].join(" ").squish!
+    # if arr_count == 0
+    #   medium = certificate.present? ? "#{medium} #{certificate}" : "#{medium}"
+    # else
+    #   #"medium, <x> and <y>"
+    #   if arr_count == 2
+    #     edition_signature_arr = edition_signature_arr.join(" and ")
+    #   elsif arr_count == 1 && certificate.blank?
+    #     edition_signature_arr = edition_signature_arr[-1].blank? ? edition_signature_arr.reverse.join(" and ") : edition_signature_arr.join(" and ")
+    #   elsif arr_count == 1 && certificate.present?
+    #     edition_signature_arr = edition_signature_arr.join("")
+    #   end
+    #   medium = "#{medium}, #{edition_signature_arr} #{certificate}"
+    # end
   end
 
   #medium comes from tagline/description
