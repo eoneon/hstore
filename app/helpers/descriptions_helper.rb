@@ -72,7 +72,7 @@ module DescriptionsHelper
     [
       [" List", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" - ", "-"],
       [" Numbered ", " No. "], ["Certificate", "Cert"], ["Gold Leaf", "GoldLeaf"], ["Silver Leaf", "SilverLeaf"],
-      [" with ", " w/"], [xy_numbering(item), ""], [out_of_numbering(item), ""], [artists_target(item)[0], artists_abrv(item)[-1]],
+      [" with ", " w/"], [xy_numbering(item), ""], [out_of_an_edition_size(item), ""], [artists_target(item)[0], artists_abrv(item)[-1]],
       [" and ", " & "],
       ["Hand Drawn Remarque", "Remarque"], ["Hand Embellished", "Embellished"], ["Artist Embellished", "Embellished"]
 
