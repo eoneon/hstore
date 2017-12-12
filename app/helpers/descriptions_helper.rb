@@ -27,7 +27,6 @@ module DescriptionsHelper
     if item.properties.present?
       medium = [ build_medium(item)[0], build_substrate(item)[0], build_medium2(item)[0] ].join(" ").squish!
       period = "." if medium.length > 0
-      #"#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}"
       ["#{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish!, "#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish!]
     end
   end
@@ -54,9 +53,8 @@ module DescriptionsHelper
 
   def build_description(item)
     if item.properties.present?
-      medium = [build_medium(item)[0], build_substrate(item)[-1], "#{artists(item)[-1]}", build_medium2(item)[-1]].join(" ").strip
-      # [reserve_clause(item)[-1], description_intro(item, medium), "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1]].join(" ").squish
-      [intro(item, medium)[-1], "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], build_certificate(item)[-1], build_dims(item)[-1], build_disclaimer(item)[-1]].join(" ").squish
+      medium = [build_medium(item)[0], build_substrate(item)[-1], build_edition(item)[0], artists(item)[-1], build_medium2(item)[-1]].join(" ").squish
+      [intro(item, medium)[-1], "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], not_numbered(item)[0], build_certificate(item)[-1], build_dims(item)[-1], build_disclaimer(item)[-1]].join(" ").squish
     end
   end
 

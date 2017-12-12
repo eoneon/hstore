@@ -21,7 +21,7 @@ module EditionTypesHelper
     end
   end
 
-  #e.g., "from an edition of 2000"
+  #e.g., "from an edition of 2000" -> "this piece is not numbered..."
   def from_an_edition_size(item)
     if item.properties && item.edition_type.present?
       "from an edition of #{item.properties["edition_size"]}" if item.edition_type.name == "from edition size" && item.properties["edition_size"].present?
@@ -46,13 +46,14 @@ module EditionTypesHelper
   def build_edition(item)
     if item.properties["limited_kind"].present? && item.edition_type.name.present?
       [[from_an_edition_size(item), from_an_edition_kind(item)].reject {|v| v.blank?}, [edition_kind_numbered(item), out_of_an_edition_size(item), xy_numbering(item)].reject {|v| v.blank?}.join(" ")]
-      # if item.edition_type.name == "x/y"
-      #   [[edition_kind_numbered(item), xy_numbering(item), out_of_an_edition_size(item)].reject {|v| v.blank?}.join(" ")]
-      # elsif item.edition_type.name == "edition only"
-      #   [from_an_edition_kind(item)]
-      # elsif item.edition_type.name == "from edition size"
-      #   [from_an_edition_size(item)]
-      # end
+    else
+      [""]
+    end
+  end
+
+  def not_numbered(item)
+    if from_an_edition_size(item).present?
+      ["This piece is not numbered."]
     else
       [""]
     end

@@ -18,23 +18,12 @@ module MediumsHelper
   def medium_ed_sign_cert(item, medium)
     medium = [ build_framing(item)[0], medium, build_edition(item)[0] ].join(" ")
     edition_signature = [build_edition(item)[1], build_signature(item)[0] ].reject {|item| item.blank?}.join(" and ")
-    #medium = [build_framing(item)[0], medium].join(" ")
-    #edition_signature = [build_edition(item)[0], build_signature(item)[0] ].reject {|item| item.blank?}.join(" and ")
-    [ [ medium, edition_signature].reject {|item| item.blank?}.join(", "), build_certificate(item)[0] ].join(" ").squish!
+    [ [ medium, edition_signature].reject {|item| item.blank?}.join(", "), build_certificate(item)[0] ].join(" ").squish
   end
 
   #medium comes from tagline/description
   def medium_ed_sign(item, medium)
-    edition_signature = [build_edition(item)[-1], build_signature(item)[-1] ].reject {|item| item.blank?}.join(" and ")
-
-    edition_signature_arr = [build_edition(item)[-1], build_signature(item)[-1]]
-    arr_count = edition_signature_arr.reject {|v| v.blank?}.count
-    if arr_count == 0
-      "#{medium}"
-    elsif arr_count == 2
-      "#{medium}, #{edition_signature_arr.join(" and ")}"
-    elsif arr_count == 1
-      edition_signature_arr[-1].present? ? "#{medium}, #{edition_signature_arr[-1]}" : "#{medium}, and #{edition_signature_arr[0]}"
-    end
+    edition_signature = [build_edition(item)[1], build_signature(item)[-1] ].reject {|item| item.blank?}.join(" and ")
+    [ medium, edition_signature].reject {|item| item.blank?}.join(", ")
   end
 end
