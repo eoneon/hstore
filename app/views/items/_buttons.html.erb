@@ -48,7 +48,7 @@
       <small><%= link_to "Dup", invoice_item_path(item.invoice, item), class: "btn-link"%></small>
     </button>
     <button type="button" class="btn btn-sm btn-danger btn-outline">
-      <small><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true, class: "btn-link" %></small>
+      <small><%= link_to 'Delete', [item.invoice, item], method: :delete, remote: true, class: "btn-link", data: {confirm: "Are you sure?"} %></small>
     </button>
   </div>
 </div>

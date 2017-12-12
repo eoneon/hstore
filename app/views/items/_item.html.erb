@@ -5,7 +5,9 @@
         <div class="xs-col-1">
           <h4>
             <%= link_to item_sku(item), edit_invoice_item_path(item.invoice, item) %> |
-            <%= artists(item)[0] %> |
+            <% if artists(item)[0].present? %>
+              <%= link_to artists(item)[0], artist_path(item.artists.first) %> |
+            <% end %>
             <%= title_header(item) %>
           </h4>
         </div>

@@ -1,4 +1,12 @@
 module ItemsHelper
+  def prev_next(item)
+    items = Item.where(invoice_id: item.invoice_id).order(:sku) #get filtered/ordered skus by invoice
+    pos = items.index(item) #get position of current item
+    prev_sku = pos == 0 ? 0 : pos -1
+    next_sku = pos == items.count - 1 ? pos : pos + 1
+    [items[prev_sku], items[next_sku]] #get item at nest pos + 1/pos -1
+  end
+
   def title(item)
     conditional_capitalize(item.title)
   end

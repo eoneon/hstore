@@ -18,7 +18,6 @@ class Item < ActiveRecord::Base
   before_save :set_title, :set_image_size, :set_retail, :set_reserve #, :create_artist
   #after_find :new_skus, if: :create_skus?
 
-  #need to assign attribute
   def set_image_size
     self.image_size = image_size
   end

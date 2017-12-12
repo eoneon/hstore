@@ -16,3 +16,5 @@
   <%= link_to "Edit sku", edit_item_path(@item) %> |
   <%= link_to "Back to invoice", invoice_path(@item.invoice) %>
 </p>
+
+<p><%= link_to prev_next(@item)[0].sku, invoice_item_path(@item.invoice, prev_next(@item)[0]) %> | <%= link_to prev_next(@item)[1].sku, invoice_item_path(@item.invoice, prev_next(@item)[1]) %></p>

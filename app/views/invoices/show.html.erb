@@ -1,7 +1,7 @@
-<h1>Invoices#show</h1>
+<h1>Invoice: <%= @invoice.name %>  |  <%= @invoice.invoice %></h1>
 
-<p>Invoice#: <%= @invoice.invoice %> |Invoice name: <%= @invoice.name %> | <%= link_to "Edit", edit_invoice_path(@invoice) %> | <%= link_to "Back to Invoices", invoices_path %></p>
-
+<p><%= link_to "Edit", edit_invoice_path(@invoice) %> | <%= link_to "Back to Invoices", invoices_path %></p>
+<br>
 Advanced Search:
 <div class="new-search">
   <%= render 'searches/form_group', search: Search.new %>
