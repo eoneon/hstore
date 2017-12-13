@@ -100,6 +100,6 @@ module ApplicationHelper
   end
 
   def reserved_list
-    ValueItem.where(kind: "edition_kind").pluck(:name) + ["a", "an", "of", "and", "or", "on", "with", "from", ",", "the", "i", "ii", "iii", "iv", "v", "vi"]
+    ValueItem.where(kind: "edition_kind").pluck(:name) + ["a", "an", "of", "and", "or", "on", "with", "from", ",", "the", "i", "ii", "iii", "iv", "v", "vi", "PSA/DNA"]
   end
 end

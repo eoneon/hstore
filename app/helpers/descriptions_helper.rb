@@ -18,10 +18,6 @@ module DescriptionsHelper
     [tagline_intro(item), description_intro(item, medium)]
   end
 
-  #change name to description_title; include substrate values: "on stretched canvas" "on paper" using a gsub loop? then remove for case specific reasons
-  #not sure about this one but it seems like I could also use this for :medium in :description_body
-  #I could also include :conditional_capitalize and a method to remove "  " using gsub or strip.
-
   #medium
   def build_title(item)
     if item.properties.present?
@@ -60,20 +56,19 @@ module DescriptionsHelper
 
   def abbrv_description(d, item, limit)
     sub_list(item).each do |sub_arr|
-      return d if d.size <= limit
-      d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}")
+      return d.squish! if d.squish.size <= limit
+      d = d.gsub(/#{sub_arr[0]}/i, "#{sub_arr[-1]}").squish!
     end
     d
   end
 
   def sub_list(item)
     [
-      [" List", ""], [coa(item), authentication(item)], [" Limited Edition ", " Ltd Ed "], [" - ", "-"],
-      [" Numbered ", " No. "], ["Certificate", "Cert"], ["Gold Leaf", "GoldLeaf"], ["Silver Leaf", "SilverLeaf"],
-      [" with ", " w/"], [xy_numbering(item), ""], [out_of_an_edition_size(item), ""], [artists_target(item)[0], artists_abrv(item)[-1]],
-      [" and ", " & "],
-      ["Hand Drawn Remarque", "Remarque"], ["Hand Embellished", "Embellished"], ["Artist Embellished", "Embellished"]
+      [" List", ""], [" Limited Edition", " Ltd Ed "], [" - ", "-"],
+      ["Certificate of Authenticity", "Certificate"], ["Certificate", "Cert"], ["Letter of Authenticity", "LOA"], ["Gold Leaf", "GoldLeaf"],
+      ["Silver Leaf", "SilverLeaf"], [" with ", " w/"], [" Numbered ", " No. "], [xy_numbering(item), ""], [out_of_an_edition_size(item), ""], [artists_target(item)[0], artists_abrv(item)[-1]],
+      [" and ", " & "], ["Hand Drawn Remarque", "Remarque"], ["Hand Embellished", "Embellished"], ["Artist Embellished", "Embellished"]
 
-    ].reject { |sub_arr| sub_arr.join("").empty?}
+    ].reject { |sub_arr| sub_arr.join("").empty?} #[coa(item), authentication(item)]
   end
 end

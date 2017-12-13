@@ -44,7 +44,7 @@ module EditionTypesHelper
   end
 
   def build_edition(item)
-    if item.properties["limited_kind"].present? && item.edition_type.name.present?
+    if item.properties["limited_kind"].present? && item.edition_type.present?
       [[from_an_edition_size(item), from_an_edition_kind(item)].reject {|v| v.blank?}, [edition_kind_numbered(item), out_of_an_edition_size(item), xy_numbering(item)].reject {|v| v.blank?}.join(" ")]
     else
       [""]
