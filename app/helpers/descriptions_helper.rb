@@ -1,6 +1,6 @@
 module DescriptionsHelper
   def tagline_intro(item)
-    [artists(item)[0], item_title(item)].reject {|item| item.blank?}.join(" - ")
+    ["#{artists(item)[0]} -", item_title(item)].reject {|item| item.blank?}.join(" ")
   end
 
   def reserve_title(item)
@@ -50,7 +50,7 @@ module DescriptionsHelper
   def build_description(item)
     if item.properties.present?
       medium = [build_medium(item)[0], build_substrate(item)[-1], build_edition(item)[0], artists(item)[-1], build_medium2(item)[-1]].join(" ").squish
-      [intro(item, medium)[-1], "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], not_numbered(item)[0], seal(item), build_certificate(item)[-1], build_dims(item)[-1], build_disclaimer(item)[-1]].join(" ").squish
+      [intro(item, medium)[-1], "#{medium_ed_sign(item, medium)}.", build_framing(item)[-1], not_numbered(item)[0], seal(item), missing_cert_clause(item), build_certificate(item)[-1], build_dims(item)[-1], build_disclaimer(item)[-1]].join(" ").squish
     end
   end
 

@@ -1,6 +1,8 @@
 module CertificateTypesHelper
   def missing_cert_clause(item)
-    ["This piece does not come with a Certificate of Authenticity and we make no additional warranties"] if item.certificate_type.name == "missing certificate"
+    if item.certificate_type.present?
+      "This piece does not come with a Certificate of Authenticity and we make no additional warranties." if item.certificate_type.name == "missing certificate"
+    end
   end
 
   def cert_psa_dna(item)
