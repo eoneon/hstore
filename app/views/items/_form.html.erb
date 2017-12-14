@@ -29,14 +29,17 @@
       <%= f.label :retail %><br>
       <%= f.text_field :retail %>
     </div>
-    <div class="col-md-2">
+
+    <div class="col-md-6">
       <%= f.label :artist_name %><br>
       <%= f.collection_select( :artist_ids, Artist.all.order(:last_name), :id, :last_name_first, prompt: "- Artist -", include_blank: true) %>
+
+      <!-- Or create artist: -->
+      <%#= f.text_field :first_name %> <%#= f.text_field :last_name %>
     </div>
-    <!-- Or create artist: -->
-    <%#= f.text_field :first_name %> <%#= f.text_field :last_name %>
   </div><br>
 
+  <br>
   <%= render "items/properties", parent: @item, f: f %>
   <%= f.submit "Save" %>
 
