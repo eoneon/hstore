@@ -46,7 +46,7 @@ class ArtistsController < ApplicationController
     @artist = Artist.find(params[:id])
 
     if @artist.destroy
-      flash[:notice] = "\"#{@artist.sku}\" was deleted successfully."
+      flash[:notice] = "\"#{@artist.full_name}\" was deleted successfully."
       redirect_to action: :index
     else
       flash.now[:alert] = "There was an error deleting the Artist."
