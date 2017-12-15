@@ -37,7 +37,7 @@ module DimensionsHelper
   end
 
   def width_height(item)
-    if dim_name(item).present?
+    if dim_name(item).present? && item.properties["width"].present? && item.properties["height"].present?
       [sculpture_w_h(item), flat_w_h(item)].reject {|v| v.blank?}[0]
     else
       [""]
@@ -47,29 +47,37 @@ module DimensionsHelper
   def build_sculpture_dim(item, dims)
     dim_name(item).each do |dim|
       if item.properties[dim].present?
-        #dim_sym = dim != "weight" ? "\"" : "lbs."
-        #dims << "#{item.properties[dim]}#{dim_sym} (#{dim})"
         dims << "#{item.properties[dim]} (#{dim})" unless dim == "weight"
       end
     end
-    dims = item.properties["weight"].present? ? "#{dims.join(" x ")}; #{item.properties["weight"]}lbs. (weight)" : "#{dims.join(" x ")}"
-    "Measures approx. #{dims}."
-    #{}"Measures approx. #{dims.join(" x ")}."
+    item.properties["weight"].present? ? "#{dims.join(" x ")}; #{item.properties["weight"]}lbs. (weight)." : "#{dims.join(" x ")}."
+  end
+
+  def image_dim(item)
+    "#{item.properties["width"]}\" x #{item.properties["height"]}\" (#{dim_name(item)[0]})." if item.properties["width"].present? && item.properties["height"].present?
+  end
+
+  def outer_dim(item)
+    "#{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\" (#{dim_name(item)[1]});" if item.properties["outer_width"].present? && item.properties["outer_height"].present?
   end
 
   def build_dims(item)
     if dim_name(item).present?
+      #conflate these methods next
       if dim_name(item)[-1] == "weight"
-        [build_sculpture_dim(item, dims = [])]
+        [["Measures approx.", build_sculpture_dim(item, dims = [])].join(" ")]
       elsif dim_name(item)[-1] != "weight"
-        image_dim = "#{item.properties["width"]}\" x #{item.properties["height"]}\"" #if item.properties["width"].present? && item.properties["height"].present?
-        outer_dim = "#{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\""
-        if dim_name(item).count == 1
-          ["Measures approx. #{image_dim} (#{dim_name(item)[0]})."]
-        elsif dim_name(item).count == 2
-          #["Measures approx. #{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\" (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
-          ["Measures approx. #{outer_dim} (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
-        end
+        [["Measures approx.", outer_dim(item), image_dim(item)].reject {|m| m.blank?}.join(" ")]
+
+        # image_dim = "#{item.properties["width"]}\" x #{item.properties["height"]}\""
+        # outer_dim = "#{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\""
+        #set in arr and reject...
+        # if dim_name(item).count == 1
+        #   ["Measures approx. #{image_dim(item)} (#{dim_name(item)[0]})."]
+        # elsif dim_name(item).count == 2
+        #   #["Measures approx. #{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\" (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
+        #   ["Measures approx. #{outer_dim(item)} (#{dim_name(item)[1]}); #{image_dim(item)} (#{dim_name(item)[0]})."]
+        # end
       end
     else
       [""]

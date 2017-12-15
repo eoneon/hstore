@@ -9,26 +9,60 @@ module ApplicationHelper
     link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
   end
 
-  def obj_type_list(parent)
+  def type_vl(parent)
     type_list = [ItemType, DimensionType, SubstrateType, EditionType, SignatureType, CertificateType, DisclaimerType]
-    type_list << ReserveType if parent.invoice.present? && parent.invoice.name == "RR3"
-    if parent.item_type_id.nil?
-      type_list - [EditionType, SubstrateType]
-    elsif parent.item_type_id.present?
-      if parent.item_type.name == "limited edition"
-        type_list
-      elsif parent.item_type.name == "print"
-        type_list - [EditionType]
-      elsif parent.item_type.name == "limited edition sculpture" || parent.item_type.name == "limited edition sericel"
-        type_list - [SubstrateType]
-      elsif parent.item_type.name == "sculpture"
-        type_list - [EditionType, SubstrateType]
-      elsif parent.item_type.name == "one-of-a-kind"
-        type_list
-      elsif parent.item_type.name == "original painting" || parent.item_type.name == "sketch"
-        type_list - [EditionType]
-      end
-    end
+    parent.invoice.present? && parent.invoice.name == "RR3" ? type_list.insert(-1, ReserveType) : type_list
+  end
+
+  def nil_parent_id_vl(parent)
+    type_vl(parent) - [EditionType, SubstrateType] if parent.item_type_id.nil?
+  end
+
+  def ltd_vl(parent)
+    type_vl(parent) if parent.item_type.name == "limited edition"
+  end
+
+  def one_kind_vl(parent)
+    type_vl(parent) if parent.item_type.name == "one-of-a-kind"
+  end
+
+  def sans_edition_vl(parent)
+    type_vl(parent) - [EditionType] if parent.item_type.name == "print"
+  end
+
+  def sans_substrate_vl(parent)
+    type_vl(parent) - [SubstrateType] if parent.item_type.name == "limited edition sculpture" || parent.item_type.name == "limited edition sericel"
+  end
+
+  def sculpture_vl(parent)
+    type_vl(parent) - [EditionType, SubstrateType] if parent.item_type.name == "sculpture"
+  end
+
+  def sans_edition_og_vl(parent)
+    type_vl(parent) - [EditionType] if parent.item_type.name == "original painting" || parent.item_type.name == "sketch"
+  end
+
+  def obj_type_list(parent)
+    [nil_parent_id_vl(parent), ltd_vl(parent), sans_edition_vl(parent), sans_substrate_vl(parent), sculpture_vl(parent), sans_edition_og_vl(parent), one_kind_vl(parent)].reject {|m| m.blank?}[0] #
+    # type_list = [ItemType, DimensionType, SubstrateType, EditionType, SignatureType, CertificateType, DisclaimerType]
+    # type_list << ReserveType if parent.invoice.present? && parent.invoice.name == "RR3"
+    # if parent.item_type_id.nil?
+    #   type_list - [EditionType, SubstrateType]
+    # elsif parent.item_type_id.present?
+    #   if parent.item_type.name == "limited edition"
+    #     type_list
+    #   elsif parent.item_type.name == "print"
+    #     type_list - [EditionType]
+    #   elsif parent.item_type.name == "limited edition sculpture" || parent.item_type.name == "limited edition sericel"
+    #     type_list - [SubstrateType]
+    #   elsif parent.item_type.name == "sculpture"
+    #     type_list - [EditionType, SubstrateType]
+    #   elsif parent.item_type.name == "one-of-a-kind"
+    #     type_list
+    #   elsif parent.item_type.name == "original painting" || parent.item_type.name == "sketch"
+    #     type_list - [EditionType]
+    #   end
+    # end
   end
 
   def type_list(parent, type)
