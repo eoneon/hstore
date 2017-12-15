@@ -133,8 +133,8 @@ class ItemsController < ApplicationController
   def new_skus
     (sku_arr[0]..sku_arr[-1]).each do |sku|
       new_item = @item.dup
-      new_item.update(sku: sku, title: "", artist_ids: @item.artist_ids)
-      #new_item.update(sku: sku, artist_ids: @item.artist_ids)
+      #new_item.update(sku: sku, title: "", artist_ids: @item.artist_ids)
+      new_item.update(sku: sku, artist_ids: @item.artist_ids)
       new_item.save
     end
   end

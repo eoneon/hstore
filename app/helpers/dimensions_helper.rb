@@ -24,6 +24,12 @@ module DimensionsHelper
     end
   end
 
+  def frame_size(item)
+    if item.properties? && dim_name(item)[-1] == "frame"
+      item.properties["outer_width"].to_f * item.properties["outer_height"].to_f
+    end
+  end
+
   def sculpture_w_h(item)
     if dim_name(item)[-1] == "weight"
       [item.properties[dim_name(item)[0]], item.properties[dim_name(item)[-1]]]
@@ -45,40 +51,60 @@ module DimensionsHelper
   end
 
   def build_sculpture_dim(item, dims)
-    dim_name(item).each do |dim|
-      if item.properties[dim].present?
-        dims << "#{item.properties[dim]} (#{dim})" unless dim == "weight"
+    if dim_name(item)[-1] == "weight"
+      dim_name(item).each do |dim|
+        if item.properties[dim].present?
+          dims << "#{item.properties[dim]} (#{dim})" unless dim == "weight"
+        end
       end
+      item.properties["weight"].present? ? "#{dims.join(" x ")}; #{item.properties["weight"]}lbs. (weight)." : "#{dims.join(" x ")}."
     end
-    item.properties["weight"].present? ? "#{dims.join(" x ")}; #{item.properties["weight"]}lbs. (weight)." : "#{dims.join(" x ")}."
   end
 
-  def image_dim(item)
-    "#{item.properties["width"]}\" x #{item.properties["height"]}\" (#{dim_name(item)[0]})." if item.properties["width"].present? && item.properties["height"].present?
+
+  def xl_image_dim(item)
+    if image_size(item) >= 864 && dim_name(item)[-1] == "image"
+      "(#{item.properties["width"]}\" x #{item.properties["height"]}\")"
+    end
   end
 
-  def outer_dim(item)
-    "#{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\" (#{dim_name(item)[1]});" if item.properties["outer_width"].present? && item.properties["outer_height"].present?
+  def xl_frame_dim(item)
+    if dim_name(item)[-1] == "frame" && frame_size(item) >= 864
+      "(#{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\")"
+    end
+  end
+
+  def xl_dim(item)
+    [xl_image_dim(item), xl_frame_dim(item)].reject {|m| m.blank?}.join(" ")
+  end
+
+  def image_dim_name(item)
+    if item.properties["width"].present? && item.properties["height"].present? && dim_name(item)[-1] != "weight"
+      "#{item.properties["width"]}\" x #{item.properties["height"]}\" (#{dim_name(item)[0]})."
+    end
+  end
+
+  def outer_dim_name(item)
+    if item.properties["outer_width"].present? && item.properties["outer_height"].present? && dim_name(item)[-1] != "weight"
+      "#{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\" (#{dim_name(item)[1]});"
+    end
   end
 
   def build_dims(item)
     if dim_name(item).present?
-      #conflate these methods next
-      if dim_name(item)[-1] == "weight"
-        [["Measures approx.", build_sculpture_dim(item, dims = [])].join(" ")]
-      elsif dim_name(item)[-1] != "weight"
-        [["Measures approx.", outer_dim(item), image_dim(item)].reject {|m| m.blank?}.join(" ")]
-
-        # image_dim = "#{item.properties["width"]}\" x #{item.properties["height"]}\""
-        # outer_dim = "#{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\""
-        #set in arr and reject...
-        # if dim_name(item).count == 1
-        #   ["Measures approx. #{image_dim(item)} (#{dim_name(item)[0]})."]
-        # elsif dim_name(item).count == 2
-        #   #["Measures approx. #{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\" (#{dim_name(item)[-1]}); #{image_dim} (#{dim_name(item)[0]})."]
-        #   ["Measures approx. #{outer_dim(item)} (#{dim_name(item)[1]}); #{image_dim(item)} (#{dim_name(item)[0]})."]
-        # end
-      end
+      [
+        [
+          "Measures approx.", outer_dim_name(item), image_dim_name(item),
+          [
+            build_sculpture_dim(item, dims = [])
+          ].join(" ")
+        ].reject {|m| m.blank?}.join(" ")
+      ]
+      # if dim_name(item)[-1] == "weight"
+      #   [["Measures approx.", build_sculpture_dim(item, dims = [])].join(" ")]
+      # elsif dim_name(item)[-1] != "weight"
+      #   [["Measures approx.", outer_dim_name(item), image_dim_name(item)].reject {|m| m.blank?}.join(" ")]
+      # end
     else
       [""]
     end

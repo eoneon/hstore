@@ -111,9 +111,9 @@ module ApplicationHelper
       clause = [words[0].downcase.capitalize!]
       words.shift
       words.each do |w|
-        w = w.downcase.capitalize! unless reserved_list.any? { |word| w.downcase == word.downcase || /[0-9]/.match(w) || /-/.match(w).present? || w[0] == "("}
+        w = w.downcase.capitalize! unless reserved_list.any? { |word| w.downcase == word.downcase || /[0-9]/.match(w) || /-/.match(w).present? || w[0] == "(" }
         w = handle_hyphens(w) if /-/.match(w).present?
-        w = handle_parenths(w) if w[0] == "("
+        w = handle_parenths(w) if w[0] == "(" && /[a-z]/.match(w[1])
         clause << w
       end
       clause.join(" ").gsub(/ ,/, ",")
