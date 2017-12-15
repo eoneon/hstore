@@ -24,19 +24,21 @@ module DimensionsHelper
     end
   end
 
+  def sculpture_w_h(item)
+    if dim_name(item)[-1] == "weight"
+      [item.properties[dim_name(item)[0]], item.properties[dim_name(item)[-1]]]
+    end
+  end
+
+  def flat_w_h(item)
+    if dim_name(item)[-1] != "weight"
+      [item.properties["width"], item.properties["height"], item.properties["outer_width"], item.properties["outer_height"]].reject {|v| v.blank?}
+    end
+  end
+
   def width_height(item)
     if dim_name(item).present?
-      if dim_name(item)[-1] == "weight"
-        #this only works for sculpture dimensions
-        [item.properties[dim_name(item)[0]], item.properties[dim_name(item)[-1]]]
-      else
-        if dim_name(item)[-1] == "frame"
-          #this works for flat art
-          [item.properties["width"], item.properties["height"], item.properties["outer_width"], item.properties["outer_height"]]
-        else
-          [item.properties["width"], item.properties["height"]]
-        end
-      end
+      [sculpture_w_h(item), flat_w_h(item)].reject {|v| v.blank?}[0]
     else
       [""]
     end
