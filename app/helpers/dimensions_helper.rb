@@ -68,7 +68,7 @@ module DimensionsHelper
 
 
   def xl_image_dim(item)
-    if image_size(item) >= 864 && dim_name(item)[-1] == "image"
+    if image_size(item) >= 1864 && dim_name(item)[-1] == "image"
       "(#{item.properties["width"]}\" x #{item.properties["height"]}\")"
     end
   end
