@@ -23,7 +23,7 @@ module DescriptionsHelper
     if item.properties.present?
       medium = [ build_medium(item)[0], build_substrate(item)[0], xl_dim(item), build_medium2(item)[0] ].join(" ").squish!
       period = "." if medium.length > 0
-      ["#{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish!, "#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish!]
+      ["#{conditional_capitalize(medium_ed_sign_cert(item, medium), item)}#{period}".squish!, "#{intro(item, medium)[0]} #{conditional_capitalize(medium_ed_sign_cert(item, medium))}#{period}".squish!]
     end
   end
 

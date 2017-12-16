@@ -25,7 +25,7 @@ module CertificateTypesHelper
       if item.properties["certificate_kind"] != "PSA/DNA authentication"
         cert = [ item.properties["certificate_kind"], item.properties["certificate_issuer"] ].reject { |item| item.blank? }.join(" from ")
         intro = item.properties["certificate_kind"] == "seal of authenticity" ? ["bearing", "This piece bears the"] : ["with", "Includes"]
-        ["#{intro[0]} #{cert}", "#{intro[-1]} #{cert}."]
+        ["#{intro[0]} #{cert}", "#{intro[-1]} #{conditional_capitalize(cert)}."]
       end
     end
   end
@@ -35,7 +35,7 @@ module CertificateTypesHelper
       #["with #{certificate(item)}", "Includes #{certificate(item)}."]
       #[ [ certificate(item)[0], certificate(item)[-1] ], [ cert_psa_dna(item).try([0]), cert_psa_dna(item).try([-1]) ] ].reject { |item| item.blank? }
       cert = [ certificate(item), cert_psa_dna(item) ].reject { |item| item.blank? }[0]
-      [ cert[0], conditional_capitalize(cert[1]) ]
+      [ cert[0], cert[1] ]
     else
       [""]
     end

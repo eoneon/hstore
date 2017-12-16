@@ -8,6 +8,11 @@ module DimensionsHelper
     DimensionType.all.map {|dim| dim if dim.name.split(" & ")[-1] == "weight"}.reject {|dim| dim.nil?}
   end
 
+  # def sorted_dimension_names
+  #   [DimensionType.all.map {|dim| dim if dim.name.split(" & ")[-1] == "weight"}.reject {|dim| dim.nil?},
+  #   DimensionType.all.map {|dim| dim unless dim.name.split(" & ")[-1] == "weight"}.reject {|dim| dim.nil?}]
+  # end
+
   #we can get rid of these at some point since they're inside item and here
   #also, the above methods should cover those below.
   def dim_name(item)
@@ -92,19 +97,7 @@ module DimensionsHelper
 
   def build_dims(item)
     if dim_name(item).present?
-      [
-        [
-          "Measures approx.", outer_dim_name(item), image_dim_name(item),
-          [
-            build_sculpture_dim(item, dims = [])
-          ].join(" ")
-        ].reject {|m| m.blank?}.join(" ")
-      ]
-      # if dim_name(item)[-1] == "weight"
-      #   [["Measures approx.", build_sculpture_dim(item, dims = [])].join(" ")]
-      # elsif dim_name(item)[-1] != "weight"
-      #   [["Measures approx.", outer_dim_name(item), image_dim_name(item)].reject {|m| m.blank?}.join(" ")]
-      # end
+      [["Measures approx.", outer_dim_name(item), image_dim_name(item),[build_sculpture_dim(item, dims = [])].join(" ")].reject {|m| m.blank?}.join(" ")]
     else
       [""]
     end

@@ -43,26 +43,7 @@ module ApplicationHelper
   end
 
   def obj_type_list(parent)
-    [nil_parent_id_vl(parent), ltd_vl(parent), sans_edition_vl(parent), sans_substrate_vl(parent), sculpture_vl(parent), sans_edition_og_vl(parent), one_kind_vl(parent)].reject {|m| m.blank?}[0] #
-    # type_list = [ItemType, DimensionType, SubstrateType, EditionType, SignatureType, CertificateType, DisclaimerType]
-    # type_list << ReserveType if parent.invoice.present? && parent.invoice.name == "RR3"
-    # if parent.item_type_id.nil?
-    #   type_list - [EditionType, SubstrateType]
-    # elsif parent.item_type_id.present?
-    #   if parent.item_type.name == "limited edition"
-    #     type_list
-    #   elsif parent.item_type.name == "print"
-    #     type_list - [EditionType]
-    #   elsif parent.item_type.name == "limited edition sculpture" || parent.item_type.name == "limited edition sericel"
-    #     type_list - [SubstrateType]
-    #   elsif parent.item_type.name == "sculpture"
-    #     type_list - [EditionType, SubstrateType]
-    #   elsif parent.item_type.name == "one-of-a-kind"
-    #     type_list
-    #   elsif parent.item_type.name == "original painting" || parent.item_type.name == "sketch"
-    #     type_list - [EditionType]
-    #   end
-    # end
+    [nil_parent_id_vl(parent), ltd_vl(parent), sans_edition_vl(parent), sans_substrate_vl(parent), sculpture_vl(parent), sans_edition_og_vl(parent), one_kind_vl(parent)].reject {|m| m.blank?}[0]
   end
 
   def type_list(parent, type)
@@ -105,9 +86,18 @@ module ApplicationHelper
     end
   end
 
-  def conditional_capitalize(words)
+  def conditional_capitalize(words, *item)
     words = words.split(" ").reject {|word| word.blank?}
     if words.present?
+      #1 find xl_image_dim/ xl_frame_dim
+      #if [xl_image_dim(item), xl_frame_dim(item)].reject {|m| m.blank?}[0].present?
+        #2 assign to var
+        # xl_dims = [xl_image_dim(item), xl_frame_dim(item)].reject {|m| m.blank?}[0]
+        #3 remove white space
+        #xl_dims2 = [xl_image_dim(item), xl_frame_dim(item)].reject {|m| m.blank?}[0].gsub(/\s+/, "")
+        #4 replace inside words
+        #words.gsub(/xl_dims/, xl_dims2)
+
       clause = [words[0].downcase.capitalize!]
       words.shift
       words.each do |w|
@@ -116,6 +106,8 @@ module ApplicationHelper
         w = handle_parenths(w) if w[0] == "(" && /[a-z]/.match(w[1])
         clause << w
       end
+      #5 swap xl_dim values
+      #
       clause.join(" ").gsub(/ ,/, ",")
     end
   end
