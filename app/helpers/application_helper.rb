@@ -15,32 +15,35 @@ module ApplicationHelper
   end
 
   def nil_parent_id_vl(parent)
-    type_vl(parent) - [EditionType, SubstrateType] if parent.item_type_id.nil?
+    if parent.item_type_id.nil?
+      type_vl(parent) - [EditionType, SubstrateType]
+    end
   end
 
   def ltd_vl(parent)
-    type_vl(parent) if parent.item_type.name == "limited edition"
+    type_vl(parent) if parent.item_type_id.present? && parent.item_type.name == "limited edition"
   end
 
   def one_kind_vl(parent)
-    type_vl(parent) if parent.item_type.name == "one-of-a-kind"
+    type_vl(parent) if parent.item_type_id.present? && parent.item_type.name == "one-of-a-kind"
   end
 
   def sans_edition_vl(parent)
-    type_vl(parent) - [EditionType] if parent.item_type.name == "print"
+    type_vl(parent) - [EditionType] if parent.item_type_id.present? && parent.item_type.name == "print"
   end
 
   def sans_substrate_vl(parent)
-    type_vl(parent) - [SubstrateType] if parent.item_type.name == "limited edition sculpture" || parent.item_type.name == "limited edition sericel"
+    type_vl(parent) - [SubstrateType] if parent.item_type_id.present? && (parent.item_type.name == "limited edition sculpture" || parent.item_type.name == "limited edition sericel")
   end
 
   def sculpture_vl(parent)
-    type_vl(parent) - [EditionType, SubstrateType] if parent.item_type.name == "sculpture"
+    type_vl(parent) - [EditionType, SubstrateType] if parent.item_type_id.present? && parent.item_type.name == "sculpture"
   end
 
   def sans_edition_og_vl(parent)
-    type_vl(parent) - [EditionType] if parent.item_type.name == "original painting" || parent.item_type.name == "sketch"
+    type_vl(parent) - [EditionType] if parent.item_type_id.present? && (parent.item_type.name == "original painting" || parent.item_type.name == "sketch")
   end
+
 
   def obj_type_list(parent)
     [nil_parent_id_vl(parent), ltd_vl(parent), sans_edition_vl(parent), sans_substrate_vl(parent), sculpture_vl(parent), sans_edition_og_vl(parent), one_kind_vl(parent)].reject {|m| m.blank?}[0]
