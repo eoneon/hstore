@@ -1,4 +1,0 @@
-<fieldset>
-  <%= f.label :artist_name %><br>
-  <%= f.collection_select( :artist_ids, Artist.all, :id, :full_name, include_blank: true) %>
-</fieldset>

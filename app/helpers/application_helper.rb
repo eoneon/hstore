@@ -45,7 +45,6 @@ module ApplicationHelper
     type_vl(parent) - [EditionType] if parent.item_type_id.present? && (parent.item_type.name == "original painting" || parent.item_type.name == "sketch")
   end
 
-
   def obj_type_list(parent)
     [nil_parent_id_vl(parent), ltd_vl(parent), sans_edition_vl(parent), sans_substrate_vl(parent), sculpture_vl(parent), sans_edition_og_vl(parent), one_kind_vl(parent)].reject {|m| m.blank?}[0]
   end
