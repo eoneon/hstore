@@ -29,21 +29,19 @@
       <%= f.label :retail %><br>
       <%= f.text_field :retail %>
     </div>
+  </div><br>
 
+  <div class="row">
     <div class="col-md-6">
-      <%= f.label :artist_name %><br>
-      <%= f.collection_select( :artist_ids, Artist.all.order(:last_name), :id, :last_name_first, prompt: "- Artist -", include_blank: true) %>
+      <%= f.fields_for :artist_items do |builder| %>
+        <%= render 'items/artist_item_fields', f: builder %>
+      <% end %>
+      <%= link_to_add_fields "Add Field", f, :artist_items, "items" %>
 
       <!-- Or create artist: -->
       <%#= f.text_field :first_name %> <%#= f.text_field :last_name %>
     </div>
-
-    <%= f.fields_for :artists do |builder| %>
-      <%= render 'items/artist_fields', f: builder %>
-    <% end %>
-
-    <%= link_to_add_fields "Add Field", f, :artists, "items" %>
-  </div><br>
+  </div>
 
   <br>
   <%= render "items/properties", parent: @item, f: f %>

@@ -11,6 +11,7 @@ class Item < ActiveRecord::Base
 
   has_many :artist_items, dependent: :destroy
   has_many :artists, through: :artist_items, dependent: :destroy
+  accepts_nested_attributes_for :artist_items, allow_destroy: true
   delegate :first_name, :last_name, :to => :artist
 
   attr_accessor :sku_range, :first_name, :last_name
