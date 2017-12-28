@@ -1,16 +1,20 @@
 <%= f.fields_for :properties, OpenStruct.new(parent.properties) do |builder| %>
-<% obj_type_list(parent).each do |type| %>
+  <% obj_type_list(parent).each do |type| %>
   <div class="row">
     <div class="col-md-2">
       <%= f.label obj_to_s(type) %><br>
       <%= f.collection_select obj_to_fk(type), type_list(parent, type), :id, :name, {:include_blank => true}, onchange: 'submitform()' %>
     </div>
-      <!-- 1st: check if a type is present; if not, we don't know what fields to render  -->
+  </div>
+  <div class="row">
+    <div class="col-md">
+    <!-- 1st: check if a type is present; if not, we don't know what fields to render  -->
       <% if obj_to_type_id(parent, type).present? %>
         <% obj_to_type(parent, type).fields.each do |field| %>
           <%= render "items/fields/#{field.field_type}", parent: parent, type: type, field: field, f: builder %>
         <% end %>
       <% end %>
-    </div><br>
+    </div>
+  </div>
   <% end %>
 <% end %>
