@@ -74,7 +74,7 @@ module DimensionsHelper
   end
 
   def xl_frame_dim(item)
-    if dim_name(item)[-1] == "frame" && frame_size(item) >= 1864
+    if dim_name(item).present? && dim_name(item)[-1] == "frame" && frame_size(item) >= 1864
       "(#{item.properties["outer_width"]}\" x #{item.properties["outer_height"]}\")"
     end
   end
