@@ -1,4 +1,6 @@
 <fieldset>
   <%= f.label :artist_name %><br>
   <%= f.collection_select( :artist_id, Artist.all, :id, :full_name, include_blank: true) %>
+  <%= f.hidden_field :_destroy %>
+  <%= link_to "remove", '#', class: "remove_fields" %>
 </fieldset>
