@@ -103,7 +103,7 @@ class ItemsController < ApplicationController
   def item_params
     #https://stackoverflow.com/questions/19172893/rails-hashes-with-unknown-keys-and-strong-parameters
     properties = params[:item].delete(:properties)
-    params.require(:item).permit(:sku_range, :title, :retail, :sku, :invoice_id, :item_type_id, :dimension_type_id, :edition_type_id, :certificate_type_id, :signature_type_id, :substrate_type_id, :reserve_type_id, :disclaimer_type_id, { :artist_items_attributes => [:id, :artist_id, :item_id, :_destroy] } ).tap do |whitelisted|
+    params.require(:item).permit(:sku_range, :title, :retail, :sku, :invoice_id, :item_type_id, :dimension_type_id, :edition_type_id, :certificate_type_id, :signature_type_id, :substrate_type_id, :reserve_type_id, :disclaimer_type_id, { :artist_items_attributes => [:id, :artist_id, :item_id, :_destroy] }, { :artists_attributes => [:id, :first_name, :last_name] } ).tap do |whitelisted|
        whitelisted[:properties] = properties
      end
   end
