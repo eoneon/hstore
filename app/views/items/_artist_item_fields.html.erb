@@ -1,8 +1,8 @@
 <fieldset>
-  <%= f.label :artist_name %><br>
+  <%= f.label :artist_name %>
   <%= f.collection_select( :artist_id, Artist.all, :id, :last_name_first, include_blank: true) %>
   <%= f.hidden_field :_destroy %>
-  <% if @item.artists.count > 1 %>
+  <%# if @item.artists.count > 1 %>
     <%= link_to "remove", '#', class: "remove_fields" %>
-  <% end %>
+  <%# end %>
 </fieldset>

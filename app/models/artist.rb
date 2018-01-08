@@ -1,6 +1,7 @@
 class Artist < ActiveRecord::Base
   has_many :artist_items, dependent: :destroy
   has_many :items, through: :artist_items
+  
   has_many :displays, autosave: true, dependent: :destroy
   accepts_nested_attributes_for :displays, allow_destroy: true
 

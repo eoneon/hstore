@@ -9,11 +9,10 @@ class Item < ActiveRecord::Base
   belongs_to :disclaimer_type
   belongs_to :invoice
 
-  has_many :artist_items, inverse_of: :item, dependent: :destroy
-  has_many :artists, through: :artist_items, dependent: :destroy
-  accepts_nested_attributes_for :artist_items, reject_if: proc {|attrs| attrs['artist_id'].blank?},  allow_destroy: true
+  has_many :artist_items, dependent: :destroy #inverse_of: :item,
+  has_many :artists, through: :artist_items #, dependent: :destroy
 
-  #this
+  accepts_nested_attributes_for :artist_items, reject_if: proc {|attrs| attrs['artist_id'].blank?},  allow_destroy: true
   accepts_nested_attributes_for :artists, reject_if: proc {|attrs| attrs['last_name'].blank?}
 
   delegate :first_name, :last_name, :to => :artist
